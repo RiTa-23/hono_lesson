@@ -1,0 +1,9 @@
+{
+  // Cloudflare Pages 設定
+  // `npm run build` 後に `npx wrangler pages deploy dist` でデプロイできます。
+  // GitHub連携でデプロイする場合はダッシュボード側で以下を設定:
+  //   Build command: npm run build
+  //   Build output directory: dist
+  "name": "hono-yorozuya-kouza",
+  "pages_build_output_dir": "dist"
+}

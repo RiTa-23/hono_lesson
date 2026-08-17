@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 97%;
+    --foreground: 25 30% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 25 30% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 25 30% 12%;
+    --primary: 28 75% 38%;
+    --primary-foreground: 40 33% 97%;
+    --secondary: 35 25% 92%;
+    --secondary-foreground: 25 30% 20%;
+    --muted: 35 20% 93%;
+    --muted-foreground: 25 12% 42%;
+    --accent: 35 30% 90%;
+    --accent-foreground: 25 30% 18%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 40 33% 97%;
+    --border: 30 18% 86%;
+    --input: 30 18% 82%;
+    --ring: 28 75% 38%;
+    --radius: 0.6rem;
+  }
+
+  .dark {
+    --background: 25 25% 8%;
+    --foreground: 40 25% 93%;
+    --card: 25 22% 11%;
+    --card-foreground: 40 25% 93%;
+    --popover: 25 22% 11%;
+    --popover-foreground: 40 25% 93%;
+    --primary: 32 80% 55%;
+    --primary-foreground: 25 30% 10%;
+    --secondary: 28 15% 18%;
+    --secondary-foreground: 40 25% 88%;
+    --muted: 28 15% 16%;
+    --muted-foreground: 38 12% 62%;
+    --accent: 30 18% 20%;
+    --accent-foreground: 40 25% 90%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 40 25% 95%;
+    --border: 28 14% 20%;
+    --input: 28 14% 24%;
+    --ring: 32 80% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "palt";
+  }
+}
+
+/* コードブロック内の横スクロール */
+pre {
+  overflow-x: auto;
+}
