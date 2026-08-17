@@ -200,6 +200,11 @@ function NavItem({
         </span>
       )}
       <span className="flex-1 leading-snug">{page.title}</span>
+      {active && (
+        <span aria-hidden="true" className="shrink-0 text-xs text-primary">
+          ▶
+        </span>
+      )}
     </a>
   );
 }

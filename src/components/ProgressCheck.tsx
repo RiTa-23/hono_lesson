@@ -58,18 +58,28 @@ export function ProgressCheck({ id, label, children }: Props) {
       >
         {checked ? <Check size={14} strokeWidth={3} /> : null}
       </span>
-      <span className="flex-1 text-[0.95rem] leading-snug">
-        {checked ? (
-          <span className="font-medium text-emerald-700 dark:text-emerald-400">
-            クエスト達成: {text}
-          </span>
-        ) : (
-          <span className="text-foreground">{text}</span>
-        )}
+      <span className="flex-1 text-[0.95rem] leading-snug text-foreground">
+        {text}
       </span>
-      <span className="shrink-0 text-xs text-muted-foreground">
-        {checked ? "クリックで戻す" : "クリックで完了"}
-      </span>
+      {checked ? (
+        // 朱色の判子スタンプ（白抜きリング付き）
+        <span
+          aria-hidden="true"
+          className={[
+            "inline-flex shrink-0 -rotate-[8deg] animate-stamp-in items-center",
+            "rounded border-2 border-[#b3402a] bg-[#b3402a] px-3 py-1.5",
+            "outline outline-1 -outline-offset-4 outline-white/90",
+            "font-serif text-xs font-bold tracking-widest text-white",
+            "shadow-sm",
+          ].join(" ")}
+        >
+          クエスト達成
+        </span>
+      ) : (
+        <span className="shrink-0 text-xs text-muted-foreground">
+          クリックで完了
+        </span>
+      )}
     </button>
   );
 }

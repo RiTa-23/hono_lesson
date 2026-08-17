@@ -49,6 +49,17 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      keyframes: {
+        // 判子が押される演出
+        "stamp-in": {
+          "0%": { opacity: "0", transform: "scale(2) rotate(-18deg)" },
+          "60%": { opacity: "1", transform: "scale(0.92) rotate(-8deg)" },
+          "100%": { opacity: "1", transform: "scale(1) rotate(-8deg)" },
+        },
+      },
+      animation: {
+        "stamp-in": "stamp-in 0.28s ease-out",
+      },
     },
   },
   plugins: [],

@@ -35,6 +35,10 @@ export function Home() {
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           よろず屋DX講座
         </h1>
+        <div className="mt-3 flex gap-1" aria-hidden="true">
+          <span className="h-1 w-16 rounded-full bg-amber-500" />
+          <span className="h-1 w-4 rounded-full bg-amber-400/70" />
+        </div>
         <p className="mt-3 leading-relaxed text-muted-foreground">
           RPGゲームの「よろず屋」を題材に、HonoでバックエンドAPIを作るハンズオンです。
           フロントエンド（React）は完成済み。あなたは店主からの依頼を受けた
@@ -65,11 +69,14 @@ export function Home() {
             {done}/{total} ステップ完了（{percent}%）
           </span>
         </div>
-        <Progress value={percent} className="mt-3" />
+        <Progress
+          value={percent}
+          className="mt-3 h-3 rounded-full border border-border bg-muted [&>div]:bg-emerald-600"
+        />
         {percent === 100 && (
           <p className="mt-3 flex items-center gap-2 text-sm font-medium text-emerald-600 dark:text-emerald-400">
             <CheckCircle2 size={16} />
-            第1回の全ステップを達成しました！お疲れさまでした。
+            全クエスト達成！
           </p>
         )}
       </section>

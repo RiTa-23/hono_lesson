@@ -26,3 +26,9 @@ RPGのよろず屋APIを題材に、第1回（API基礎・Hono・CORS・フロ�
 - テンプレート厳守: PageHeader（ゴール・所要時間）/ 手順 / よくあるつまずき×2以上 / ProgressCheck / NextLink
 - 進捗IDは既存と重複させない（routes.test.ts が検知）
 - 変更後は `npm run build` と `npm test` が通ることを確認する
+
+## UIの約束（RPGアクセント・読みやすさ最優先）
+
+- ベースは読みやすいニュートラルなshadcnテーマのまま。フォント・パレット・全面テーマ化はしない
+- RPG要素はアクセントのみ: ProgressCheck達成時の朱色の判子スタンプ（`#b3402a` 直書き。CSS変数にしない）、ホームのHPバー風進捗ゲージ、見出し下の金（amber）の短罫線、サイドバー現在地の「▶」
+- 判子のスタンプ演出（`stamp-in`）は全環境で常に再生する（reduced-motion による無効化はしない）
