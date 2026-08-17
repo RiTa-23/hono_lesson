@@ -18,7 +18,7 @@ export function Rpc() {
 
       <Callout variant="quest">
         <p>
-          よろず屋のDXが進み、フロントの開発者からこんな相談が。
+          よろず屋のネット販売が軌道に乗り、フロントの開発者からこんな相談が。
           「APIのパスをタイポしても気づけないし、レスポンスの形を毎回確認するのが大変…」
           Honoの<span className="font-medium">RPC</span>機能は、この悩みを型で解決します。
         </p>

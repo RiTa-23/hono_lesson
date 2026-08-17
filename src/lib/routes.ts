@@ -7,7 +7,7 @@ export type PageDef = {
   minutes?: number; // 所要時間の目安（分）
 };
 
-export const HOME: PageDef = { path: "/", title: "よろず屋DX講座" };
+export const HOME: PageDef = { path: "/", title: "よろず屋API講座" };
 
 export const SESSION1_PAGES: PageDef[] = [
   {

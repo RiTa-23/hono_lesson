@@ -44,7 +44,7 @@ export function Layout({ currentPath, children }: Props) {
           </Button>
           <a href="#/" className="flex items-center gap-2 font-bold">
             <Store size={20} className="text-primary" />
-            <span>よろず屋DX講座</span>
+            <span>よろず屋API講座</span>
           </a>
           {page && page.path !== "/" && (
             <span className="hidden truncate text-sm text-muted-foreground sm:inline">

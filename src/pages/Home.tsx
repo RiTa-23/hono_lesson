@@ -33,7 +33,7 @@ export function Home() {
           Hono ハンズオン講座
         </Badge>
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          よろず屋DX講座
+          よろず屋API講座
         </h1>
         <div className="mt-3 flex gap-1" aria-hidden="true">
           <span className="h-1 w-16 rounded-full bg-amber-500" />
@@ -42,7 +42,7 @@ export function Home() {
         <p className="mt-3 leading-relaxed text-muted-foreground">
           RPGゲームの「よろず屋」を題材に、HonoでバックエンドAPIを作るハンズオンです。
           フロントエンド（React）は完成済み。あなたは店主からの依頼を受けた
-          <span className="font-medium text-foreground">駆け出しDXエンジニア</span>
+          <span className="font-medium text-foreground">駆け出しエンジニア</span>
           として、よろず屋のネット販売システムを作り上げていきます。
         </p>
       </section>
@@ -54,7 +54,7 @@ export function Home() {
         <p className="mt-2 border-l-4 border-primary/40 pl-3 italic">
           「最近は魔王城の近くまで行かずにポーションを買いたい勇者が増えておる。
           　うちもネット販売を始めたいのじゃが、APIというのを作ればよいらしい。
-          　頼んだぞ、DXエンジニアよ！」
+          　頼んだぞ、エンジニアよ！」
         </p>
       </Callout>
 
