@@ -98,11 +98,12 @@ export function Summary() {
         </li>
       </ul>
 
-      <Callout variant="quest" title="第3回の予告">
+      <Callout variant="quest" title="第3回・第4回の予告">
         <p>
           今のよろず屋は、店じまい（サーバー停止）するとすべてを忘れてしまいます。
-          第3回はD1データベースに記録を残し、Cloudflare Workersにデプロイして、
-          世界中の冒険者がアクセスできるお店にします。
+          第3回はCloudflare D1とDrizzle ORMでデータを永続化し、再起動してもデータが消えないお店にします
+          （この時点では、まだ手元のパソコンの中だけの話です）。
+          そして第4回で、実際にCloudflare Workersへデプロイし、世界中の冒険者がアクセスできるお店にします。
         </p>
       </Callout>
 
