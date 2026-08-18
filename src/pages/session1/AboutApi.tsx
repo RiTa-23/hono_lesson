@@ -20,9 +20,9 @@ export function AboutApi() {
           よろず屋の店頭では、こんなやりとりが毎日行われています。
         </p>
         <p className="mt-2 border-l-4 border-primary/40 pl-3">
-          勇者「ポーションを3本ください」<br />
+          冒険者「ポーションを3本ください」<br />
           店主「はいよ。150ゴールドね」<br />
-          勇者「…エリクサーって売ってる？」<br />
+          冒険者「…エリクサーって売ってる？」<br />
           店主「残念、品切れだよ」
         </p>
         <p className="mt-2">
@@ -133,7 +133,7 @@ export function AboutApi() {
 
       <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
       <Quiz
-        question="勇者が「ポーションを1本買いたい」とき、APIへのお願いとして適切なのはどれ？"
+        question="冒険者が「ポーションを1本買いたい」とき、APIへのお願いとして適切なのはどれ？"
         choices={[
           "GET /api/purchase",
           "POST /api/purchase",
@@ -143,7 +143,7 @@ export function AboutApi() {
         explanation="「購入する」はデータを書き換えるお願いなのでPOSTを使います。GETは「見せて」、DELETEは「消して」の合図です。"
       />
       <Quiz
-        question="勇者が売っていない「まほうのじゅうたん」を GET /api/items/50 でリクエストしたとき、返ってくるステータスコードとして適切なのはどれ？"
+        question="冒険者が売っていない「まほうのじゅうたん」を GET /api/items/50 でリクエストしたとき、返ってくるステータスコードとして適切なのはどれ？"
         choices={["200", "404", "500"]}
         answerIndex={1}
         explanation="「指定されたものが存在しない」ことを表すのは404です。500は「サーバー側で予期しないトラブルが起きた」ときに使うもので、意味が異なります。"

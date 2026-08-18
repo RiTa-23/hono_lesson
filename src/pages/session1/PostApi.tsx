@@ -24,16 +24,16 @@ export function PostApi() {
         </p>
       </Callout>
 
-      <h2 className="mt-8 text-xl font-bold">1. 勇者の状態を用意する</h2>
+      <h2 className="mt-8 text-xl font-bold">1. 冒険者の状態を用意する</h2>
       <p className="mt-3 leading-relaxed">
-        売り買いの結果を覚えておくため、勇者の所持金と所持アイテムをメモリ上に用意します。
+        売り買いの結果を覚えておくため、冒険者の所持金と所持アイテムをメモリ上に用意します。
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs">items</code> 配列の下に追記してください。
       </p>
 
       <CopyBlock
         lang="ts"
         title="backend/src/index.ts（追記）"
-        code={`// 勇者の状態（第3回でデータベースに置き換えます）
+        code={`// 冒険者の状態（第3回でデータベースに置き換えます）
 const player = {
   gold: 500,
   items: [] as { itemId: number; quantity: number }[],
@@ -75,7 +75,7 @@ app.post('/api/purchase', async (c) => {
     return c.json({ message: 'お金が足りないよ' }, 400)
   }
 
-  // 売り買いの処理：在庫を減らし、お金を受け取り、勇者に渡す
+  // 売り買いの処理：在庫を減らし、お金を受け取り、冒険者に渡す
   item.stock -= quantity
   player.gold -= total
   const owned = player.items.find((i) => i.itemId === item.id)

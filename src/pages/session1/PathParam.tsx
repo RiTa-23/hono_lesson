@@ -17,7 +17,7 @@ export function PathParam() {
 
       <Callout variant="quest">
         <p>
-          勇者「この『エリクサー』って、どんな効果があるの？」
+          冒険者「この『エリクサー』って、どんな効果があるの？」
           商品を1つだけ詳しく教える窓口を作ります。ポイントは、
           <span className="font-medium">URLの一部（ID）を受け取る</span>ことと、
           <span className="font-medium">存在しない商品へのお返事</span>です。
