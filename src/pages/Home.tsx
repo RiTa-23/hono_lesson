@@ -1,12 +1,33 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, Store, Package, ShieldCheck, Database, Rocket } from "lucide-react";
 import { Callout } from "@/components/Callout";
+import { ClearedBadge } from "@/components/ClearedBadge";
 import { ProgressReset } from "@/components/ProgressReset";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { MAIN_FLOW, SESSION1_PAGES, PUBLISHED_UP_TO } from "@/lib/routes";
+import {
+  MAIN_FLOW,
+  SESSION1_PAGES,
+  SESSION2_PAGES,
+  SESSION3_PAGES,
+  SESSION4_PAGES,
+  PUBLISHED_UP_TO,
+} from "@/lib/routes";
+import type { PageDef } from "@/lib/routes";
 import { getAllProgress } from "@/lib/storage";
+
+type SessionProgress = {
+  done: number;
+  total: number;
+  cleared: boolean;
+};
+
+function countProgress(pages: PageDef[], progress: Record<string, boolean>): SessionProgress {
+  const withId = pages.filter((p) => p.progressId);
+  const done = withId.filter((p) => progress[p.progressId!]).length;
+  return { done, total: withId.length, cleared: withId.length > 0 && done === withId.length };
+}
 
 export function Home() {
   const [progress, setProgress] = useState<Record<string, boolean>>({});
@@ -25,6 +46,11 @@ export function Home() {
   const total = MAIN_FLOW.length;
   const done = MAIN_FLOW.filter((p) => p.progressId && progress[p.progressId]).length;
   const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+
+  const s1 = countProgress(SESSION1_PAGES, progress);
+  const s2 = countProgress(SESSION2_PAGES, progress);
+  const s3 = countProgress(SESSION3_PAGES, progress);
+  const s4 = countProgress(SESSION4_PAGES, progress);
 
   return (
     <div>
@@ -94,7 +120,10 @@ export function Home() {
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>
-            <Badge className="w-fit">第1回</Badge>
+            <div className="flex items-center justify-between">
+              <Badge className="w-fit">第1回</Badge>
+              {s1.cleared && <ClearedBadge />}
+            </div>
             <CardTitle className="flex items-center gap-2 text-base">
               <Store size={16} className="text-primary" />
               よろず屋APIを作ろう
@@ -107,9 +136,12 @@ export function Home() {
         </Card>
         <Card className={PUBLISHED_UP_TO < 2 ? "opacity-75" : undefined}>
           <CardHeader>
-            <Badge variant={PUBLISHED_UP_TO >= 2 ? "default" : "secondary"} className="w-fit">
-              第2回{PUBLISHED_UP_TO < 2 && "（準備中）"}
-            </Badge>
+            <div className="flex items-center justify-between">
+              <Badge variant={PUBLISHED_UP_TO >= 2 ? "default" : "secondary"} className="w-fit">
+                第2回{PUBLISHED_UP_TO < 2 && "（準備中）"}
+              </Badge>
+              {s2.cleared && <ClearedBadge />}
+            </div>
             <CardTitle className="flex items-center gap-2 text-base">
               <ShieldCheck size={16} />
               堅牢なAPIにしよう
@@ -122,9 +154,12 @@ export function Home() {
         </Card>
         <Card className={PUBLISHED_UP_TO < 3 ? "opacity-75" : undefined}>
           <CardHeader>
-            <Badge variant={PUBLISHED_UP_TO >= 3 ? "default" : "secondary"} className="w-fit">
-              第3回{PUBLISHED_UP_TO < 3 && "（準備中）"}
-            </Badge>
+            <div className="flex items-center justify-between">
+              <Badge variant={PUBLISHED_UP_TO >= 3 ? "default" : "secondary"} className="w-fit">
+                第3回{PUBLISHED_UP_TO < 3 && "（準備中）"}
+              </Badge>
+              {s3.cleared && <ClearedBadge />}
+            </div>
             <CardTitle className="flex items-center gap-2 text-base">
               <Database size={16} />
               データベースを導入しよう
@@ -137,9 +172,12 @@ export function Home() {
         </Card>
         <Card className={PUBLISHED_UP_TO < 4 ? "opacity-75" : undefined}>
           <CardHeader>
-            <Badge variant={PUBLISHED_UP_TO >= 4 ? "default" : "secondary"} className="w-fit">
-              第4回{PUBLISHED_UP_TO < 4 && "（準備中）"}
-            </Badge>
+            <div className="flex items-center justify-between">
+              <Badge variant={PUBLISHED_UP_TO >= 4 ? "default" : "secondary"} className="w-fit">
+                第4回{PUBLISHED_UP_TO < 4 && "（準備中）"}
+              </Badge>
+              {s4.cleared && <ClearedBadge />}
+            </div>
             <CardTitle className="flex items-center gap-2 text-base">
               <Rocket size={16} />
               本番デプロイでよろず屋を開店

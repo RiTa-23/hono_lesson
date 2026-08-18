@@ -22,6 +22,7 @@ import {
 import type { PageDef } from "@/lib/routes";
 import { getAllProgress } from "@/lib/storage";
 import { cn } from "@/lib/utils";
+import { ClearedBadge } from "@/components/ClearedBadge";
 import { ProgressReset } from "@/components/ProgressReset";
 
 type Props = {
@@ -216,11 +217,14 @@ function Section({
       >
         {icon}
         <span className="flex-1 text-left">{label}</span>
-        {progress.total > 0 && (
-          <span className="text-xs font-normal text-muted-foreground">
-            {progress.done}/{progress.total}
-          </span>
-        )}
+        {progress.total > 0 &&
+          (progress.done === progress.total ? (
+            <ClearedBadge />
+          ) : (
+            <span className="text-xs font-normal text-muted-foreground">
+              {progress.done}/{progress.total}
+            </span>
+          ))}
         <ChevronDown
           size={14}
           className={cn("transition-transform", !open && "-rotate-90")}
