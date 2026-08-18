@@ -17,6 +17,7 @@ import {
   EXTRA_PAGES,
   HOME,
   PUBLISHED_UP_TO,
+  isPagePublished,
 } from "@/lib/routes";
 import type { PageDef } from "@/lib/routes";
 import { getAllProgress } from "@/lib/storage";
@@ -168,7 +169,7 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
           onToggle={() => setOpenExtra((v) => !v)}
           progress={{ done: 0, total: 0 }}
         >
-          {EXTRA_PAGES.map((p) => (
+          {EXTRA_PAGES.filter(isPagePublished).map((p) => (
             <NavItem
               key={p.path}
               page={p}

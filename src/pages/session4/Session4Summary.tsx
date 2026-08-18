@@ -78,14 +78,14 @@ export function Session4Summary() {
           </span>
         </a>
         <a
-          href="#/extra/glossary"
+          href="#/extra/glossary-4"
           className="flex items-start gap-3 rounded-lg border p-4 transition hover:bg-secondary/60"
         >
           <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />
           <span>
-            <span className="block font-medium">用語集</span>
+            <span className="block font-medium">用語集（第4回）</span>
             <span className="mt-1 block text-sm text-muted-foreground">
-              全4回で出てきた用語をまとめて振り返れます。
+              各回の用語集はサイドバーの「おまけ」からもまとめて振り返れます。
             </span>
           </span>
         </a>

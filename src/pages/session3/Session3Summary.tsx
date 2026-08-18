@@ -93,14 +93,14 @@ export function Session3Summary() {
           </span>
         </a>
         <a
-          href="#/extra/glossary"
+          href="#/extra/glossary-3"
           className="flex items-start gap-3 rounded-lg border p-4 transition hover:bg-secondary/60"
         >
           <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />
           <span>
-            <span className="block font-medium">用語集</span>
+            <span className="block font-medium">用語集（第3回）</span>
             <span className="mt-1 block text-sm text-muted-foreground">
-              第1回で出てきた基本用語をいつでも引けます。復習にどうぞ。
+              D1・Drizzle・マイグレーションなど、今回出てきた用語もあわせて復習できます。
             </span>
           </span>
         </a>

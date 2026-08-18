@@ -30,6 +30,9 @@ import { Verify } from "@/pages/session4/Verify";
 import { Session4Summary } from "@/pages/session4/Session4Summary";
 import { Rpc } from "@/pages/extra/Rpc";
 import { Glossary } from "@/pages/extra/Glossary";
+import { Glossary2 } from "@/pages/extra/Glossary2";
+import { Glossary3 } from "@/pages/extra/Glossary3";
+import { Glossary4 } from "@/pages/extra/Glossary4";
 import { NotFound } from "@/pages/NotFound";
 
 function normalizeHash(): string {
@@ -128,6 +131,12 @@ function resolvePage(path: string): () => React.JSX.Element {
       return Rpc;
     case "/extra/glossary":
       return Glossary;
+    case "/extra/glossary-2":
+      return Glossary2;
+    case "/extra/glossary-3":
+      return Glossary3;
+    case "/extra/glossary-4":
+      return Glossary4;
     default:
       return NotFound;
   }

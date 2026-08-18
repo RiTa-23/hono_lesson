@@ -160,7 +160,7 @@ export function Summary() {
         >
           <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />
           <span>
-            <span className="block font-medium">用語集</span>
+            <span className="block font-medium">用語集（第1回）</span>
             <span className="mt-1 block text-sm text-muted-foreground">
               今日出てきた用語を辞書のように引けます。復習にどうぞ。
             </span>

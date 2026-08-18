@@ -95,7 +95,7 @@ export function Glossary() {
         おまけ
       </Badge>
       <PageHeader
-        title="用語集"
+        title="用語集（第1回）"
         goal="第1回で出てきた用語をいつでも引けるようにする"
       />
       <Accordion type="multiple" className="w-full">
