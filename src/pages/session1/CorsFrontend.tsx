@@ -76,8 +76,8 @@ app.use('/api/*', cors())`}
         lang="bash"
         title="ターミナル（新しい方）"
         code={`cd yorozuya/frontend
-npm install
-npm run dev`}
+bun install
+bun run dev`}
       />
       <p className="mt-3 leading-relaxed">
         起動したら

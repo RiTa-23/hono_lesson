@@ -134,9 +134,10 @@ app.get('/api/items', (c) => {
           による変換忘れが典型例です（上のクイズ参照）。
         </li>
         <li>
-          詳細のURLが商品一覧と被って動かない → Honoは上から順にマッチします。
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/items/:id</code> は
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/items</code> とは別パスとして扱われるので安心してください。
+          詳細のURLが商品一覧と被って動かない →
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/items/:id</code> と
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/items</code>
+          はパスの区切り（セグメント）の数が異なる別パスなので、定義した順番に関係なく正しく振り分けられます。安心してください。
         </li>
       </ul>
 

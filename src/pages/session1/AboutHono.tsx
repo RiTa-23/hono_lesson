@@ -26,7 +26,16 @@ export function AboutHono() {
           和田裕介（yusukebe）さん
         </a>
         が開発した、TypeScript / JavaScript製のWebアプリケーションフレームワークです。
-        名前は「炎」＋ Cloudflare の「flare」が由来で、もともとCloudflare Workers上で動く
+        名前は日本語の「炎（ほのお）」に由来し
+        （<a
+          href="https://hono.dev/docs/concepts/motivation"
+          target="_blank"
+          rel="noreferrer"
+          className="text-primary underline-offset-4 hover:underline"
+        >
+          公式ドキュメント
+        </a>
+        参照）、もともとCloudflare Workers上で動く
         良いフレームワークがなかったことから生まれました（第3回でそのCloudflareにデプロイします！）。
       </p>
 
@@ -129,6 +138,16 @@ export default app`}</code>
           <li>
             <a href="https://hono.dev/" target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
               Hono 公式サイト
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://hono.dev/docs/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              公式ドキュメント（Getting Started）
             </a>
           </li>
           <li>

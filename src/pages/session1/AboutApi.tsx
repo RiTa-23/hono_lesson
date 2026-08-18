@@ -98,8 +98,8 @@ export function AboutApi() {
         lang="json"
         title="レスポンスの例（GET /api/items）"
         code={`[
-  { "id": 1, "name": "ポーション", "price": 50, "stock": 10 },
-  { "id": 2, "name": "やくそう",   "price": 8,  "stock": 99 }
+  { "id": 1, "name": "やくそう",   "price": 8,  "stock": 99, "description": "HPを少量回復する" },
+  { "id": 2, "name": "ポーション", "price": 50, "stock": 10, "description": "HPを大きく回復する" }
 ]`}
       />
 
