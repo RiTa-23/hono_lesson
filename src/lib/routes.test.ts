@@ -45,7 +45,7 @@ describe("routes（ページ構成）", () => {
     expect(getNextPage(MAIN_FLOW[MAIN_FLOW.length - 1].path)).toBeUndefined();
   });
 
-  it("おまけページはメインフローに含まれない", () => {
+  it("サブクエストページはメインフローに含まれない", () => {
     for (const p of EXTRA_PAGES) {
       expect(MAIN_FLOW.find((m) => m.path === p.path)).toBeUndefined();
     }

@@ -2,7 +2,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Callout } from "@/components/Callout";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
-import { Sparkles } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 export function Session4Summary() {
   return (
@@ -63,13 +63,13 @@ export function Session4Summary() {
         <li>Swagger UIのドキュメントをさらに充実させる（各エンドポイントの説明文・例を追加）</li>
       </ul>
 
-      <h2 className="mt-10 text-xl font-bold">おまけページ</h2>
+      <h2 className="mt-10 text-xl font-bold">サブクエスト</h2>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <a
           href="#/extra/rpc"
           className="flex items-start gap-3 rounded-lg border p-4 transition hover:bg-secondary/60"
         >
-          <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />
+          <MapPin size={18} className="mt-0.5 shrink-0 text-primary" />
           <span>
             <span className="block font-medium">RPCで型安全な連携</span>
             <span className="mt-1 block text-sm text-muted-foreground">
@@ -81,11 +81,11 @@ export function Session4Summary() {
           href="#/extra/glossary-4"
           className="flex items-start gap-3 rounded-lg border p-4 transition hover:bg-secondary/60"
         >
-          <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />
+          <MapPin size={18} className="mt-0.5 shrink-0 text-primary" />
           <span>
             <span className="block font-medium">用語集（第4回）</span>
             <span className="mt-1 block text-sm text-muted-foreground">
-              各回の用語集はサイドバーの「おまけ」からもまとめて振り返れます。
+              各回の用語集はサイドバーの「サブクエスト」からもまとめて振り返れます。
             </span>
           </span>
         </a>

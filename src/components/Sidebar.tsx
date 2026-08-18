@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import {
   ChevronDown,
   CheckCircle2,
-  Sparkles,
+  MapPin,
   Store,
   ShieldCheck,
   Database,
@@ -163,8 +163,8 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
 
       <div className="mt-6">
         <Section
-          label="おまけ"
-          icon={<Sparkles size={14} />}
+          label="サブクエスト"
+          icon={<MapPin size={14} />}
           open={openExtra}
           onToggle={() => setOpenExtra((v) => !v)}
           progress={{ done: 0, total: 0 }}

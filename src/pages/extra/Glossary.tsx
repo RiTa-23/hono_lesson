@@ -80,7 +80,7 @@ const TERMS: { term: string; reading?: string; body: string }[] = [
   },
   {
     term: "RPC",
-    body: "Honoの機能の1つ。APIの型情報をフロント側と共有して、パスの補完や型チェックが効くクライアントを作れる。おまけページ参照。",
+    body: "Honoの機能の1つ。APIの型情報をフロント側と共有して、パスの補完や型チェックが効くクライアントを作れる。サブクエストページ参照。",
   },
   {
     term: "ホットリロード",
@@ -92,7 +92,7 @@ export function Glossary() {
   return (
     <div>
       <Badge variant="secondary" className="mb-4">
-        おまけ
+        サブクエスト
       </Badge>
       <PageHeader
         title="用語集（第1回）"

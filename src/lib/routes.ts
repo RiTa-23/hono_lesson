@@ -224,34 +224,34 @@ export const SESSION4_PAGES: PageDef[] = [
 export const EXTRA_PAGES: PageDef[] = [
   {
     path: "/extra/rpc",
-    title: "おまけ：RPCで型安全な連携",
+    title: "サブクエスト：RPCで型安全な連携",
     section: "session1",
-    sectionLabel: "おまけ",
+    sectionLabel: "サブクエスト",
     minutes: 15,
   },
   {
     path: "/extra/glossary",
     title: "用語集（第1回）",
     section: "session1",
-    sectionLabel: "おまけ",
+    sectionLabel: "サブクエスト",
   },
   {
     path: "/extra/glossary-2",
     title: "用語集（第2回）",
     section: "session2",
-    sectionLabel: "おまけ",
+    sectionLabel: "サブクエスト",
   },
   {
     path: "/extra/glossary-3",
     title: "用語集（第3回）",
     section: "session3",
-    sectionLabel: "おまけ",
+    sectionLabel: "サブクエスト",
   },
   {
     path: "/extra/glossary-4",
     title: "用語集（第4回）",
     section: "session4",
-    sectionLabel: "おまけ",
+    sectionLabel: "サブクエスト",
   },
 ];
 
@@ -272,7 +272,7 @@ function isPublished(section: PageDef["section"]): boolean {
   return num === undefined || num <= PUBLISHED_UP_TO;
 }
 
-// おまけページなど、ALL_PAGES以外の一覧を表示側で絞り込むときに使う
+// サブクエストページなど、ALL_PAGES以外の一覧を表示側で絞り込むときに使う
 export function isPagePublished(page: PageDef): boolean {
   return isPublished(page.section);
 }
@@ -286,7 +286,7 @@ export const ALL_PAGES: PageDef[] = [
   ...EXTRA_PAGES,
 ].filter((p) => isPublished(p.section));
 
-// 進捗トラッキング対象のメインフロー（おまけは含めない）
+// 進捗トラッキング対象のメインフロー（サブクエストは含めない）
 export const MAIN_FLOW: PageDef[] = [
   ...SESSION1_PAGES,
   ...SESSION2_PAGES,

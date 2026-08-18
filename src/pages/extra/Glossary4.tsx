@@ -47,7 +47,7 @@ export function Glossary4() {
   return (
     <div>
       <Badge variant="secondary" className="mb-4">
-        おまけ
+        サブクエスト
       </Badge>
       <PageHeader
         title="用語集（第4回）"

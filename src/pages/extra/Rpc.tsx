@@ -56,7 +56,7 @@ export function Rpc() {
   return (
     <div>
       <Badge variant="secondary" className="mb-4">
-        おまけ（本編の進行には含まれません）
+        サブクエスト（本編の進行には含まれません）
       </Badge>
       <PageHeader
         title="RPCで型安全な連携"

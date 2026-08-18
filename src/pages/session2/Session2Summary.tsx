@@ -2,7 +2,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Callout } from "@/components/Callout";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
-import { Sparkles } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 export function Session2Summary() {
   return (
@@ -75,13 +75,13 @@ export function Session2Summary() {
         </p>
       </Callout>
 
-      <h2 className="mt-10 text-xl font-bold">余裕がある人へ（おまけ）</h2>
+      <h2 className="mt-10 text-xl font-bold">余裕がある人へ（サブクエスト）</h2>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <a
           href="#/extra/rpc"
           className="flex items-start gap-3 rounded-lg border p-4 transition hover:bg-secondary/60"
         >
-          <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />
+          <MapPin size={18} className="mt-0.5 shrink-0 text-primary" />
           <span>
             <span className="block font-medium">RPCで型安全な連携</span>
             <span className="mt-1 block text-sm text-muted-foreground">
@@ -93,7 +93,7 @@ export function Session2Summary() {
           href="#/extra/glossary-2"
           className="flex items-start gap-3 rounded-lg border p-4 transition hover:bg-secondary/60"
         >
-          <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />
+          <MapPin size={18} className="mt-0.5 shrink-0 text-primary" />
           <span>
             <span className="block font-medium">用語集（第2回）</span>
             <span className="mt-1 block text-sm text-muted-foreground">
