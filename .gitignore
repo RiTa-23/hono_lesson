@@ -6,3 +6,6 @@ dist-ssr
 node_modules/.tmp
 .wrangler
 .dev.vars
+
+# 講座用サンプルリポジトリ（独立したgitリポジトリとして管理）
+yorozuya/
