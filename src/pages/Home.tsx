@@ -5,7 +5,7 @@ import { ProgressReset } from "@/components/ProgressReset";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { MAIN_FLOW, SESSION1_PAGES } from "@/lib/routes";
+import { MAIN_FLOW, SESSION1_PAGES, PUBLISHED_UP_TO } from "@/lib/routes";
 import { getAllProgress } from "@/lib/storage";
 
 export function Home() {
@@ -71,7 +71,7 @@ export function Home() {
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 font-bold">
             <Package size={18} className="text-primary" />
-            全体の進捗（全4回）
+            全体の進捗（第{PUBLISHED_UP_TO}回まで公開中）
           </h2>
           <span className="text-sm font-bold text-muted-foreground">
             {done}/{total} ステップ完了（{percent}%）
@@ -105,9 +105,11 @@ export function Home() {
             最後はReactのフロントとつないで、画面からアイテムを売り買いします。
           </CardContent>
         </Card>
-        <Card>
+        <Card className={PUBLISHED_UP_TO < 2 ? "opacity-75" : undefined}>
           <CardHeader>
-            <Badge className="w-fit">第2回</Badge>
+            <Badge variant={PUBLISHED_UP_TO >= 2 ? "default" : "secondary"} className="w-fit">
+              第2回{PUBLISHED_UP_TO < 2 && "（準備中）"}
+            </Badge>
             <CardTitle className="flex items-center gap-2 text-base">
               <ShieldCheck size={16} />
               堅牢なAPIにしよう
@@ -118,9 +120,11 @@ export function Home() {
             そしてテストコードを書いて、安心して直せるAPIに育てます。
           </CardContent>
         </Card>
-        <Card>
+        <Card className={PUBLISHED_UP_TO < 3 ? "opacity-75" : undefined}>
           <CardHeader>
-            <Badge className="w-fit">第3回</Badge>
+            <Badge variant={PUBLISHED_UP_TO >= 3 ? "default" : "secondary"} className="w-fit">
+              第3回{PUBLISHED_UP_TO < 3 && "（準備中）"}
+            </Badge>
             <CardTitle className="flex items-center gap-2 text-base">
               <Database size={16} />
               データベースを導入しよう
@@ -131,9 +135,11 @@ export function Home() {
             再起動しても所持金・在庫が消えないAPIに育てます（ローカル環境まで）。
           </CardContent>
         </Card>
-        <Card>
+        <Card className={PUBLISHED_UP_TO < 4 ? "opacity-75" : undefined}>
           <CardHeader>
-            <Badge className="w-fit">第4回</Badge>
+            <Badge variant={PUBLISHED_UP_TO >= 4 ? "default" : "secondary"} className="w-fit">
+              第4回{PUBLISHED_UP_TO < 4 && "（準備中）"}
+            </Badge>
             <CardTitle className="flex items-center gap-2 text-base">
               <Rocket size={16} />
               本番デプロイでよろず屋を開店

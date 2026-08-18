@@ -16,6 +16,7 @@ import {
   SESSION4_PAGES,
   EXTRA_PAGES,
   HOME,
+  PUBLISHED_UP_TO,
 } from "@/lib/routes";
 import type { PageDef } from "@/lib/routes";
 import { getAllProgress } from "@/lib/storage";
@@ -96,62 +97,68 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
         ))}
       </Section>
 
-      <Section
-        label="第2回：堅牢なAPIにしよう"
-        icon={<ShieldCheck size={14} />}
-        open={openS2}
-        onToggle={() => setOpenS2((v) => !v)}
-        progress={countProgress(SESSION2_PAGES)}
-      >
-        {SESSION2_PAGES.map((p, i) => (
-          <NavItem
-            key={p.path}
-            page={p}
-            index={i + 1}
-            active={currentPath === p.path}
-            done={!!(p.progressId && progress[p.progressId])}
-            onNavigate={onNavigate}
-          />
-        ))}
-      </Section>
+      {PUBLISHED_UP_TO >= 2 && (
+        <Section
+          label="第2回：堅牢なAPIにしよう"
+          icon={<ShieldCheck size={14} />}
+          open={openS2}
+          onToggle={() => setOpenS2((v) => !v)}
+          progress={countProgress(SESSION2_PAGES)}
+        >
+          {SESSION2_PAGES.map((p, i) => (
+            <NavItem
+              key={p.path}
+              page={p}
+              index={i + 1}
+              active={currentPath === p.path}
+              done={!!(p.progressId && progress[p.progressId])}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </Section>
+      )}
 
-      <Section
-        label="第3回：データベースを導入しよう"
-        icon={<Database size={14} />}
-        open={openS3}
-        onToggle={() => setOpenS3((v) => !v)}
-        progress={countProgress(SESSION3_PAGES)}
-      >
-        {SESSION3_PAGES.map((p, i) => (
-          <NavItem
-            key={p.path}
-            page={p}
-            index={i + 1}
-            active={currentPath === p.path}
-            done={!!(p.progressId && progress[p.progressId])}
-            onNavigate={onNavigate}
-          />
-        ))}
-      </Section>
+      {PUBLISHED_UP_TO >= 3 && (
+        <Section
+          label="第3回：データベースを導入しよう"
+          icon={<Database size={14} />}
+          open={openS3}
+          onToggle={() => setOpenS3((v) => !v)}
+          progress={countProgress(SESSION3_PAGES)}
+        >
+          {SESSION3_PAGES.map((p, i) => (
+            <NavItem
+              key={p.path}
+              page={p}
+              index={i + 1}
+              active={currentPath === p.path}
+              done={!!(p.progressId && progress[p.progressId])}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </Section>
+      )}
 
-      <Section
-        label="第4回：本番デプロイでよろず屋を開店しよう"
-        icon={<Rocket size={14} />}
-        open={openS4}
-        onToggle={() => setOpenS4((v) => !v)}
-        progress={countProgress(SESSION4_PAGES)}
-      >
-        {SESSION4_PAGES.map((p, i) => (
-          <NavItem
-            key={p.path}
-            page={p}
-            index={i + 1}
-            active={currentPath === p.path}
-            done={!!(p.progressId && progress[p.progressId])}
-            onNavigate={onNavigate}
-          />
-        ))}
-      </Section>
+      {PUBLISHED_UP_TO >= 4 && (
+        <Section
+          label="第4回：本番デプロイでよろず屋を開店しよう"
+          icon={<Rocket size={14} />}
+          open={openS4}
+          onToggle={() => setOpenS4((v) => !v)}
+          progress={countProgress(SESSION4_PAGES)}
+        >
+          {SESSION4_PAGES.map((p, i) => (
+            <NavItem
+              key={p.path}
+              page={p}
+              index={i + 1}
+              active={currentPath === p.path}
+              done={!!(p.progressId && progress[p.progressId])}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </Section>
+      )}
 
       <div className="mt-6">
         <Section

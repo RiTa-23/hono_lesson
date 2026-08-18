@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
+import { findPage } from "@/lib/routes";
 import { ensureVersion } from "@/lib/storage";
 import { Home } from "@/pages/Home";
 import { AboutApi } from "@/pages/session1/AboutApi";
@@ -66,6 +67,9 @@ function App() {
 }
 
 function resolvePage(path: string): () => React.JSX.Element {
+  // 未公開の回（PUBLISHED_UP_TOより先）は、直接URLを叩かれても404にする
+  if (!findPage(path)) return NotFound;
+
   switch (path) {
     case "/":
       return Home;

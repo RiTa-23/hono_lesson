@@ -229,13 +229,31 @@ export const EXTRA_PAGES: PageDef[] = [
   },
 ];
 
+// 公開設定：この回まで公開する（値を変えてmainにpushすると自動デプロイで反映される）
+// 例: 第2回まで公開したい場合は 2 にする
+export const PUBLISHED_UP_TO = 4;
+
+const SESSION_NUMBER: Partial<Record<NonNullable<PageDef["section"]>, number>> = {
+  session1: 1,
+  session2: 2,
+  session3: 3,
+  session4: 4,
+};
+
+function isPublished(section: PageDef["section"]): boolean {
+  if (!section || section === "extra") return true;
+  const num = SESSION_NUMBER[section];
+  return num === undefined || num <= PUBLISHED_UP_TO;
+}
+
 export const ALL_PAGES: PageDef[] = [
   HOME,
   ...SESSION1_PAGES,
   ...SESSION2_PAGES,
   ...SESSION3_PAGES,
+  ...SESSION4_PAGES,
   ...EXTRA_PAGES,
-];
+].filter((p) => isPublished(p.section));
 
 // 進捗トラッキング対象のメインフロー（おまけは含めない）
 export const MAIN_FLOW: PageDef[] = [
@@ -243,7 +261,7 @@ export const MAIN_FLOW: PageDef[] = [
   ...SESSION2_PAGES,
   ...SESSION3_PAGES,
   ...SESSION4_PAGES,
-];
+].filter((p) => isPublished(p.section));
 
 export function findPage(path: string): PageDef | undefined {
   return ALL_PAGES.find((p) => p.path === path);
