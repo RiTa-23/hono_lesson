@@ -4,13 +4,16 @@ import {
   CheckCircle2,
   Sparkles,
   Store,
+  ShieldCheck,
+  Database,
+  Rocket,
   Home,
-  Hammer,
 } from "lucide-react";
 import {
   SESSION1_PAGES,
   SESSION2_PAGES,
   SESSION3_PAGES,
+  SESSION4_PAGES,
   EXTRA_PAGES,
   HOME,
 } from "@/lib/routes";
@@ -27,6 +30,9 @@ type Props = {
 export function Sidebar({ currentPath, onNavigate }: Props) {
   const [progress, setProgress] = useState<Record<string, boolean>>({});
   const [openS1, setOpenS1] = useState(true);
+  const [openS2, setOpenS2] = useState(false);
+  const [openS3, setOpenS3] = useState(false);
+  const [openS4, setOpenS4] = useState(false);
   const [openExtra, setOpenExtra] = useState(false);
 
   useEffect(() => {
@@ -43,6 +49,9 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
   // 現在ページのセクションを自動で開く
   useEffect(() => {
     if (currentPath.startsWith("/session1")) setOpenS1(true);
+    if (currentPath.startsWith("/session2")) setOpenS2(true);
+    if (currentPath.startsWith("/session3")) setOpenS3(true);
+    if (currentPath.startsWith("/session4")) setOpenS4(true);
     if (currentPath.startsWith("/extra")) setOpenExtra(true);
   }, [currentPath]);
 
@@ -87,15 +96,62 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
         ))}
       </Section>
 
-      {/* 第2回・第3回は開催前に追記 */}
-      {SESSION2_PAGES.length === 0 && SESSION3_PAGES.length === 0 && (
-        <div className="mt-4 rounded-md border border-dashed px-3 py-2 text-xs text-muted-foreground">
-          <p className="flex items-center gap-1.5">
-            <Hammer size={12} />
-            第2回・第3回のページは準備中です
-          </p>
-        </div>
-      )}
+      <Section
+        label="第2回：堅牢なAPIにしよう"
+        icon={<ShieldCheck size={14} />}
+        open={openS2}
+        onToggle={() => setOpenS2((v) => !v)}
+        progress={countProgress(SESSION2_PAGES)}
+      >
+        {SESSION2_PAGES.map((p, i) => (
+          <NavItem
+            key={p.path}
+            page={p}
+            index={i + 1}
+            active={currentPath === p.path}
+            done={!!(p.progressId && progress[p.progressId])}
+            onNavigate={onNavigate}
+          />
+        ))}
+      </Section>
+
+      <Section
+        label="第3回：データベースを導入しよう"
+        icon={<Database size={14} />}
+        open={openS3}
+        onToggle={() => setOpenS3((v) => !v)}
+        progress={countProgress(SESSION3_PAGES)}
+      >
+        {SESSION3_PAGES.map((p, i) => (
+          <NavItem
+            key={p.path}
+            page={p}
+            index={i + 1}
+            active={currentPath === p.path}
+            done={!!(p.progressId && progress[p.progressId])}
+            onNavigate={onNavigate}
+          />
+        ))}
+      </Section>
+
+      <Section
+        label="第4回：本番デプロイでよろず屋を開店しよう"
+        icon={<Rocket size={14} />}
+        open={openS4}
+        onToggle={() => setOpenS4((v) => !v)}
+        progress={countProgress(SESSION4_PAGES)}
+      >
+        {SESSION4_PAGES.map((p, i) => (
+          <NavItem
+            key={p.path}
+            page={p}
+            index={i + 1}
+            active={currentPath === p.path}
+            done={!!(p.progressId && progress[p.progressId])}
+            onNavigate={onNavigate}
+          />
+        ))}
+      </Section>
 
       <div className="mt-6">
         <Section

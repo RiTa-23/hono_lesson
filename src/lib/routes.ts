@@ -1,7 +1,7 @@
 export type PageDef = {
   path: string;
   title: string;
-  section?: "session1" | "session2" | "session3" | "extra";
+  section?: "session1" | "session2" | "session3" | "session4" | "extra";
   progressId?: string;
   sectionLabel?: string;
   minutes?: number; // 所要時間の目安（分）
@@ -76,9 +76,142 @@ export const SESSION1_PAGES: PageDef[] = [
   },
 ];
 
-// 第2回・第3回は開催前に同じリポジトリへ追記する（パスは予約済み）
-export const SESSION2_PAGES: PageDef[] = [];
-export const SESSION3_PAGES: PageDef[] = [];
+export const SESSION2_PAGES: PageDef[] = [
+  {
+    path: "/session2/01-intro",
+    title: "今のAPIの穴",
+    section: "session2",
+    progressId: "s2-01-intro",
+    sectionLabel: "第2回 堅牢なAPIにしよう",
+    minutes: 10,
+  },
+  {
+    path: "/session2/02-zod-basics",
+    title: "zodとは？バリデーションの基本",
+    section: "session2",
+    progressId: "s2-02-zod-basics",
+    sectionLabel: "第2回 堅牢なAPIにしよう",
+    minutes: 10,
+  },
+  {
+    path: "/session2/03-zod-openapi",
+    title: "zod-openapiでリクエストを検証する",
+    section: "session2",
+    progressId: "s2-03-zod-openapi",
+    sectionLabel: "第2回 堅牢なAPIにしよう",
+    minutes: 25,
+  },
+  {
+    path: "/session2/04-swagger-ui",
+    title: "Swagger UIでドキュメントを見る",
+    section: "session2",
+    progressId: "s2-04-swagger-ui",
+    sectionLabel: "第2回 堅牢なAPIにしよう",
+    minutes: 15,
+  },
+  {
+    path: "/session2/05-testing",
+    title: "テストコードを書こう",
+    section: "session2",
+    progressId: "s2-05-testing",
+    sectionLabel: "第2回 堅牢なAPIにしよう",
+    minutes: 20,
+  },
+  {
+    path: "/session2/06-summary",
+    title: "まとめ・次回予告",
+    section: "session2",
+    progressId: "s2-06-summary",
+    sectionLabel: "第2回 堅牢なAPIにしよう",
+    minutes: 10,
+  },
+];
+
+export const SESSION3_PAGES: PageDef[] = [
+  {
+    path: "/session3/01-intro",
+    title: "メモリ管理の限界とD1",
+    section: "session3",
+    progressId: "s3-01-intro",
+    sectionLabel: "第3回 データベースを導入しよう",
+    minutes: 10,
+  },
+  {
+    path: "/session3/02-d1-setup",
+    title: "D1データベースを作る",
+    section: "session3",
+    progressId: "s3-02-d1-setup",
+    sectionLabel: "第3回 データベースを導入しよう",
+    minutes: 15,
+  },
+  {
+    path: "/session3/03-drizzle-setup",
+    title: "Drizzle ORMをセットアップする",
+    section: "session3",
+    progressId: "s3-03-drizzle-setup",
+    sectionLabel: "第3回 データベースを導入しよう",
+    minutes: 15,
+  },
+  {
+    path: "/session3/04-migration",
+    title: "マイグレーションを実行する（ローカル）",
+    section: "session3",
+    progressId: "s3-04-migration",
+    sectionLabel: "第3回 データベースを導入しよう",
+    minutes: 15,
+  },
+  {
+    path: "/session3/05-read-api",
+    title: "items一覧・詳細をDBから取得する",
+    section: "session3",
+    progressId: "s3-05-read-api",
+    sectionLabel: "第3回 データベースを導入しよう",
+    minutes: 15,
+  },
+  {
+    path: "/session3/06-write-api",
+    title: "purchase/sellをDB更新処理に書き換える",
+    section: "session3",
+    progressId: "s3-06-write-api",
+    sectionLabel: "第3回 データベースを導入しよう",
+    minutes: 20,
+  },
+];
+
+export const SESSION4_PAGES: PageDef[] = [
+  {
+    path: "/session4/01-remote-migration",
+    title: "本番D1へのマイグレーション",
+    section: "session4",
+    progressId: "s4-01-remote-migration",
+    sectionLabel: "第4回 本番デプロイでよろず屋を開店しよう",
+    minutes: 15,
+  },
+  {
+    path: "/session4/02-deploy",
+    title: "Cloudflare Workersへデプロイする",
+    section: "session4",
+    progressId: "s4-02-deploy",
+    sectionLabel: "第4回 本番デプロイでよろず屋を開店しよう",
+    minutes: 15,
+  },
+  {
+    path: "/session4/03-verify",
+    title: "動作確認・よくあるトラブル",
+    section: "session4",
+    progressId: "s4-03-verify",
+    sectionLabel: "第4回 本番デプロイでよろず屋を開店しよう",
+    minutes: 15,
+  },
+  {
+    path: "/session4/04-summary",
+    title: "全体まとめ・講座修了",
+    section: "session4",
+    progressId: "s4-04-summary",
+    sectionLabel: "第4回 本番デプロイでよろず屋を開店しよう",
+    minutes: 10,
+  },
+];
 
 export const EXTRA_PAGES: PageDef[] = [
   {
@@ -105,7 +238,12 @@ export const ALL_PAGES: PageDef[] = [
 ];
 
 // 進捗トラッキング対象のメインフロー（おまけは含めない）
-export const MAIN_FLOW: PageDef[] = [...SESSION1_PAGES];
+export const MAIN_FLOW: PageDef[] = [
+  ...SESSION1_PAGES,
+  ...SESSION2_PAGES,
+  ...SESSION3_PAGES,
+  ...SESSION4_PAGES,
+];
 
 export function findPage(path: string): PageDef | undefined {
   return ALL_PAGES.find((p) => p.path === path);

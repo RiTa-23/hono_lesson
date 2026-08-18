@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, CheckCircle2, Store, Package, ShieldCheck, Rocket } from "lucide-react";
+import { ArrowRight, CheckCircle2, Store, Package, ShieldCheck, Database, Rocket } from "lucide-react";
 import { Callout } from "@/components/Callout";
 import { ProgressReset } from "@/components/ProgressReset";
 import { Badge } from "@/components/ui/badge";
@@ -71,7 +71,7 @@ export function Home() {
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 font-bold">
             <Package size={18} className="text-primary" />
-            第1回の進捗
+            全体の進捗（全4回）
           </h2>
           <span className="text-sm font-bold text-muted-foreground">
             {done}/{total} ステップ完了（{percent}%）
@@ -90,11 +90,11 @@ export function Home() {
       </section>
 
       {/* ロードマップ */}
-      <h2 className="mt-10 text-xl font-bold">全3回のロードマップ</h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-3">
+      <h2 className="mt-10 text-xl font-bold">全4回のロードマップ</h2>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>
-            <Badge className="w-fit">第1回（今回）</Badge>
+            <Badge className="w-fit">第1回</Badge>
             <CardTitle className="flex items-center gap-2 text-base">
               <Store size={16} className="text-primary" />
               よろず屋APIを作ろう
@@ -105,11 +105,9 @@ export function Home() {
             最後はReactのフロントとつないで、画面からアイテムを売り買いします。
           </CardContent>
         </Card>
-        <Card className="opacity-75">
+        <Card>
           <CardHeader>
-            <Badge variant="secondary" className="w-fit">
-              第2回（準備中）
-            </Badge>
+            <Badge className="w-fit">第2回</Badge>
             <CardTitle className="flex items-center gap-2 text-base">
               <ShieldCheck size={16} />
               堅牢なAPIにしよう
@@ -120,19 +118,30 @@ export function Home() {
             そしてテストコードを書いて、安心して直せるAPIに育てます。
           </CardContent>
         </Card>
-        <Card className="opacity-75">
+        <Card>
           <CardHeader>
-            <Badge variant="secondary" className="w-fit">
-              第3回（準備中）
-            </Badge>
+            <Badge className="w-fit">第3回</Badge>
             <CardTitle className="flex items-center gap-2 text-base">
-              <Rocket size={16} />
-              公開してみよう
+              <Database size={16} />
+              データベースを導入しよう
             </CardTitle>
           </CardHeader>
           <CardContent className="text-sm leading-relaxed text-muted-foreground">
-            D1データベース（drizzle ORM）と連携してデータを永続化。
-            Cloudflare Workersへデプロイして、世界に公開します。
+            Cloudflare D1とDrizzle ORMでデータを永続化。
+            再起動しても所持金・在庫が消えないAPIに育てます（ローカル環境まで）。
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <Badge className="w-fit">第4回</Badge>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Rocket size={16} />
+              本番デプロイでよろず屋を開店
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm leading-relaxed text-muted-foreground">
+            本番D1へのマイグレーションとCloudflare Workersへのデプロイで、
+            世界中からアクセスできるお店に仕上げます。
           </CardContent>
         </Card>
       </div>
