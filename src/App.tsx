@@ -23,6 +23,7 @@ import { DrizzleSetup } from "@/pages/session3/DrizzleSetup";
 import { Migration } from "@/pages/session3/Migration";
 import { ReadApi } from "@/pages/session3/ReadApi";
 import { WriteApi } from "@/pages/session3/WriteApi";
+import { Session3Summary } from "@/pages/session3/Session3Summary";
 import { RemoteMigration } from "@/pages/session4/RemoteMigration";
 import { Deploy } from "@/pages/session4/Deploy";
 import { Verify } from "@/pages/session4/Verify";
@@ -113,6 +114,8 @@ function resolvePage(path: string): () => React.JSX.Element {
       return ReadApi;
     case "/session3/06-write-api":
       return WriteApi;
+    case "/session3/07-summary":
+      return Session3Summary;
     case "/session4/01-remote-migration":
       return RemoteMigration;
     case "/session4/02-deploy":

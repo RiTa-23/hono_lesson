@@ -176,6 +176,14 @@ export const SESSION3_PAGES: PageDef[] = [
     sectionLabel: "第3回 データベースを導入しよう",
     minutes: 20,
   },
+  {
+    path: "/session3/07-summary",
+    title: "まとめ・次回予告",
+    section: "session3",
+    progressId: "s3-07-summary",
+    sectionLabel: "第3回 データベースを導入しよう",
+    minutes: 10,
+  },
 ];
 
 export const SESSION4_PAGES: PageDef[] = [
