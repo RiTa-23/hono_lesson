@@ -131,6 +131,9 @@ export default app`}</code>
         <li>
           HonoとBunの関係が混ざる → BunはJavaScriptを「実行する環境」、Honoはその上で動く「APIの土台」です。料理で言えば、Bunが厨房、Honoが調理器具セットのイメージです。
         </li>
+        <li>
+          「実行環境ごとにコードを書き換える必要があるのでは？」→ 基本的なAPIのコード（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.get</code> や <code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.json</code> など）はどの実行環境でも共通です。書き換えが必要なのは、サーバーを起動する末尾の数行だけです。
+        </li>
       </ul>
 
       <Callout variant="info" title="参考リンク">

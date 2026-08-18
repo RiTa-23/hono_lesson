@@ -106,6 +106,40 @@ export function Summary() {
         </p>
       </Callout>
 
+      <h2 className="mt-10 text-xl font-bold">参考リンクまとめ</h2>
+      <p className="mt-3 leading-relaxed">
+        今日の講座内で登場した公式ドキュメントへのリンクです。復習や、家に帰ってからの深掘りにどうぞ。
+      </p>
+      <Callout variant="info" title="復習用リンク集">
+        <ul className="list-disc space-y-1 pl-5">
+          <li>
+            <a href="https://hono.dev/docs/" target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
+              Hono 公式ドキュメント
+            </a>
+          </li>
+          <li>
+            <a href="https://hono.dev/docs/api/routing" target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
+              Hono 公式ドキュメント（Routing）
+            </a>
+          </li>
+          <li>
+            <a href="https://hono.dev/docs/middleware/builtin/cors" target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
+              Hono 公式ドキュメント（CORS Middleware）
+            </a>
+          </li>
+          <li>
+            <a href="https://bun.sh/docs" target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
+              Bun 公式ドキュメント
+            </a>
+          </li>
+          <li>
+            <a href="https://developer.mozilla.org/ja/docs/Web/HTTP/Overview" target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
+              MDN: HTTP の概要
+            </a>
+          </li>
+        </ul>
+      </Callout>
+
       <h2 className="mt-10 text-xl font-bold">余裕がある人へ（おまけ）</h2>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <a

@@ -134,12 +134,29 @@ app.get('/api/items', (c) => {
           による変換忘れが典型例です（上のクイズ参照）。
         </li>
         <li>
-          詳細のURLが商品一覧と被って動かない →
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/items/:id</code> と
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/items</code>
-          はパスの区切り（セグメント）の数が異なる別パスなので、定義した順番に関係なく正しく振り分けられます。安心してください。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/items/abc</code>
+          のように数値でないIDを渡してもエラーにならず404が返る →
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">Number('abc')</code>
+          は <code className="rounded bg-muted px-1.5 py-0.5 text-xs">NaN</code> になり、
+          NaNはどんな値と比べても一致しない（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">NaN === NaN</code> ですらfalse）という性質のおかげで、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">items.find</code> が何も見つけられず、結果的に意図通り404になります。
         </li>
       </ul>
+
+      <Callout variant="info" title="参考リンク">
+        <ul className="list-disc space-y-1 pl-5">
+          <li>
+            <a
+              href="https://hono.dev/docs/api/routing"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              Hono 公式ドキュメント（Routing）
+            </a>
+          </li>
+        </ul>
+      </Callout>
 
       <ProgressCheck id="s1-05-path-param" label="GET /api/items/:id で商品詳細と404を返せた" />
       <NextLink current="/session1/05-path-param" />

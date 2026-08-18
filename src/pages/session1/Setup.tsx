@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader";
 import { Callout } from "@/components/Callout";
+import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
@@ -152,6 +153,18 @@ export function Setup() {
         </p>
       </Callout>
 
+      <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
+      <Quiz
+        question="bun create hono@latest backend を実行すると何が起きる？"
+        choices={[
+          "backendディレクトリにHonoプロジェクトのひな形が作られる",
+          "すでにあるbackendディレクトリの中身がすべて削除される",
+          "フロントエンドのプロジェクトが自動生成される",
+        ]}
+        answerIndex={0}
+        explanation="create honoコマンドは、指定した名前のディレクトリにHonoプロジェクトの雛形（テンプレート）一式を生成するコマンドです。"
+      />
+
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
@@ -167,7 +180,35 @@ export function Setup() {
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">localhost:3000</code>
           になっているか、ターミナルにエラーが出ていないか確認しましょう。
         </li>
+        <li>
+          macOSで「着信接続を許可しますか？」というダイアログが出る → 初回起動時にファイアウォールが確認するものです。「許可」を選べば問題ありません。
+        </li>
       </ul>
+
+      <Callout variant="info" title="参考リンク">
+        <ul className="list-disc space-y-1 pl-5">
+          <li>
+            <a
+              href="https://bun.sh/docs/installation"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              Bun 公式ドキュメント（インストール）
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://hono.dev/docs/getting-started/bun"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              Hono 公式ドキュメント（Bunでのはじめ方）
+            </a>
+          </li>
+        </ul>
+      </Callout>
 
       <ProgressCheck id="s1-03-setup" label="Bunをインストールし、backendの開発サーバーが起動できた" />
       <NextLink current="/session1/03-setup" />

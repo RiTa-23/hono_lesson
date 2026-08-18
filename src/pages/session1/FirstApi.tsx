@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader";
 import { Callout } from "@/components/Callout";
+import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
@@ -121,6 +122,18 @@ app.get('/api/items', (c) => {
         </p>
       </Callout>
 
+      <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
+      <Quiz
+        question="c.json(items) のように第2引数を省略すると、レスポンスのステータスコードはどうなる？"
+        choices={[
+          "自動的に200になる",
+          "自動的に204になる",
+          "ステータスコードを省略するとエラーになり、サーバーが落ちる",
+        ]}
+        answerIndex={0}
+        explanation="c.json() や c.text() は第2引数を省略すると自動的に200（成功）になります。404や400にしたいときだけ、第2引数でステータスコードを指定します（05で使います）。"
+      />
+
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
@@ -132,7 +145,25 @@ app.get('/api/items', (c) => {
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/item</code>
           など単数形にしていませんか？）。
         </li>
+        <li>
+          ブラウザに生のJSONがそのまま表示されて不安になる → 今開発中のAPIを直接見ているだけなので、これで正常です。実際の画面はこの後ReactがこのJSONを受け取って、見やすい形に描画します（07で確認します）。
+        </li>
       </ul>
+
+      <Callout variant="info" title="参考リンク">
+        <ul className="list-disc space-y-1 pl-5">
+          <li>
+            <a
+              href="https://hono.dev/docs/api/context"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              Hono 公式ドキュメント（Context：c.json / c.text など）
+            </a>
+          </li>
+        </ul>
+      </Callout>
 
       <ProgressCheck id="s1-04-first-api" label="GET /api/items で商品一覧のJSONを返せた" />
       <NextLink current="/session1/04-first-api" />

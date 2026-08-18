@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader";
 import { Callout } from "@/components/Callout";
+import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
@@ -156,6 +157,18 @@ curl -X POST -H "Content-Type: application/json" \\
         </p>
       </Callout>
 
+      <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
+      <Quiz
+        question="購入APIで「在庫チェック」と「所持金チェック」の両方を行っているのはなぜ？"
+        choices={[
+          "片方だけチェックすればもう片方は自動的に守られるから",
+          "在庫が足りないまま購入を許すと在庫がマイナスになり、所持金が足りないまま購入を許すと所持金がマイナスになってしまうから",
+          "Honoの仕様上、チェックを2つ以上書かないとエラーになるから",
+        ]}
+        answerIndex={1}
+        explanation="在庫・所持金はそれぞれ独立した値なので、どちらか一方でもチェックを怠るとマイナスの値が生まれ、お店のデータが壊れてしまいます。"
+      />
+
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
@@ -171,6 +184,31 @@ curl -X POST -H "Content-Type: application/json" \\
           の意味が分からない → 「quantityが未指定なら1」という書き方（null合体演算子）です。
         </li>
       </ul>
+
+      <Callout variant="info" title="参考リンク">
+        <ul className="list-disc space-y-1 pl-5">
+          <li>
+            <a
+              href="https://hono.dev/docs/api/request"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              Hono 公式ドキュメント（HonoRequest：req.json など）
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              MDN: Null合体演算子（??）
+            </a>
+          </li>
+        </ul>
+      </Callout>
 
       <ProgressCheck id="s1-06-post-api" label="購入・売却APIで所持金と在庫が変わることを確認できた" />
       <NextLink current="/session1/06-post-api" />

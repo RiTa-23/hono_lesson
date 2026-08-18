@@ -142,6 +142,12 @@ export function AboutApi() {
         answerIndex={1}
         explanation="「購入する」はデータを書き換えるお願いなのでPOSTを使います。GETは「見せて」、DELETEは「消して」の合図です。"
       />
+      <Quiz
+        question="勇者が売っていない「まほうのじゅうたん」を GET /api/items/50 でリクエストしたとき、返ってくるステータスコードとして適切なのはどれ？"
+        choices={["200", "404", "500"]}
+        answerIndex={1}
+        explanation="「指定されたものが存在しない」ことを表すのは404です。500は「サーバー側で予期しないトラブルが起きた」ときに使うもので、意味が異なります。"
+      />
 
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
@@ -151,7 +157,35 @@ export function AboutApi() {
         <li>
           GETとPOSTの使い分けに迷う → 「画面に表示するための取得」ならGET、「お店の状態を変える（在庫・所持金など）」ならPOST、と考えると整理しやすいです。
         </li>
+        <li>
+          ステータスコードの種類が多すぎて覚えきれない → 実際は数十種類ありますが、全部を暗記する必要はありません。まずは200（成功）・400（お願いの中身がおかしい）・404（そもそも無い）・500（お店側のトラブル）の4つをまず押さえれば十分です。細かい種類は必要になったときに調べれば大丈夫です。
+        </li>
       </ul>
+
+      <Callout variant="info" title="参考リンク">
+        <ul className="list-disc space-y-1 pl-5">
+          <li>
+            <a
+              href="https://developer.mozilla.org/ja/docs/Web/HTTP/Overview"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              MDN: HTTP の概要
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://developer.mozilla.org/ja/docs/Web/HTTP/Reference/Status"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              MDN: HTTP レスポンスステータスコード一覧
+            </a>
+          </li>
+        </ul>
+      </Callout>
 
       <ProgressCheck id="s1-01-about-api" label="APIの基本（リクエスト・レスポンス・JSON・ステータスコード）を理解した" />
       <NextLink current="/session1/01-about-api" />

@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader";
 import { Callout } from "@/components/Callout";
+import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
@@ -113,6 +114,14 @@ bun run dev`}
         </p>
       </Callout>
 
+      <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
+      <Quiz
+        question="CORSの許可設定は、フロントエンドとバックエンドのどちらで行う？"
+        choices={["フロントエンド（React側）", "バックエンド（Hono側）", "ブラウザの設定画面"]}
+        answerIndex={1}
+        explanation="CORSは「サーバー側が、どのオリジンからのアクセスを許可するか」を宣言する仕組みです。今回はHonoにcors()ミドルウェアを設定しました。"
+      />
+
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
@@ -129,7 +138,38 @@ bun run dev`}
           購入しても画面の数字が変わらない → ホットリロードでバックエンドの状態がリセットされているだけかもしれません。
           もう一度購入してみましょう。
         </li>
+        <li>
+          Networkタブに <span className="font-medium">OPTIONS</span> という見慣れないリクエストが表示される
+          → POSTでJSONを送るとき、ブラウザは本番のリクエストの前に「送っても大丈夫か」を確認する
+          preflightリクエスト（OPTIONS）を自動で送ります。<code className="rounded bg-muted px-1.5 py-0.5 text-xs">cors()</code>
+          はこれにも対応しているので、特に何もしなくて大丈夫です。
+        </li>
       </ul>
+
+      <Callout variant="info" title="参考リンク">
+        <ul className="list-disc space-y-1 pl-5">
+          <li>
+            <a
+              href="https://developer.mozilla.org/ja/docs/Web/HTTP/Guides/CORS"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              MDN: オリジン間リソース共有（CORS）
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://hono.dev/docs/middleware/builtin/cors"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              Hono 公式ドキュメント（CORS Middleware）
+            </a>
+          </li>
+        </ul>
+      </Callout>
 
       <ProgressCheck id="s1-07-cors-frontend" label="Reactの画面からアイテムの購入・売却ができた" />
       <NextLink current="/session1/07-cors-frontend" />
