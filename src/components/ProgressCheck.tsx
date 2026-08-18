@@ -40,20 +40,18 @@ export function ProgressCheck({ id, label, children }: Props) {
       onClick={toggle}
       aria-pressed={checked}
       className={[
-        "group my-6 flex w-full items-center gap-3 rounded-md border px-4 py-3 text-left transition",
+        "group my-6 flex w-full items-center gap-3 rounded-sm border border-primary bg-card px-4 py-3 text-left transition",
         "min-h-[52px]",
-        checked
-          ? "border-emerald-500/70 bg-emerald-500/10 text-foreground"
-          : "border-border bg-card hover:bg-secondary/60",
+        "hover:bg-secondary/60",
       ].join(" ")}
     >
       <span
         aria-hidden="true"
         className={[
-          "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded border-2 transition",
+          "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition",
           checked
-            ? "border-emerald-600 bg-emerald-600 text-white"
-            : "border-border bg-background group-hover:border-primary/60",
+            ? "border-primary bg-primary text-primary-foreground"
+            : "border-primary/60 bg-card group-hover:bg-secondary",
         ].join(" ")}
       >
         {checked ? <Check size={14} strokeWidth={3} /> : null}

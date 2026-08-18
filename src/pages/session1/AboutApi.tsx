@@ -10,6 +10,7 @@ export function AboutApi() {
     <div>
       <PageHeader
         title="APIとは？"
+        chapter="01"
         goal="API・リクエスト・レスポンスの関係を、よろず屋のやりとりに例えて説明できるようになる"
         minutes={10}
       />
@@ -50,7 +51,7 @@ export function AboutApi() {
 
       <div className="mt-4 overflow-hidden rounded-lg border">
         <table className="w-full text-sm">
-          <thead className="bg-muted">
+          <thead className="border-b border-gold bg-secondary/60 font-serif">
             <tr>
               <th className="px-4 py-2 text-left font-medium">店頭でのやりとり</th>
               <th className="px-4 py-2 text-left font-medium">APIの世界</th>

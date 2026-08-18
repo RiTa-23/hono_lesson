@@ -4,48 +4,52 @@
 
 @layer base {
   :root {
-    --background: 40 33% 97%;
-    --foreground: 25 30% 12%;
-    --card: 0 0% 100%;
-    --card-foreground: 25 30% 12%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 25 30% 12%;
-    --primary: 28 75% 38%;
-    --primary-foreground: 40 33% 97%;
-    --secondary: 35 25% 92%;
-    --secondary-foreground: 25 30% 20%;
-    --muted: 35 20% 93%;
-    --muted-foreground: 25 12% 42%;
-    --accent: 35 30% 90%;
-    --accent-foreground: 25 30% 18%;
-    --destructive: 0 70% 45%;
-    --destructive-foreground: 40 33% 97%;
-    --border: 30 18% 86%;
-    --input: 30 18% 82%;
-    --ring: 28 75% 38%;
-    --radius: 0.6rem;
+    /* 依頼書（生成り × 焦茶インク × 金 × 朱） */
+    --background: 45 35% 94%;
+    --foreground: 29 32% 15%;
+    --card: 43 45% 97%;
+    --card-foreground: 29 32% 15%;
+    --popover: 43 45% 97%;
+    --popover-foreground: 29 32% 15%;
+    --primary: 29 32% 15%;
+    --primary-foreground: 42 40% 96%;
+    --secondary: 40 25% 90%;
+    --secondary-foreground: 29 32% 20%;
+    --muted: 40 22% 91%;
+    --muted-foreground: 30 15% 36%;
+    --accent: 40 28% 88%;
+    --accent-foreground: 29 32% 18%;
+    --destructive: 9 62% 44%;
+    --destructive-foreground: 45 35% 95%;
+    --border: 38 22% 78%;
+    --input: 38 22% 74%;
+    --ring: 43 55% 38%;
+    --gold: 43 55% 38%;
+    --radius: 0.125rem;
   }
 
   .dark {
-    --background: 25 25% 8%;
-    --foreground: 40 25% 93%;
-    --card: 25 22% 11%;
-    --card-foreground: 40 25% 93%;
-    --popover: 25 22% 11%;
-    --popover-foreground: 40 25% 93%;
-    --primary: 32 80% 55%;
-    --primary-foreground: 25 30% 10%;
-    --secondary: 28 15% 18%;
-    --secondary-foreground: 40 25% 88%;
-    --muted: 28 15% 16%;
-    --muted-foreground: 38 12% 62%;
-    --accent: 30 18% 20%;
-    --accent-foreground: 40 25% 90%;
-    --destructive: 0 65% 50%;
-    --destructive-foreground: 40 25% 95%;
-    --border: 28 14% 20%;
-    --input: 28 14% 24%;
-    --ring: 32 80% 55%;
+    /* 夜の店内（木目 × 蝋燭の金） */
+    --background: 29 25% 12%;
+    --foreground: 40 35% 88%;
+    --card: 29 24% 15%;
+    --card-foreground: 40 35% 88%;
+    --popover: 29 24% 15%;
+    --popover-foreground: 40 35% 88%;
+    --primary: 41 50% 62%;
+    --primary-foreground: 29 32% 12%;
+    --secondary: 30 16% 20%;
+    --secondary-foreground: 40 30% 85%;
+    --muted: 30 14% 17%;
+    --muted-foreground: 38 15% 60%;
+    --accent: 30 18% 22%;
+    --accent-foreground: 40 35% 90%;
+    --destructive: 9 65% 58%;
+    --destructive-foreground: 45 35% 95%;
+    --border: 32 16% 26%;
+    --input: 32 16% 30%;
+    --ring: 43 70% 60%;
+    --gold: 43 70% 60%;
   }
 }
 
@@ -56,6 +60,21 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "palt";
+  }
+
+  /* 依頼書の約束: 見出しは明朝、h2は二重線、h3は金の点線 */
+  h1,
+  h2,
+  h3 {
+    font-family: ui-serif, "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+  }
+  h2 {
+    border-bottom: 3px double hsl(var(--foreground));
+    padding-bottom: 0.3rem;
+  }
+  h3 {
+    border-bottom: 1px dotted hsl(var(--gold));
+    padding-bottom: 0.25rem;
   }
 }
 

@@ -28,23 +28,31 @@ export function Home() {
 
   return (
     <div>
-      <section className="rounded-xl border bg-gradient-to-br from-primary/10 via-card to-card p-6 sm:p-8">
-        <Badge variant="secondary" className="mb-3">
-          Hono ハンズオン講座
-        </Badge>
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          よろず屋API講座
-        </h1>
-        <div className="mt-3 flex gap-1" aria-hidden="true">
-          <span className="h-1 w-16 rounded-full bg-amber-500" />
-          <span className="h-1 w-4 rounded-full bg-amber-400/70" />
+      {/* 表紙 */}
+      <section className="relative border-2 border-primary bg-card p-2">
+        <span aria-hidden="true" className="pointer-events-none absolute -left-1 -top-1 h-4 w-4 border-l-2 border-t-2 border-gold" />
+        <span aria-hidden="true" className="pointer-events-none absolute -right-1 -top-1 h-4 w-4 border-r-2 border-t-2 border-gold" />
+        <span aria-hidden="true" className="pointer-events-none absolute -bottom-1 -left-1 h-4 w-4 border-b-2 border-l-2 border-gold" />
+        <span aria-hidden="true" className="pointer-events-none absolute -bottom-1 -right-1 h-4 w-4 border-b-2 border-r-2 border-gold" />
+        <div className="border border-gold/50 px-5 py-8 text-center sm:px-8">
+          <p className="font-serif text-xs tracking-[0.5em] text-gold">冒険者ギルド 公式テキスト</p>
+          <Badge variant="secondary" className="mb-3 mt-5">
+            Hono ハンズオン講座
+          </Badge>
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            よろず屋API講座
+          </h1>
+          <div className="mx-auto mt-3 flex w-24 justify-center gap-1" aria-hidden="true">
+            <span className="h-0.5 w-16 bg-gold" />
+            <span className="h-0.5 w-3 bg-gold/60" />
+          </div>
+          <p className="mx-auto mt-4 max-w-2xl text-left leading-relaxed text-muted-foreground">
+            RPGゲームの「よろず屋」を題材に、HonoでバックエンドAPIを作るハンズオンです。
+            フロントエンド（React）は完成済み。あなたは店主からの依頼を受けた
+            <span className="font-medium text-foreground">駆け出しエンジニア</span>
+            として、よろず屋のネット販売システムを作り上げていきます。
+          </p>
         </div>
-        <p className="mt-3 leading-relaxed text-muted-foreground">
-          RPGゲームの「よろず屋」を題材に、HonoでバックエンドAPIを作るハンズオンです。
-          フロントエンド（React）は完成済み。あなたは店主からの依頼を受けた
-          <span className="font-medium text-foreground">駆け出しエンジニア</span>
-          として、よろず屋のネット販売システムを作り上げていきます。
-        </p>
       </section>
 
       <Callout variant="quest" title="ストーリー">
@@ -59,24 +67,24 @@ export function Home() {
       </Callout>
 
       {/* 全体進捗 */}
-      <section className="mt-8 rounded-xl border bg-card p-6">
+      <section className="mt-8 rounded-md border-2 border-primary bg-card p-6">
         <div className="flex items-center justify-between">
-          <h2 className="flex items-center gap-2 font-semibold">
+          <h2 className="flex items-center gap-2 font-bold">
             <Package size={18} className="text-primary" />
             第1回の進捗
           </h2>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm font-bold text-muted-foreground">
             {done}/{total} ステップ完了（{percent}%）
           </span>
         </div>
         <Progress
           value={percent}
-          className="mt-3 h-3 rounded-full border border-border bg-muted [&>div]:bg-emerald-600"
+          className="mt-3 h-2.5 rounded-none border border-primary bg-card [&>div]:bg-gold"
         />
         {percent === 100 && (
-          <p className="mt-3 flex items-center gap-2 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+          <p className="mt-3 flex items-center gap-2 font-serif text-sm font-bold text-gold">
             <CheckCircle2 size={16} />
-            全クエスト達成！
+            全クエスト達成！ HP MAX です
           </p>
         )}
       </section>
@@ -161,28 +169,28 @@ export function Home() {
 
       {/* タイムテーブル */}
       <h2 className="mt-10 text-xl font-bold">第1回のタイムテーブル（目安）</h2>
-      <div className="mt-4 overflow-hidden rounded-lg border">
+      <div className="mt-4 overflow-hidden rounded-sm border border-primary">
         <table className="w-full text-sm">
-          <thead className="bg-muted">
+          <thead className="border-b border-gold bg-secondary/60 font-serif">
             <tr>
-              <th className="px-4 py-2 text-left font-medium">時間</th>
-              <th className="px-4 py-2 text-left font-medium">内容</th>
+              <th className="px-4 py-2 text-left font-bold">時間</th>
+              <th className="px-4 py-2 text-left font-bold">内容</th>
             </tr>
           </thead>
           <tbody>
             {SESSION1_PAGES.map((p, i) => (
-              <tr key={p.path} className="border-t">
+              <tr key={p.path} className="border-t border-border">
                 <td className="whitespace-nowrap px-4 py-2 text-muted-foreground">
                   約{p.minutes ?? "-"}分
                 </td>
                 <td className="px-4 py-2">
-                  <a href={`#${p.path}`} className="text-primary underline-offset-4 hover:underline">
-                    {i + 1}. {p.title}
+                  <a href={`#${p.path}`} className="font-medium text-primary underline-offset-4 hover:underline">
+                    {String(i + 1).padStart(2, "0")}. {p.title}
                   </a>
                   {p.progressId && progress[p.progressId] && (
                     <CheckCircle2
                       size={14}
-                      className="ml-2 inline-block text-emerald-600"
+                      className="ml-2 inline-block text-gold"
                       aria-label="完了"
                     />
                   )}
@@ -196,7 +204,7 @@ export function Home() {
       <div className="mt-10 flex justify-center">
         <a
           href="#/session1/01-about-api"
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground shadow transition hover:bg-primary/90"
+          className="inline-flex items-center gap-2 rounded-sm border border-primary bg-primary px-6 py-3 font-serif font-bold text-primary-foreground transition hover:opacity-90"
         >
           クエストを開始する
           <ArrowRight size={18} />

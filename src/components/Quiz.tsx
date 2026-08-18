@@ -16,8 +16,11 @@ export function Quiz({ question, choices, answerIndex, explanation }: Props) {
   const correct = selected === answerIndex;
 
   return (
-    <div className="my-6 rounded-lg border bg-card p-4">
-      <p className="font-medium">Q. {question}</p>
+    <div className="my-6 rounded-sm border border-primary bg-card p-4">
+      <p className="font-medium">
+        <span className="font-serif font-bold text-gold">Q. </span>
+        {question}
+      </p>
       <ul className="mt-3 space-y-2">
         {choices.map((choice, i) => {
           const isAnswer = i === answerIndex;
@@ -29,9 +32,9 @@ export function Quiz({ question, choices, answerIndex, explanation }: Props) {
                 disabled={answered}
                 onClick={() => setSelected(i)}
                 className={cn(
-                  "w-full rounded-md border px-3 py-2 text-left text-sm transition",
+                  "w-full rounded-sm border px-3 py-2 text-left text-sm transition",
                   !answered && "hover:bg-secondary/60",
-                  answered && isAnswer && "border-emerald-500 bg-emerald-500/10",
+                  answered && isAnswer && "border-gold bg-gold/10",
                   answered &&
                     isSelected &&
                     !isAnswer &&
@@ -48,10 +51,10 @@ export function Quiz({ question, choices, answerIndex, explanation }: Props) {
       {answered && (
         <div
           className={cn(
-            "mt-3 flex items-start gap-2 rounded-md p-3 text-sm",
+            "mt-3 flex items-start gap-2 rounded-sm border p-3 text-sm",
             correct
-              ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-              : "bg-destructive/10 text-destructive"
+              ? "border-gold bg-gold/10 text-gold"
+              : "border-destructive bg-destructive/10 text-destructive"
           )}
         >
           {correct ? (
@@ -60,7 +63,7 @@ export function Quiz({ question, choices, answerIndex, explanation }: Props) {
             <XCircle size={16} className="mt-0.5 shrink-0" />
           )}
           <span>
-            {correct ? "正解！" : "不正解…"}
+            <span className="font-serif font-bold">{correct ? "正解！" : "不正解…"}</span>
             {explanation && <span className="mt-1 block">{explanation}</span>}
           </span>
         </div>

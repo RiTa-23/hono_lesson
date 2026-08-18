@@ -58,9 +58,9 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
         href={`#${HOME.path}`}
         onClick={onNavigate}
         className={cn(
-          "group mb-3 flex items-center gap-2 rounded-md px-3 py-2 text-sm transition",
+          "group mb-3 flex items-center gap-2 rounded-sm px-3 py-2 text-sm font-bold transition",
           currentPath === "/"
-            ? "bg-primary/10 font-medium text-primary"
+            ? "bg-primary/10 text-primary"
             : "text-foreground hover:bg-secondary"
         )}
       >
@@ -148,12 +148,12 @@ function Section({
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition hover:bg-secondary"
+        className="flex w-full items-center gap-2 rounded-sm border-b border-dashed border-gold/60 px-3 py-2 font-serif text-xs font-bold tracking-widest transition hover:bg-secondary"
       >
         {icon}
         <span className="flex-1 text-left">{label}</span>
         {progress.total > 0 && (
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs font-normal text-muted-foreground">
             {progress.done}/{progress.total}
           </span>
         )}
@@ -162,7 +162,7 @@ function Section({
           className={cn("transition-transform", !open && "-rotate-90")}
         />
       </button>
-      {open && <div className="ml-3 border-l pl-2">{children}</div>}
+      {open && <div className="ml-3 border-l-2 border-border pl-2">{children}</div>}
     </div>
   );
 }
@@ -186,16 +186,16 @@ function NavItem({
       onClick={onNavigate}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "my-0.5 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition",
+        "my-0.5 flex items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition",
         active
-          ? "bg-primary/10 font-medium text-primary"
+          ? "bg-primary/10 font-bold text-primary"
           : "text-foreground hover:bg-secondary"
       )}
     >
       {done ? (
-        <CheckCircle2 size={14} className="shrink-0 text-emerald-600" />
+        <CheckCircle2 size={14} className="shrink-0 text-gold" />
       ) : (
-        <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border text-[0.6rem] text-muted-foreground">
+        <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-border text-[0.6rem] text-muted-foreground">
           {index ?? "・"}
         </span>
       )}

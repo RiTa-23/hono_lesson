@@ -30,7 +30,7 @@ export function Layout({ currentPath, children }: Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b-[3px] border-double border-b-primary bg-background">
         <div className="flex h-14 items-center gap-2 px-4">
           <Button
             type="button"
@@ -42,8 +42,8 @@ export function Layout({ currentPath, children }: Props) {
           >
             <Menu size={20} />
           </Button>
-          <a href="#/" className="flex items-center gap-2 font-bold">
-            <Store size={20} className="text-primary" />
+          <a href="#/" className="flex items-center gap-2 text-lg font-bold">
+            <Store size={20} className="text-gold" />
             <span>よろず屋API講座</span>
           </a>
           {page && page.path !== "/" && (
@@ -59,7 +59,7 @@ export function Layout({ currentPath, children }: Props) {
 
       <div className="mx-auto flex max-w-7xl">
         {/* デスクトップ用サイドバー */}
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-72 shrink-0 border-r lg:block">
+        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-72 shrink-0 border-r-2 border-primary lg:block">
           <ScrollArea className="h-full">
             <Sidebar currentPath={currentPath} />
           </ScrollArea>
@@ -73,10 +73,10 @@ export function Layout({ currentPath, children }: Props) {
               onClick={() => setMenuOpen(false)}
               aria-hidden="true"
             />
-            <div className="absolute inset-y-0 left-0 w-72 max-w-[85vw] bg-background shadow-xl">
-              <div className="flex h-14 items-center justify-between border-b px-4">
+            <div className="absolute inset-y-0 left-0 w-72 max-w-[85vw] border-r-2 border-primary bg-background shadow-xl">
+              <div className="flex h-14 items-center justify-between border-b-2 border-primary px-4">
                 <span className="flex items-center gap-2 font-bold">
-                  <Store size={18} className="text-primary" />
+                  <Store size={18} className="text-gold" />
                   メニュー
                 </span>
                 <Button

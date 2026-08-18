@@ -9,6 +9,7 @@ export function CorsFrontend() {
     <div>
       <PageHeader
         title="フロントとつなげよう（CORS）"
+        chapter="07"
         goal="CORSを設定して、Reactの画面からよろず屋APIを操作できるようになっている"
         minutes={20}
       />

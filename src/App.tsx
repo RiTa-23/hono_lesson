@@ -13,8 +13,6 @@ import { Summary } from "@/pages/session1/Summary";
 import { Rpc } from "@/pages/extra/Rpc";
 import { Glossary } from "@/pages/extra/Glossary";
 import { NotFound } from "@/pages/NotFound";
-// TODO: 一時的なテーマ比較モック（テーマ確定後に削除）
-import { Mock } from "@/pages/Mock";
 
 function normalizeHash(): string {
   const h = window.location.hash || "";
@@ -75,9 +73,6 @@ function resolvePage(path: string): () => React.JSX.Element {
       return Rpc;
     case "/extra/glossary":
       return Glossary;
-    // TODO: 一時的なテーマ比較モック（テーマ確定後に削除）
-    case "/mock":
-      return Mock;
     default:
       return NotFound;
   }

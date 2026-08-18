@@ -9,6 +9,7 @@ export function FirstApi() {
     <div>
       <PageHeader
         title="最初のAPI：商品一覧"
+        chapter="04"
         goal="GET /api/items で、よろず屋の商品一覧をJSONで返せるようになっている"
         minutes={15}
       />

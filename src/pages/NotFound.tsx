@@ -3,15 +3,17 @@ import { Button } from "@/components/ui/button";
 
 export function NotFound() {
   return (
-    <div className="flex flex-col items-center gap-4 py-16 text-center">
-      <Ghost size={48} className="text-muted-foreground" />
-      <h1 className="text-2xl font-bold">404 - ページが見つかりません</h1>
-      <p className="text-sm text-muted-foreground">
-        そのページは存在しないか、移動した可能性があります。
-      </p>
-      <Button asChild>
-        <a href="#/">ホームへ戻る</a>
-      </Button>
+    <div className="flex justify-center py-16">
+      <div className="border border-primary bg-card p-8 text-center">
+        <Ghost size={48} className="mx-auto text-gold" />
+        <h1 className="mt-4 text-2xl font-bold">404 - ページが見つかりません</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          そのページは存在しないか、移動した可能性があります。
+        </p>
+        <Button asChild className="mt-4">
+          <a href="#/">ホームへ戻る</a>
+        </Button>
+      </div>
     </div>
   );
 }

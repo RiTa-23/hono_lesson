@@ -27,20 +27,20 @@ export function CopyBlock({ code, lang, title }: Props) {
   };
 
   return (
-    <div className="my-4 overflow-hidden rounded-lg border bg-zinc-950 text-zinc-100 dark:border-zinc-800">
-      <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-2">
-        <span className="text-xs text-zinc-400">
+    <div className="my-4 overflow-hidden rounded-sm border border-gold/40 bg-[#2b2118] text-[#f0e6d2]">
+      <div className="flex items-center justify-between border-b border-gold/25 px-4 py-2">
+        <span className="font-serif text-xs font-bold tracking-wider text-gold">
           {title ?? lang ?? "コード"}
         </span>
         <button
           type="button"
           onClick={onCopy}
-          className="inline-flex items-center gap-1 rounded px-2 py-1 text-xs text-zinc-300 transition hover:bg-zinc-800"
+          className="inline-flex items-center gap-1 rounded-sm px-2 py-1 text-xs text-[#f0e6d2]/70 transition hover:bg-white/10"
           aria-label="コードをコピー"
         >
           {copied ? (
             <>
-              <Check size={13} className="text-emerald-400" />
+              <Check size={13} className="text-gold" />
               コピーしました
             </>
           ) : (

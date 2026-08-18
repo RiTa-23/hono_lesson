@@ -9,6 +9,7 @@ export function AboutHono() {
     <div>
       <PageHeader
         title="Honoとは？"
+        chapter="02"
         goal="Honoの特徴と、今回の講座でHonoを使う理由を説明できるようになる"
         minutes={10}
       />
@@ -73,8 +74,8 @@ export function AboutHono() {
         分かりやすさが魅力です。
       </p>
 
-      <div className="my-4 overflow-hidden rounded-lg border bg-zinc-950 text-zinc-100">
-        <div className="border-b border-zinc-800 px-4 py-2 text-xs text-zinc-400">src/index.ts</div>
+      <div className="my-4 overflow-hidden rounded-sm border border-gold/40 bg-[#2b2118] text-[#f0e6d2]">
+        <div className="border-b border-gold/25 px-4 py-2 font-serif text-xs font-bold tracking-wider text-gold">src/index.ts</div>
         <pre className="p-4 text-sm leading-relaxed">
           <code>{`import { Hono } from 'hono'
 

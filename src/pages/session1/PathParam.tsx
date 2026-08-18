@@ -10,6 +10,7 @@ export function PathParam() {
     <div>
       <PageHeader
         title="商品詳細と404"
+        chapter="05"
         goal="GET /api/items/:id で1件の商品を返し、存在しないIDには404を返せるようになっている"
         minutes={15}
       />

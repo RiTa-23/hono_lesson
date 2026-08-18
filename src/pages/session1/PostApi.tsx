@@ -9,6 +9,7 @@ export function PostApi() {
     <div>
       <PageHeader
         title="購入・売却API（POST）"
+        chapter="06"
         goal="POST /api/purchase と POST /api/sell で、所持金と在庫が変わる売り買いができるようになっている"
         minutes={20}
       />

@@ -10,6 +10,7 @@ export function Setup() {
     <div>
       <PageHeader
         title="プロジェクトのセットアップ"
+        chapter="03"
         goal="Bunをインストールし、講座用リポジトリをcloneして、Honoの開発サーバーが起動している"
         minutes={20}
       />
@@ -98,7 +99,7 @@ export function Setup() {
       </p>
       <div className="mt-4 overflow-hidden rounded-lg border">
         <table className="w-full text-sm">
-          <thead className="bg-muted">
+          <thead className="border-b border-gold bg-secondary/60 font-serif">
             <tr>
               <th className="px-4 py-2 text-left font-medium">質問</th>
               <th className="px-4 py-2 text-left font-medium">回答</th>

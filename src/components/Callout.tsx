@@ -4,26 +4,31 @@ import { cn } from "@/lib/utils";
 
 type Variant = "info" | "warn" | "tip" | "quest";
 
-const styles: Record<Variant, { box: string; icon: ReactNode; label: string }> = {
+// 依頼書風: 縦罫＋明朝ラベル。金（ストーリー/ポイント）・朱（注意）・茶（補足）
+const styles: Record<Variant, { box: string; label: string; labelClass: string; icon: ReactNode }> = {
   info: {
-    box: "border-sky-500/60 bg-sky-500/10",
-    icon: <Info size={18} className="text-sky-600 dark:text-sky-400" />,
-    label: "補足",
+    box: "border-l-4 border-primary/70 bg-secondary/40",
+    label: "【補足】",
+    labelClass: "text-primary",
+    icon: <Info size={16} className="text-primary" />,
   },
   warn: {
-    box: "border-amber-500/60 bg-amber-500/10",
-    icon: <AlertTriangle size={18} className="text-amber-600 dark:text-amber-400" />,
-    label: "注意",
+    box: "border-l-4 border-destructive bg-destructive/5",
+    label: "【注意】",
+    labelClass: "text-destructive",
+    icon: <AlertTriangle size={16} className="text-destructive" />,
   },
   tip: {
-    box: "border-emerald-500/60 bg-emerald-500/10",
-    icon: <Lightbulb size={18} className="text-emerald-600 dark:text-emerald-400" />,
-    label: "ポイント",
+    box: "border-l-4 border-gold bg-gold/5",
+    label: "【ポイント】",
+    labelClass: "text-gold",
+    icon: <Lightbulb size={16} className="text-gold" />,
   },
   quest: {
-    box: "border-primary/50 bg-primary/10",
-    icon: <ScrollText size={18} className="text-primary" />,
-    label: "ストーリー",
+    box: "border-l-4 border-gold bg-gold/5",
+    label: "【ストーリー】",
+    labelClass: "text-gold",
+    icon: <ScrollText size={16} className="text-gold" />,
   },
 };
 
@@ -36,8 +41,13 @@ type Props = {
 export function Callout({ variant = "info", title, children }: Props) {
   const s = styles[variant];
   return (
-    <aside className={cn("my-4 rounded-lg border px-4 py-3", s.box)}>
-      <div className="flex items-center gap-2 font-medium">
+    <aside className={cn("my-4 rounded-sm border-l-4 px-4 py-3", s.box)}>
+      <div
+        className={cn(
+          "flex items-center gap-2 font-serif text-sm font-bold tracking-wide",
+          s.labelClass
+        )}
+      >
         {s.icon}
         <span>{title ?? s.label}</span>
       </div>
