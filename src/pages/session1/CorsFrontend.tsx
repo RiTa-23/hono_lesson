@@ -103,8 +103,9 @@ bun run dev`}
         <li>売却すると所持金が（半額で）増える → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">POST /api/sell</code> が動いている</li>
       </ul>
       <p className="mt-3 leading-relaxed">
-        ブラウザのDevTools（F12）のNetworkタブを開くと、画面の裏でAPIへのリクエストが
-        飛んでいる様子が見えます。ぜひ覗いてみてください。
+        DevToolsはブラウザに内蔵された「のぞき窓」のような開発者ツールで、F12キーで開きます。
+        その中のNetworkタブを開くと、画面の裏でAPIへのリクエストが飛んでいる様子が見えます。
+        ぜひ覗いてみてください。
       </p>
 
       <Callout variant="tip" title="ここまでの仕組みを振り返る">

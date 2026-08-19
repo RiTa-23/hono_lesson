@@ -39,6 +39,7 @@ export function AboutApi() {
         HTTPというルールでお願いを送り、結果を受け取ります。
       </p>
       <p className="mt-3 leading-relaxed">
+        Reactは画面（UI）を作るためのJavaScriptの道具です（詳しくは02で整理します）。
         今回の講座では、完成済みのReactアプリ（フロントエンド）からのお願いを受け取って、
         アイテムの情報を返したり、売り買いの処理をしたりする
         <span className="font-medium">バックエンド側の窓口（APIサーバー）</span>をHonoで作ります。
@@ -92,7 +93,8 @@ export function AboutApi() {
       <h3 className="mt-8 text-lg font-semibold">JSON = やりとりの伝票</h3>
       <p className="mt-2 leading-relaxed">
         リクエストとレスポンスの中身（データ）は、JSONという書き方でやりとりするのが一般的です。
-        JavaScriptのオブジェクトに似た形をしているので、フロントエンドとの相性が抜群です。
+        JavaScriptのオブジェクトに似た形をしているので、フロントエンドとの相性が抜群です
+        （JavaScriptはWebブラウザで動くプログラミング言語。詳しくは02で整理します）。
       </p>
       <CopyBlock
         lang="json"

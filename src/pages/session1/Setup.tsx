@@ -122,6 +122,19 @@ export function Setup() {
           </tbody>
         </table>
       </div>
+      <p className="mt-3 leading-relaxed">
+        この講座で使うパッケージマネージャは <span className="font-medium">Bun</span> です
+        （上の質問で「bun」を選んだのはそのためです）。
+        1つ目のステップではBunを「実行環境」と紹介しましたが、実はBunは
+        実行環境とパッケージマネージャの<span className="font-medium">両方の役割を1つで兼ねる</span>
+        オールインワンの道具です。
+      </p>
+      <p className="mt-3 leading-relaxed">
+        パッケージマネージャとは、ライブラリ（部品）のインストールや更新を管理する道具のこと。
+        Bunを選ぶと、部品の追加も
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun add 部品名</code>
+        の1コマンドで完結します（第2回以降で使います）。
+      </p>
 
       <h2 className="mt-10 text-xl font-bold">4. 開発サーバーを起動する</h2>
       <p className="mt-3 leading-relaxed">
@@ -172,8 +185,10 @@ export function Setup() {
           → ターミナルを開き直すか、インストール時に表示されたPATH設定のコマンドを実行してください。
         </li>
         <li>
-          ポート3000がすでに使われている → ほかの開発サーバー（Viteなど）が3000を使っている可能性があります。
-          そのプロセスを止めるか、教えてもらった別ポートを使ってください。
+          ポート3000がすでに使われている → ポートは「パソコンの中の番地」のようなものです。
+          今回の講座では3000番はAPI（Hono）、5173番はフロント（Vite）が使う番地となっています。
+          ほかの開発サーバーが3000を使っている場合は、そのプロセスを止めるか、
+          教えてもらった別ポートを使ってください。
         </li>
         <li>
           「Hello Hono!」が表示されない → ブラウザのアドレスが
