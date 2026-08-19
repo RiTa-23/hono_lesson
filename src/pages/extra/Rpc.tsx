@@ -3,12 +3,60 @@ import { Callout } from "@/components/Callout";
 import { CopyBlock } from "@/components/CopyBlock";
 import { NextLink } from "@/components/NextLink";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PUBLISHED_UP_TO } from "@/lib/routes";
+
+const BEFORE2_CODE = `const app = new Hono()
+
+app.use('/api/*', cors())
+
+// チェインさせて変数に入れる
+const routes = app
+  .get('/api/items', (c) => c.json(items))
+  .get('/api/items/:id', (c) => {
+    // ...省略...
+  })
+  .get('/api/player', (c) => c.json(player))
+  .post('/api/purchase', async (c) => {
+    // ...省略...
+  })
+  .post('/api/sell', async (c) => {
+    // ...省略...
+  })
+
+// クライアント側で使えるように「型」としてエクスポート
+export type AppType = typeof routes
+
+export default app`;
+
+const AFTER2_CODE = `const app = new OpenAPIHono()
+
+app.use('/api/*', cors())
+
+// app.openapi(...) もチェイン可能。app.get(...) と同じように連鎖させる
+const routes = app
+  .get('/api/items', (c) => c.json(items))
+  .get('/api/items/:id', (c) => {
+    // ...省略...
+  })
+  .get('/api/player', (c) => c.json(player))
+  .openapi(purchaseRoute, (c) => {
+    // ...省略...
+  })
+  .openapi(sellRoute, (c) => {
+    // ...省略...
+  })
+
+// クライアント側で使えるように「型」としてエクスポート
+export type AppType = typeof routes
+
+export default app`;
 
 export function Rpc() {
   return (
     <div>
       <Badge variant="secondary" className="mb-4">
-        おまけ（本編の進行には含まれません）
+        サブクエスト（本編の進行には含まれません）
       </Badge>
       <PageHeader
         title="RPCで型安全な連携"
@@ -32,27 +80,38 @@ export function Rpc() {
         型としてエクスポートします。
       </p>
 
-      <CopyBlock
-        lang="ts"
-        title="backend/src/index.ts（イメージ）"
-        code={`const app = new Hono()
+      {PUBLISHED_UP_TO >= 2 ? (
+        <>
+          <p className="mt-3 leading-relaxed">
+            第2回で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">OpenAPIHono</code>
+            に切り替えた人も、まだ第1回の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">Hono</code>
+            のままの人も、どちらもこのままRPCを試せます。今のあなたのコードに近い方を見てください。
+          </p>
 
-app.use('/api/*', cors())
-
-// チェインさせて変数に入れる
-const routes = app
-  .get('/api/items', (c) => c.json(items))
-  .get('/api/items/:id', (c) => {
-    // ...省略...
-  })
-  .get('/api/player', (c) => c.json(player))
-//  ...購入・売却も同様にチェイン
-
-// クライアント側で使えるように「型」としてエクスポート
-export type AppType = typeof routes
-
-export default app`}
-      />
+          <Tabs defaultValue="after2" className="mt-4">
+            <TabsList>
+              <TabsTrigger value="before2">第1回完了時点（Hono / app.post）</TabsTrigger>
+              <TabsTrigger value="after2">第2回完了後（OpenAPIHono / app.openapi）</TabsTrigger>
+            </TabsList>
+            <TabsContent value="before2">
+              <CopyBlock lang="ts" title="backend/src/index.ts（イメージ）" code={BEFORE2_CODE} />
+            </TabsContent>
+            <TabsContent value="after2">
+              <CopyBlock lang="ts" title="backend/src/index.ts（イメージ）" code={AFTER2_CODE} />
+              <Callout variant="tip" title="むしろ型がより正確になる">
+                <p>
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs">createRoute</code>
+                  で定義したリクエストボディの型（quantityは正の整数、など）もそのまま
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs">AppType</code>
+                  に乗るので、RPCクライアント側の入力補完もより正確になります。
+                </p>
+              </Callout>
+            </TabsContent>
+          </Tabs>
+        </>
+      ) : (
+        <CopyBlock lang="ts" title="backend/src/index.ts（イメージ）" code={BEFORE2_CODE} />
+      )}
 
       <Callout variant="info" title="なぜチェインさせるの？">
         <p>

@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { getNextPage, getPrevPage } from "@/lib/routes";
+import { preloadPage } from "@/lib/pageResolver";
 
 type Props = {
   current: string;
@@ -9,6 +11,12 @@ type Props = {
 export function NextLink({ current }: Props) {
   const prev = getPrevPage(current);
   const next = getNextPage(current);
+
+  // 次のページを先読みしておく。セッションをまたぐ移動でも
+  // 遷移時に「依頼書を開いています…」が表示されないようにする
+  useEffect(() => {
+    if (next?.file) preloadPage(next.file);
+  }, [next?.file]);
 
   if (!prev && !next) return null;
 

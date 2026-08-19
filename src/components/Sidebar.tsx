@@ -2,21 +2,27 @@ import { useEffect, useState, type ReactNode } from "react";
 import {
   ChevronDown,
   CheckCircle2,
-  Sparkles,
+  MapPin,
   Store,
+  ShieldCheck,
+  Database,
+  Rocket,
   Home,
-  Hammer,
 } from "lucide-react";
 import {
   SESSION1_PAGES,
   SESSION2_PAGES,
   SESSION3_PAGES,
+  SESSION4_PAGES,
   EXTRA_PAGES,
   HOME,
+  PUBLISHED_UP_TO,
+  isPagePublished,
 } from "@/lib/routes";
 import type { PageDef } from "@/lib/routes";
 import { getAllProgress } from "@/lib/storage";
 import { cn } from "@/lib/utils";
+import { ClearedBadge } from "@/components/ClearedBadge";
 import { ProgressReset } from "@/components/ProgressReset";
 
 type Props = {
@@ -27,6 +33,9 @@ type Props = {
 export function Sidebar({ currentPath, onNavigate }: Props) {
   const [progress, setProgress] = useState<Record<string, boolean>>({});
   const [openS1, setOpenS1] = useState(true);
+  const [openS2, setOpenS2] = useState(false);
+  const [openS3, setOpenS3] = useState(false);
+  const [openS4, setOpenS4] = useState(false);
   const [openExtra, setOpenExtra] = useState(false);
 
   useEffect(() => {
@@ -43,6 +52,9 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
   // 現在ページのセクションを自動で開く
   useEffect(() => {
     if (currentPath.startsWith("/session1")) setOpenS1(true);
+    if (currentPath.startsWith("/session2")) setOpenS2(true);
+    if (currentPath.startsWith("/session3")) setOpenS3(true);
+    if (currentPath.startsWith("/session4")) setOpenS4(true);
     if (currentPath.startsWith("/extra")) setOpenExtra(true);
   }, [currentPath]);
 
@@ -74,6 +86,9 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
         open={openS1}
         onToggle={() => setOpenS1((v) => !v)}
         progress={countProgress(SESSION1_PAGES)}
+        topPath="/session1"
+        active={currentPath === "/session1"}
+        onNavigate={onNavigate}
       >
         {SESSION1_PAGES.map((p, i) => (
           <NavItem
@@ -87,25 +102,87 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
         ))}
       </Section>
 
-      {/* 第2回・第3回は開催前に追記 */}
-      {SESSION2_PAGES.length === 0 && SESSION3_PAGES.length === 0 && (
-        <div className="mt-4 rounded-md border border-dashed px-3 py-2 text-xs text-muted-foreground">
-          <p className="flex items-center gap-1.5">
-            <Hammer size={12} />
-            第2回・第3回のページは準備中です
-          </p>
-        </div>
+      {PUBLISHED_UP_TO >= 2 && (
+        <Section
+          label="第2回：堅牢なAPIにしよう"
+          icon={<ShieldCheck size={14} />}
+          open={openS2}
+          onToggle={() => setOpenS2((v) => !v)}
+          progress={countProgress(SESSION2_PAGES)}
+          topPath="/session2"
+          active={currentPath === "/session2"}
+          onNavigate={onNavigate}
+        >
+          {SESSION2_PAGES.map((p, i) => (
+            <NavItem
+              key={p.path}
+              page={p}
+              index={i + 1}
+              active={currentPath === p.path}
+              done={!!(p.progressId && progress[p.progressId])}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </Section>
+      )}
+
+      {PUBLISHED_UP_TO >= 3 && (
+        <Section
+          label="第3回：データベースを導入しよう"
+          icon={<Database size={14} />}
+          open={openS3}
+          onToggle={() => setOpenS3((v) => !v)}
+          progress={countProgress(SESSION3_PAGES)}
+          topPath="/session3"
+          active={currentPath === "/session3"}
+          onNavigate={onNavigate}
+        >
+          {SESSION3_PAGES.map((p, i) => (
+            <NavItem
+              key={p.path}
+              page={p}
+              index={i + 1}
+              active={currentPath === p.path}
+              done={!!(p.progressId && progress[p.progressId])}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </Section>
+      )}
+
+      {PUBLISHED_UP_TO >= 4 && (
+        <Section
+          label="第4回：本番デプロイでよろず屋を開店しよう"
+          icon={<Rocket size={14} />}
+          open={openS4}
+          onToggle={() => setOpenS4((v) => !v)}
+          progress={countProgress(SESSION4_PAGES)}
+          topPath="/session4"
+          active={currentPath === "/session4"}
+          onNavigate={onNavigate}
+        >
+          {SESSION4_PAGES.map((p, i) => (
+            <NavItem
+              key={p.path}
+              page={p}
+              index={i + 1}
+              active={currentPath === p.path}
+              done={!!(p.progressId && progress[p.progressId])}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </Section>
       )}
 
       <div className="mt-6">
         <Section
-          label="おまけ"
-          icon={<Sparkles size={14} />}
+          label="サブクエスト"
+          icon={<MapPin size={14} />}
           open={openExtra}
           onToggle={() => setOpenExtra((v) => !v)}
           progress={{ done: 0, total: 0 }}
         >
-          {EXTRA_PAGES.map((p) => (
+          {EXTRA_PAGES.filter(isPagePublished).map((p) => (
             <NavItem
               key={p.path}
               page={p}
@@ -133,6 +210,9 @@ function Section({
   open,
   onToggle,
   progress,
+  topPath,
+  active,
+  onNavigate,
   children,
 }: {
   label: string;
@@ -140,28 +220,59 @@ function Section({
   open: boolean;
   onToggle: () => void;
   progress: { done: number; total: number };
+  topPath?: string;
+  active?: boolean;
+  onNavigate?: () => void;
   children: ReactNode;
 }) {
+  const badge =
+    progress.total > 0 &&
+    (progress.done === progress.total ? (
+      <ClearedBadge />
+    ) : (
+      <span className="text-xs font-normal text-muted-foreground">
+        {progress.done}/{progress.total}
+      </span>
+    ));
+
   return (
     <div className="mb-1">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        className="flex w-full items-center gap-2 rounded-sm border-b border-dashed border-gold/60 px-3 py-2 font-serif text-xs font-bold tracking-widest transition hover:bg-secondary"
+      <div
+        className={cn(
+          "flex w-full items-center gap-1 rounded-sm border-b border-dashed border-gold/60 pr-2 font-serif text-xs font-bold tracking-widest transition",
+          active && "bg-primary/10 text-primary"
+        )}
       >
-        {icon}
-        <span className="flex-1 text-left">{label}</span>
-        {progress.total > 0 && (
-          <span className="text-xs font-normal text-muted-foreground">
-            {progress.done}/{progress.total}
+        {topPath ? (
+          <a
+            href={`#${topPath}`}
+            onClick={onNavigate}
+            aria-current={active ? "page" : undefined}
+            className="flex flex-1 items-center gap-2 rounded-sm px-3 py-2 hover:bg-secondary"
+          >
+            {icon}
+            <span className="flex-1 text-left">{label}</span>
+          </a>
+        ) : (
+          <span className="flex flex-1 items-center gap-2 px-3 py-2">
+            {icon}
+            <span className="flex-1 text-left">{label}</span>
           </span>
         )}
-        <ChevronDown
-          size={14}
-          className={cn("transition-transform", !open && "-rotate-90")}
-        />
-      </button>
+        {badge}
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={open}
+          aria-label={open ? `${label}を閉じる` : `${label}を開く`}
+          className="rounded-sm p-1 transition hover:bg-secondary"
+        >
+          <ChevronDown
+            size={14}
+            className={cn("transition-transform", !open && "-rotate-90")}
+          />
+        </button>
+      </div>
       {open && <div className="ml-3 border-l-2 border-border pl-2">{children}</div>}
     </div>
   );

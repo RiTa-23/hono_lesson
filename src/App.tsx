@@ -1,17 +1,9 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import type { ComponentType } from "react";
 import { Layout } from "@/components/Layout";
+import { findPage, MAIN_FLOW } from "@/lib/routes";
+import { getPageComponent, preloadSession } from "@/lib/pageResolver";
 import { ensureVersion } from "@/lib/storage";
-import { Home } from "@/pages/Home";
-import { AboutApi } from "@/pages/session1/AboutApi";
-import { AboutHono } from "@/pages/session1/AboutHono";
-import { Setup } from "@/pages/session1/Setup";
-import { FirstApi } from "@/pages/session1/FirstApi";
-import { PathParam } from "@/pages/session1/PathParam";
-import { PostApi } from "@/pages/session1/PostApi";
-import { CorsFrontend } from "@/pages/session1/CorsFrontend";
-import { Summary } from "@/pages/session1/Summary";
-import { Rpc } from "@/pages/extra/Rpc";
-import { Glossary } from "@/pages/extra/Glossary";
 import { NotFound } from "@/pages/NotFound";
 
 function normalizeHash(): string {
@@ -19,6 +11,17 @@ function normalizeHash(): string {
   const raw = h.startsWith("#") ? h.slice(1) : h;
   if (!raw || raw === "/") return "/";
   return raw.startsWith("/") ? raw : "/" + raw;
+}
+
+// 遅延ロード中のフォールバック（依頼書風）
+function PageLoading() {
+  return (
+    <div className="flex justify-center py-24">
+      <p className="animate-pulse font-serif text-sm tracking-widest text-muted-foreground">
+        依頼書を開いています…
+      </p>
+    </div>
+  );
 }
 
 function App() {
@@ -40,42 +43,37 @@ function App() {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
+  const currentPage = findPage(path);
+
+  useEffect(() => {
+    // 現在のセッションの全ページを先読みする。セッションのページは1チャンクに
+    // まとまっているため、同一セッション内の遷移ではフォールバックが表示されない。
+    // ホーム（fileにセッションの区切りがない）では、次に進む先である
+    // メインフロー最初のセッションを先読みする
+    const file = currentPage?.file;
+    if (!file) return;
+    const session = file.includes("/")
+      ? file.split("/")[0]
+      : MAIN_FLOW[0]?.file?.split("/")[0];
+    if (session) preloadSession(session);
+  }, [path]);
+
   const PageComponent = resolvePage(path);
 
   return (
     <Layout currentPath={path}>
-      <PageComponent />
+      <Suspense fallback={<PageLoading />}>
+        <PageComponent />
+      </Suspense>
     </Layout>
   );
 }
 
-function resolvePage(path: string): () => React.JSX.Element {
-  switch (path) {
-    case "/":
-      return Home;
-    case "/session1/01-about-api":
-      return AboutApi;
-    case "/session1/02-about-hono":
-      return AboutHono;
-    case "/session1/03-setup":
-      return Setup;
-    case "/session1/04-first-api":
-      return FirstApi;
-    case "/session1/05-path-param":
-      return PathParam;
-    case "/session1/06-post-api":
-      return PostApi;
-    case "/session1/07-cors-frontend":
-      return CorsFrontend;
-    case "/session1/08-summary":
-      return Summary;
-    case "/extra/rpc":
-      return Rpc;
-    case "/extra/glossary":
-      return Glossary;
-    default:
-      return NotFound;
-  }
+// 未公開の回（PUBLISHED_UP_TOより先）は、直接URLを叩かれても404にする
+function resolvePage(path: string): ComponentType {
+  const page = findPage(path);
+  if (!page) return NotFound;
+  return getPageComponent(page) ?? NotFound;
 }
 
 export default App;

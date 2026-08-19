@@ -2,7 +2,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Callout } from "@/components/Callout";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
-import { Sparkles } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 export function Summary() {
   return (
@@ -98,11 +98,12 @@ export function Summary() {
         </li>
       </ul>
 
-      <Callout variant="quest" title="第3回の予告">
+      <Callout variant="quest" title="第3回・第4回の予告">
         <p>
           今のよろず屋は、店じまい（サーバー停止）するとすべてを忘れてしまいます。
-          第3回はD1データベースに記録を残し、Cloudflare Workersにデプロイして、
-          世界中の冒険者がアクセスできるお店にします。
+          第3回はCloudflare D1とDrizzle ORMでデータを永続化し、再起動してもデータが消えないお店にします
+          （この時点では、まだ手元のパソコンの中だけの話です）。
+          そして第4回で、実際にCloudflare Workersへデプロイし、世界中の冒険者がアクセスできるお店にします。
         </p>
       </Callout>
 
@@ -140,13 +141,13 @@ export function Summary() {
         </ul>
       </Callout>
 
-      <h2 className="mt-10 text-xl font-bold">余裕がある人へ（おまけ）</h2>
+      <h2 className="mt-10 text-xl font-bold">余裕がある人へ（サブクエスト）</h2>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <a
           href="#/extra/rpc"
           className="flex items-start gap-3 rounded-lg border p-4 transition hover:bg-secondary/60"
         >
-          <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />
+          <MapPin size={18} className="mt-0.5 shrink-0 text-primary" />
           <span>
             <span className="block font-medium">RPCで型安全な連携</span>
             <span className="mt-1 block text-sm text-muted-foreground">
@@ -158,9 +159,9 @@ export function Summary() {
           href="#/extra/glossary"
           className="flex items-start gap-3 rounded-lg border p-4 transition hover:bg-secondary/60"
         >
-          <Sparkles size={18} className="mt-0.5 shrink-0 text-primary" />
+          <MapPin size={18} className="mt-0.5 shrink-0 text-primary" />
           <span>
-            <span className="block font-medium">用語集</span>
+            <span className="block font-medium">用語集（第1回）</span>
             <span className="mt-1 block text-sm text-muted-foreground">
               今日出てきた用語を辞書のように引けます。復習にどうぞ。
             </span>

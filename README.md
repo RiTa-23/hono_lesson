@@ -1,7 +1,8 @@
 # よろず屋API講座（Hono ハンズオン教材サイト）
 
 RPGの「よろず屋」を題材に、HonoでバックエンドAPIを作るハンズオン講座の教材サイトです。
-第1回（APIの基礎〜Reactフロント連携）のコンテンツを収録しています。
+全4回（第1回：APIの基礎〜Reactフロント連携／第2回：zod・OpenAPI・テスト／
+第3回：D1・Drizzle ORMでのデータ永続化／第4回：本番デプロイ）のコンテンツを収録しています。
 
 ## 技術スタック
 
@@ -38,14 +39,24 @@ npm run build
 npx wrangler pages deploy dist --project-name hono-yorozuya-kouza
 ```
 
-## コンテンツの追加方法（第2回・第3回）
+## 公開設定
 
-1. `src/lib/routes.ts` の `SESSION2_PAGES` / `SESSION3_PAGES` にページ定義を追記
-   （`progressId` は重複しない一意の文字列）
-2. `src/pages/session2/` などにページコンポーネントを作成
-   （`PageHeader` / `CopyBlock` / `Callout` / `ProgressCheck` / `NextLink` を組み合わせる）
-3. `src/App.tsx` の `resolvePage` に case を追記
-4. 必要なら `src/components/Sidebar.tsx` にセクションを追加
+どの回まで公開するかは `src/lib/routes.ts` の `PUBLISHED_UP_TO`（数値）で一元管理しています。
+この値を変更して `main` にpushすると、Cloudflare PagesのGit連携で自動デプロイされます。
+
+- 未公開の回のページは、サイドバー・ホームのロードマップから自動的に隠れます
+- 未公開ページはURLを直接開いても404になります（`App.tsx` の `resolvePage` が `findPage` で存在確認）
+- RPCページ・各回の用語集（サブクエスト）も、対応する回の公開状況に連動します
+
+## コンテンツの追加方法（第5回以降を増やす場合など）
+
+1. `src/lib/routes.ts` に `SESSION5_PAGES` のような配列を追加し、`ALL_PAGES` / `MAIN_FLOW` に組み込む
+   （`progressId` は重複しない一意の文字列。`section` に新しい回の識別子を追加し、`PageDef["section"]` の型定義も更新する）
+2. `src/pages/session5/` などにページコンポーネントを作成
+   （`PageHeader` / `CopyBlock` / `Callout` / `ProgressCheck` / `NextLink` を組み合わせる。エクスポート名はファイル名と同じにし、`routes.ts` の `PageDef.file` に `src/pages` 配下のパスを拡張子なしで書く）
+3. `src/App.tsx` の変更は不要（`src/lib/pageResolver.tsx` が `import.meta.glob` で自動解決し、ページごとに遅延ロードする）
+4. `src/components/Sidebar.tsx` にセクションを追加
+5. 追加した回をいきなり公開したくない場合は `PUBLISHED_UP_TO` を据え置いたままpushする
 
 各ページのテンプレート:
 

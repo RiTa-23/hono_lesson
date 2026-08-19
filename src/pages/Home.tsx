@@ -1,12 +1,34 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, CheckCircle2, Store, Package, ShieldCheck, Rocket } from "lucide-react";
+import { ArrowRight, Store, Package, ShieldCheck, Database, Rocket } from "lucide-react";
+import { AchievementStamp } from "@/components/AchievementStamp";
 import { Callout } from "@/components/Callout";
+import { ClearedBadge } from "@/components/ClearedBadge";
 import { ProgressReset } from "@/components/ProgressReset";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { MAIN_FLOW, SESSION1_PAGES } from "@/lib/routes";
+import {
+  MAIN_FLOW,
+  SESSION1_PAGES,
+  SESSION2_PAGES,
+  SESSION3_PAGES,
+  SESSION4_PAGES,
+  PUBLISHED_UP_TO,
+} from "@/lib/routes";
+import type { PageDef } from "@/lib/routes";
 import { getAllProgress } from "@/lib/storage";
+
+type SessionProgress = {
+  done: number;
+  total: number;
+  cleared: boolean;
+};
+
+function countProgress(pages: PageDef[], progress: Record<string, boolean>): SessionProgress {
+  const withId = pages.filter((p) => p.progressId);
+  const done = withId.filter((p) => progress[p.progressId!]).length;
+  return { done, total: withId.length, cleared: withId.length > 0 && done === withId.length };
+}
 
 export function Home() {
   const [progress, setProgress] = useState<Record<string, boolean>>({});
@@ -25,6 +47,11 @@ export function Home() {
   const total = MAIN_FLOW.length;
   const done = MAIN_FLOW.filter((p) => p.progressId && progress[p.progressId]).length;
   const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+
+  const s1 = countProgress(SESSION1_PAGES, progress);
+  const s2 = countProgress(SESSION2_PAGES, progress);
+  const s3 = countProgress(SESSION3_PAGES, progress);
+  const s4 = countProgress(SESSION4_PAGES, progress);
 
   return (
     <div>
@@ -71,7 +98,7 @@ export function Home() {
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 font-bold">
             <Package size={18} className="text-primary" />
-            第1回の進捗
+            全体の進捗（第{PUBLISHED_UP_TO}回まで公開中）
           </h2>
           <span className="text-sm font-bold text-muted-foreground">
             {done}/{total} ステップ完了（{percent}%）
@@ -81,60 +108,163 @@ export function Home() {
           value={percent}
           className="mt-3 h-2.5 rounded-none border border-primary bg-card [&>div]:bg-gold"
         />
-        {percent === 100 && (
-          <p className="mt-3 flex items-center gap-2 font-serif text-sm font-bold text-gold">
-            <CheckCircle2 size={16} />
-            全クエスト達成！ HP MAX です
-          </p>
+        {percent === 100 && PUBLISHED_UP_TO === 4 && (
+          <div className="relative mt-4 border-2 border-primary bg-card p-1.5">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -left-[3px] -top-[3px] h-4 w-4 border-l-2 border-t-2 border-gold"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-[3px] -top-[3px] h-4 w-4 border-r-2 border-t-2 border-gold"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-[3px] -left-[3px] h-4 w-4 border-b-2 border-l-2 border-gold"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-[3px] -right-[3px] h-4 w-4 border-b-2 border-r-2 border-gold"
+            />
+            <div className="flex flex-col items-center gap-3 border border-gold/50 px-6 py-6 text-center">
+              <AchievementStamp />
+              <p className="font-serif text-sm font-bold text-gold">
+                よろず屋は満を持して開店だ
+              </p>
+            </div>
+          </div>
         )}
       </section>
 
       {/* ロードマップ */}
-      <h2 className="mt-10 text-xl font-bold">全3回のロードマップ</h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <Badge className="w-fit">第1回（今回）</Badge>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Store size={16} className="text-primary" />
-              よろず屋APIを作ろう
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm leading-relaxed text-muted-foreground">
-            APIとは？Honoとは？から始めて、商品一覧・購入・売却のAPIを実装。
-            最後はReactのフロントとつないで、画面からアイテムを売り買いします。
-          </CardContent>
-        </Card>
-        <Card className="opacity-75">
-          <CardHeader>
-            <Badge variant="secondary" className="w-fit">
-              第2回（準備中）
-            </Badge>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <ShieldCheck size={16} />
-              堅牢なAPIにしよう
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm leading-relaxed text-muted-foreground">
-            zodでバリデーション、OpenAPIでドキュメント自動生成、
-            そしてテストコードを書いて、安心して直せるAPIに育てます。
-          </CardContent>
-        </Card>
-        <Card className="opacity-75">
-          <CardHeader>
-            <Badge variant="secondary" className="w-fit">
-              第3回（準備中）
-            </Badge>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Rocket size={16} />
-              公開してみよう
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm leading-relaxed text-muted-foreground">
-            D1データベース（drizzle ORM）と連携してデータを永続化。
-            Cloudflare Workersへデプロイして、世界に公開します。
-          </CardContent>
-        </Card>
+      <h2 className="mt-10 text-xl font-bold">全4回のロードマップ</h2>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <a href="#/session1" className="block transition hover:opacity-90">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <Badge className="w-fit">第1回</Badge>
+                {s1.cleared && <ClearedBadge />}
+              </div>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Store size={16} className="text-primary" />
+                よろず屋APIを作ろう
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-muted-foreground">
+              APIとは？Honoとは？から始めて、商品一覧・購入・売却のAPIを実装。
+              最後はReactのフロントとつないで、画面からアイテムを売り買いします。
+            </CardContent>
+          </Card>
+        </a>
+        {PUBLISHED_UP_TO >= 2 ? (
+          <a href="#/session2" className="block transition hover:opacity-90">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <Badge className="w-fit">第2回</Badge>
+                  {s2.cleared && <ClearedBadge />}
+                </div>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <ShieldCheck size={16} />
+                  堅牢なAPIにしよう
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm leading-relaxed text-muted-foreground">
+                zodでバリデーション、OpenAPIでドキュメント自動生成、
+                そしてテストコードを書いて、安心して直せるAPIに育てます。
+              </CardContent>
+            </Card>
+          </a>
+        ) : (
+          <Card className="opacity-75">
+            <CardHeader>
+              <Badge variant="secondary" className="w-fit">
+                第2回（準備中）
+              </Badge>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <ShieldCheck size={16} />
+                堅牢なAPIにしよう
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-muted-foreground">
+              zodでバリデーション、OpenAPIでドキュメント自動生成、
+              そしてテストコードを書いて、安心して直せるAPIに育てます。
+            </CardContent>
+          </Card>
+        )}
+        {PUBLISHED_UP_TO >= 3 ? (
+          <a href="#/session3" className="block transition hover:opacity-90">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <Badge className="w-fit">第3回</Badge>
+                  {s3.cleared && <ClearedBadge />}
+                </div>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Database size={16} />
+                  データベースを導入しよう
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm leading-relaxed text-muted-foreground">
+                Cloudflare D1とDrizzle ORMでデータを永続化。
+                再起動しても所持金・在庫が消えないAPIに育てます（ローカル環境まで）。
+              </CardContent>
+            </Card>
+          </a>
+        ) : (
+          <Card className="opacity-75">
+            <CardHeader>
+              <Badge variant="secondary" className="w-fit">
+                第3回（準備中）
+              </Badge>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Database size={16} />
+                データベースを導入しよう
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-muted-foreground">
+              Cloudflare D1とDrizzle ORMでデータを永続化。
+              再起動しても所持金・在庫が消えないAPIに育てます（ローカル環境まで）。
+            </CardContent>
+          </Card>
+        )}
+        {PUBLISHED_UP_TO >= 4 ? (
+          <a href="#/session4" className="block transition hover:opacity-90">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <Badge className="w-fit">第4回</Badge>
+                  {s4.cleared && <ClearedBadge />}
+                </div>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Rocket size={16} />
+                  本番デプロイでよろず屋を開店
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm leading-relaxed text-muted-foreground">
+                本番D1へのマイグレーションとCloudflare Workersへのデプロイで、
+                世界中からアクセスできるお店に仕上げます。
+              </CardContent>
+            </Card>
+          </a>
+        ) : (
+          <Card className="opacity-75">
+            <CardHeader>
+              <Badge variant="secondary" className="w-fit">
+                第4回（準備中）
+              </Badge>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Rocket size={16} />
+                本番デプロイでよろず屋を開店
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-muted-foreground">
+              本番D1へのマイグレーションとCloudflare Workersへのデプロイで、
+              世界中からアクセスできるお店に仕上げます。
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* このサイトの使い方 */}
@@ -166,40 +296,6 @@ export function Home() {
         <li>npm などを使ったフロントエンド開発の経験</li>
         <li>ターミナルでの基本的なコマンド操作</li>
       </ul>
-
-      {/* タイムテーブル */}
-      <h2 className="mt-10 text-xl font-bold">第1回のタイムテーブル（目安）</h2>
-      <div className="mt-4 overflow-hidden rounded-sm border border-primary">
-        <table className="w-full text-sm">
-          <thead className="border-b border-gold bg-secondary/60 font-serif">
-            <tr>
-              <th className="px-4 py-2 text-left font-bold">時間</th>
-              <th className="px-4 py-2 text-left font-bold">内容</th>
-            </tr>
-          </thead>
-          <tbody>
-            {SESSION1_PAGES.map((p, i) => (
-              <tr key={p.path} className="border-t border-border">
-                <td className="whitespace-nowrap px-4 py-2 text-muted-foreground">
-                  約{p.minutes ?? "-"}分
-                </td>
-                <td className="px-4 py-2">
-                  <a href={`#${p.path}`} className="font-medium text-primary underline-offset-4 hover:underline">
-                    {String(i + 1).padStart(2, "0")}. {p.title}
-                  </a>
-                  {p.progressId && progress[p.progressId] && (
-                    <CheckCircle2
-                      size={14}
-                      className="ml-2 inline-block text-gold"
-                      aria-label="完了"
-                    />
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
       <div className="mt-10 flex justify-center">
         <a
