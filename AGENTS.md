@@ -16,7 +16,8 @@ RPGのよろず屋APIを題材に、全4回を収録済み。
 
 ## 構成の要点
 
-- `src/lib/routes.ts` … ページ構成の単一ソース。`progressId` は進捗管理のキー
+- `src/lib/routes.ts` … ページ構成の単一ソース。`progressId` は進捗管理のキー、`file` はページコンポーネントの場所
+- `src/lib/pageResolver.tsx` … ページコンポーネントの遅延ロード（`import.meta.glob`）。`PageDef.file` からコンポーネントを解決する（エクスポート名はファイル名と同じ規約）
 - `src/lib/storage.ts` … localStorage ラッパー。進捗変更時に `progress-updated` / `progress-cleared` の CustomEvent を発火し、サイドバー・ホームが再描画される仕組み
 - `src/lib/theme.ts` … ライト/ダークテーマ（`<html>` の `.dark` クラス切替）
 - `src/App.tsx` … hash ルーティング（react-router は未使用）
@@ -32,7 +33,8 @@ RPGのよろず屋APIを題材に、全4回を収録済み。
 
 ## ルール
 
-- ページ追加時は必ず routes.ts → ページコンポーネント → App.tsx の3箇所を更新する
+- ページ追加時は routes.ts（`path`・`title`・`file` を記入）→ ページコンポーネント作成の2箇所（App.tsx の変更は不要。`src/lib/pageResolver.tsx` が `import.meta.glob` で自動解決する）
+- ページコンポーネントのエクスポート名はファイル名と同じにする（例: `FirstApi.tsx` → `export function FirstApi`）。`PageDef.file` は `src/pages` 配下のパスを拡張子なしで書く（例: `"session1/FirstApi"`）
 - テンプレート厳守: PageHeader（ゴール・所要時間）/ 手順 / よくあるつまずき×2以上 / ProgressCheck / NextLink
 - 進捗IDは既存と重複させない（routes.test.ts が検知）
 - 変更後は `npm run build` と `npm test` が通ることを確認する

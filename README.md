@@ -53,8 +53,8 @@ npx wrangler pages deploy dist --project-name hono-yorozuya-kouza
 1. `src/lib/routes.ts` に `SESSION5_PAGES` のような配列を追加し、`ALL_PAGES` / `MAIN_FLOW` に組み込む
    （`progressId` は重複しない一意の文字列。`section` に新しい回の識別子を追加し、`PageDef["section"]` の型定義も更新する）
 2. `src/pages/session5/` などにページコンポーネントを作成
-   （`PageHeader` / `CopyBlock` / `Callout` / `ProgressCheck` / `NextLink` を組み合わせる）
-3. `src/App.tsx` の `resolvePage` に case を追記
+   （`PageHeader` / `CopyBlock` / `Callout` / `ProgressCheck` / `NextLink` を組み合わせる。エクスポート名はファイル名と同じにし、`routes.ts` の `PageDef.file` に `src/pages` 配下のパスを拡張子なしで書く）
+3. `src/App.tsx` の変更は不要（`src/lib/pageResolver.tsx` が `import.meta.glob` で自動解決し、ページごとに遅延ロードする）
 4. `src/components/Sidebar.tsx` にセクションを追加
 5. 追加した回をいきなり公開したくない場合は `PUBLISHED_UP_TO` を据え置いたままpushする
 

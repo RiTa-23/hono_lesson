@@ -8,6 +8,7 @@ import {
   getNextPage,
   getPrevPage,
 } from "./routes";
+import { getRegisteredPageFiles } from "./pageResolver";
 
 describe("routes（ページ構成）", () => {
   it("パスが重複していない", () => {
@@ -48,6 +49,19 @@ describe("routes（ページ構成）", () => {
   it("サブクエストページはメインフローに含まれない", () => {
     for (const p of EXTRA_PAGES) {
       expect(MAIN_FLOW.find((m) => m.path === p.path)).toBeUndefined();
+    }
+  });
+
+  it("全ページにコンポーネントのfileが登録されている", () => {
+    for (const p of ALL_PAGES) {
+      expect(p.file, `${p.path} に file がない`).toBeTruthy();
+    }
+  });
+
+  it("file が実際のページモジュールに存在する", () => {
+    const files = getRegisteredPageFiles();
+    for (const p of ALL_PAGES) {
+      expect(files, `${p.path} の file (${p.file}) が存在しない`).toContain(p.file);
     }
   });
 });
