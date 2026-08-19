@@ -2,6 +2,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Callout } from "@/components/Callout";
 import { CopyBlock } from "@/components/CopyBlock";
 import { NextLink } from "@/components/NextLink";
+import { ProgressCheck } from "@/components/ProgressCheck";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PUBLISHED_UP_TO } from "@/lib/routes";
@@ -209,6 +210,7 @@ bun run src/client.ts
         </li>
       </ul>
 
+      <ProgressCheck id="extra-rpc" label="RPCで型安全な連携を体験した" />
       <NextLink current="/extra/rpc" />
     </div>
   );

@@ -260,6 +260,7 @@ export const EXTRA_PAGES: PageDef[] = [
     section: "session1",
     sectionLabel: "サブクエスト",
     minutes: 15,
+    progressId: "extra-rpc",
   },
   {
     path: "/extra/glossary",
@@ -267,6 +268,7 @@ export const EXTRA_PAGES: PageDef[] = [
     title: "用語集（第1回）",
     section: "session1",
     sectionLabel: "サブクエスト",
+    progressId: "extra-glossary-1",
   },
   {
     path: "/extra/glossary-2",
@@ -274,6 +276,7 @@ export const EXTRA_PAGES: PageDef[] = [
     title: "用語集（第2回）",
     section: "session2",
     sectionLabel: "サブクエスト",
+    progressId: "extra-glossary-2",
   },
   {
     path: "/extra/glossary-3",
@@ -281,6 +284,7 @@ export const EXTRA_PAGES: PageDef[] = [
     title: "用語集（第3回）",
     section: "session3",
     sectionLabel: "サブクエスト",
+    progressId: "extra-glossary-3",
   },
   {
     path: "/extra/glossary-4",
@@ -288,8 +292,17 @@ export const EXTRA_PAGES: PageDef[] = [
     title: "用語集（第4回）",
     section: "session4",
     sectionLabel: "サブクエスト",
+    progressId: "extra-glossary-4",
   },
 ];
+
+// サブクエストのトップページ（一覧・進捗表示）。HOME同様、特定の回に
+// 紐づかないためsectionを持たず、常に公開される
+export const EXTRA_TOP: PageDef = {
+  path: "/extra",
+  file: "extra/ExtraTop",
+  title: "サブクエスト",
+};
 
 // 各回のトップページ（進捗・タイムテーブルの一覧）。ステップではないので
 // progressIdを持たず、MAIN_FLOWにも含めない
@@ -352,6 +365,7 @@ export function computeAllPages(limit: number = PUBLISHED_UP_TO): PageDef[] {
     ...SESSION3_PAGES,
     ...SESSION4_PAGES,
     ...SESSION_TOP_PAGES,
+    EXTRA_TOP,
     ...EXTRA_PAGES,
   ].filter((p) => isPublishedForLimit(p.section, limit));
 }

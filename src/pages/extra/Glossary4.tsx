@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader";
 import { NextLink } from "@/components/NextLink";
+import { ProgressCheck } from "@/components/ProgressCheck";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -70,6 +71,7 @@ export function Glossary4() {
           </AccordionItem>
         ))}
       </Accordion>
+      <ProgressCheck id="extra-glossary-4" label="第4回の用語集にひととおり目を通した" />
       <NextLink current="/extra/glossary-4" />
     </div>
   );

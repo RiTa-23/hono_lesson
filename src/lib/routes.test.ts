@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   EXTRA_PAGES,
+  EXTRA_TOP,
   MAIN_FLOW,
   PUBLISHED_UP_TO,
   SESSION1_PAGES,
@@ -66,6 +67,18 @@ describe("routes（ページ構成）", () => {
       expect(FULL_MAIN_FLOW.find((m) => m.path === p.path)).toBeUndefined();
       expect(p.progressId, `${p.path} は進捗トラッキング対象外のはず`).toBeUndefined();
     }
+  });
+
+  it("サブクエストの各ページにprogressIdがある", () => {
+    for (const p of EXTRA_PAGES) {
+      expect(p.progressId, `${p.path} に progressId がない`).toBeTruthy();
+    }
+  });
+
+  it("サブクエストのトップページはメインフローに含まれず、progressIdも持たない。常に公開される", () => {
+    expect(FULL_MAIN_FLOW.find((m) => m.path === EXTRA_TOP.path)).toBeUndefined();
+    expect(EXTRA_TOP.progressId).toBeUndefined();
+    expect(findPage(EXTRA_TOP.path)).toBeDefined();
   });
 
   it("各回のトップページが、公開状況に応じてfindPageから引ける・引けない", () => {
