@@ -9,3 +9,4 @@ node_modules/.tmp
 
 # 講座用サンプルリポジトリ（独立したgitリポジトリとして管理）
 yorozuya/
+announcements/
