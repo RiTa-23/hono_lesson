@@ -16,47 +16,91 @@ const moduleMap: Record<string, () => Promise<Record<string, unknown>>> =
       ])
   );
 
-const cache = new Map<string, LazyExoticComponent<ComponentType>>();
+// セッション名 → そのセッションに属するfile一覧（先読み時に全fileを毎回走査しないための索引）
+const sessionIndex = new Map<string, string[]>();
+for (const file of Object.keys(moduleMap)) {
+  const slash = file.indexOf("/");
+  if (slash === -1) continue; // Home のようにセッションに属さないページは対象外
+  const session = file.slice(0, slash);
+  const list = sessionIndex.get(session);
+  if (list) list.push(file);
+  else sessionIndex.set(session, [file]);
+}
 
+// file単位のロード状態を一本化する。preload（先読み）と実描画（lazy）の両方が
+// このMapを経由するため、同じファイルへの二重ロードが起きない
+const loadPromises = new Map<string, Promise<ComponentType>>();
 // ロード済み（評価済み）ページのコンポーネントを保持する同期レジストリ。
 // ここに登録済みのページは lazy() を経由せず直接描画されるため、
 // ページ遷移で Suspense フォールバック（「依頼書を開いています…」）が
 // 一切表示されなくなる（サスペンド自体が発生しない）
-const loadedComponents = new Map<string, ComponentType>();
+const resolvedComponents = new Map<string, ComponentType>();
+const lazyComponents = new Map<string, LazyExoticComponent<ComponentType>>();
 
 // テスト用: 登録されているページモジュールの一覧（routes.test.ts が file の存在確認に使う）
 export function getRegisteredPageFiles(): string[] {
   return Object.keys(moduleMap);
 }
 
-function loadModule(file: string) {
-  if (loadedComponents.has(file)) return;
+// テスト用: file に対応するモジュールを実際にロードする
+// （routes.test.ts が「export名がファイル名と一致しているか」の検証に使う）
+export function loadPageModule(
+  file: string
+): Promise<Record<string, unknown>> | undefined {
+  return moduleMap[file]?.();
+}
+
+// file に対応するコンポーネントをロードする（進行中のロードがあれば使い回す）。
+// 規約: ページコンポーネントのエクスポート名はファイル名と同じ（例: FirstApi.tsx → export function FirstApi）
+function loadComponent(file: string): Promise<ComponentType> {
+  const inFlight = loadPromises.get(file);
+  if (inFlight) return inFlight;
+
   const loader = moduleMap[file];
-  if (!loader) return;
-  // 規約: ページコンポーネントのエクスポート名はファイル名と同じ（例: FirstApi.tsx → export function FirstApi）
+  if (!loader) {
+    return Promise.reject(
+      new Error(`[yorozuya] ページモジュールが見つかりません: ${file}`)
+    );
+  }
+
   const exportName = file.split("/").pop()!;
-  void loader()
+  const promise = loader()
     .then((m) => {
       const C = m[exportName] as ComponentType | undefined;
-      if (C) loadedComponents.set(file, C);
+      if (!C) {
+        throw new Error(
+          `[yorozuya] ページコンポーネントが見つかりません: ${file} (export: ${exportName})`
+        );
+      }
+      resolvedComponents.set(file, C);
+      return C;
     })
-    .catch(() => {
-      // 読み込み失敗は遅延ロード側（lazy）で改めてエラーになるため、ここでは無視
+    .catch((err) => {
+      // 失敗をキャッシュに残さない。ネットワーク不調などの一時的な失敗から
+      // 再試行できるようにする
+      loadPromises.delete(file);
+      throw err;
     });
+
+  loadPromises.set(file, promise);
+  return promise;
 }
 
 // セッション内の全ページを先読みする。セッションのページは1つのチャンクに
-// まとまっているため、先読みは最初の1回だけネットワークを消費する。
-// 先読み完了後は loadedComponents に登録され、遷移時にサスペンドしない
+// まとまっているため、先読みは最初の1回だけネットワークを消費する
 export function preloadSession(session: string) {
-  for (const file of Object.keys(moduleMap)) {
-    if (file.startsWith(`${session}/`)) loadModule(file);
+  for (const file of sessionIndex.get(session) ?? []) {
+    void loadComponent(file).catch(() => {
+      // 読み込み失敗は遅延ロード側（lazy）で改めてエラーになるため、ここでは無視
+    });
   }
 }
 
 // 指定ページを先読みする（NextLink などが次ページの遷移をスムーズにするために使う）
 export function preloadPage(file: string) {
-  loadModule(file);
+  void loadComponent(file).catch(() => {
+    // 読み込み失敗は遅延ロード側（lazy）で改めてエラーになるため、ここでは無視
+  });
 }
 
 // PageDef.file に対応するページコンポーネントを返す（見つからなければ null）。
@@ -66,26 +110,16 @@ export function getPageComponent(
 ): ComponentType | LazyExoticComponent<ComponentType> | null {
   const file = page.file;
   if (!file) return null;
-  const loaded = loadedComponents.get(file);
-  if (loaded) return loaded;
-  const cached = cache.get(page.path);
-  if (cached) return cached;
-  const loader = moduleMap[file];
-  if (!loader) return null;
-  const exportName = file.split("/").pop()!;
-  const comp = lazy(() =>
-    loader().then((m) => {
-      const C = m[exportName] as ComponentType | undefined;
-      if (!C) {
-        throw new Error(
-          `[yorozuya] ページコンポーネントが見つかりません: ${file} (export: ${exportName})`
-        );
-      }
-      // 一度ロードしたページは以降サスペンドさせない
-      loadedComponents.set(file, C);
-      return { default: C };
-    })
-  );
-  cache.set(page.path, comp);
+
+  const resolved = resolvedComponents.get(file);
+  if (resolved) return resolved;
+
+  const cachedLazy = lazyComponents.get(file);
+  if (cachedLazy) return cachedLazy;
+
+  if (!moduleMap[file]) return null;
+
+  const comp = lazy(() => loadComponent(file).then((C) => ({ default: C })));
+  lazyComponents.set(file, comp);
   return comp;
 }

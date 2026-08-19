@@ -8,7 +8,7 @@ import {
   getNextPage,
   getPrevPage,
 } from "./routes";
-import { getRegisteredPageFiles } from "./pageResolver";
+import { getRegisteredPageFiles, loadPageModule } from "./pageResolver";
 
 describe("routes（ページ構成）", () => {
   it("パスが重複していない", () => {
@@ -62,6 +62,18 @@ describe("routes（ページ構成）", () => {
     const files = getRegisteredPageFiles();
     for (const p of ALL_PAGES) {
       expect(files, `${p.path} の file (${p.file}) が存在しない`).toContain(p.file);
+    }
+  });
+
+  it("file に対応するexportがファイル名と同じ規約で存在する", async () => {
+    for (const p of ALL_PAGES) {
+      if (!p.file) continue;
+      const mod = await loadPageModule(p.file);
+      const exportName = p.file.split("/").pop()!;
+      expect(
+        mod?.[exportName],
+        `${p.file} に export ${exportName} がない（ファイル名とexport名の規約を確認）`
+      ).toBeTypeOf("function");
     }
   });
 });

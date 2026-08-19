@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState } from "react";
 import type { ComponentType } from "react";
 import { Layout } from "@/components/Layout";
-import { findPage } from "@/lib/routes";
+import { findPage, MAIN_FLOW } from "@/lib/routes";
 import { getPageComponent, preloadSession } from "@/lib/pageResolver";
 import { ensureVersion } from "@/lib/storage";
 import { NotFound } from "@/pages/NotFound";
@@ -47,10 +47,15 @@ function App() {
 
   useEffect(() => {
     // 現在のセッションの全ページを先読みする。セッションのページは1チャンクに
-    // まとまっているため、同一セッション内の遷移ではフォールバックが表示されない
-    if (currentPage?.file) {
-      preloadSession(currentPage.file.split("/")[0]);
-    }
+    // まとまっているため、同一セッション内の遷移ではフォールバックが表示されない。
+    // ホーム（fileにセッションの区切りがない）では、次に進む先である
+    // メインフロー最初のセッションを先読みする
+    const file = currentPage?.file;
+    if (!file) return;
+    const session = file.includes("/")
+      ? file.split("/")[0]
+      : MAIN_FLOW[0]?.file?.split("/")[0];
+    if (session) preloadSession(session);
   }, [path]);
 
   const PageComponent = resolvePage(path);
