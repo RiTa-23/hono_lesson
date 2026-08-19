@@ -129,7 +129,7 @@ export function Home() {
             <div className="flex flex-col items-center gap-3 border border-gold/50 px-6 py-6 text-center">
               <AchievementStamp />
               <p className="font-serif text-sm font-bold text-gold">
-                HP MAX！よろず屋は満を持して開店だ
+                よろず屋は満を持して開店だ
               </p>
             </div>
           </div>
