@@ -11,7 +11,7 @@ export type PageDef = {
 
 // 公開設定：この回まで公開する（値を変えてmainにpushすると自動デプロイで反映される）
 // 例: 第2回まで公開したい場合は 2 にする
-export const PUBLISHED_UP_TO = 4;
+export const PUBLISHED_UP_TO = 1;
 
 export const HOME: PageDef = { path: "/", title: "よろず屋API講座", file: "Home" };
 
