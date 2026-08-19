@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, Store, Package, ShieldCheck, Database, Rocket } from "lucide-react";
+import { AchievementStamp } from "@/components/AchievementStamp";
 import { Callout } from "@/components/Callout";
 import { ClearedBadge } from "@/components/ClearedBadge";
 import { ProgressReset } from "@/components/ProgressReset";
@@ -108,10 +109,30 @@ export function Home() {
           className="mt-3 h-2.5 rounded-none border border-primary bg-card [&>div]:bg-gold"
         />
         {percent === 100 && (
-          <p className="mt-3 flex items-center gap-2 font-serif text-sm font-bold text-gold">
-            <CheckCircle2 size={16} />
-            全クエスト達成！ HP MAX です
-          </p>
+          <div className="relative mt-4 border-2 border-primary bg-card p-1.5">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -left-[3px] -top-[3px] h-4 w-4 border-l-2 border-t-2 border-gold"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-[3px] -top-[3px] h-4 w-4 border-r-2 border-t-2 border-gold"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-[3px] -left-[3px] h-4 w-4 border-b-2 border-l-2 border-gold"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-[3px] -right-[3px] h-4 w-4 border-b-2 border-r-2 border-gold"
+            />
+            <div className="flex flex-col items-center gap-3 border border-gold/50 px-6 py-6 text-center">
+              <AchievementStamp />
+              <p className="font-serif text-sm font-bold text-gold">
+                HP MAX！よろず屋は満を持して開店だ
+              </p>
+            </div>
+          </div>
         )}
       </section>
 

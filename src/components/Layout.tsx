@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Menu, Store, X } from "lucide-react";
+import { AllClearOverlay } from "@/components/AllClearOverlay";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -100,6 +101,9 @@ export function Layout({ currentPath, children }: Props) {
           <div className="mx-auto max-w-3xl">{children}</div>
         </main>
       </div>
+
+      {/* 全クエスト達成時の演出（最後のクエスト完了瞬間に表示） */}
+      <AllClearOverlay />
     </div>
   );
 }
