@@ -256,7 +256,7 @@ export const EXTRA_PAGES: PageDef[] = [
   {
     path: "/extra/rpc",
     file: "extra/Rpc",
-    title: "サブクエスト：RPCで型安全な連携",
+    title: "RPCで型安全な連携",
     section: "session1",
     sectionLabel: "サブクエスト",
     minutes: 15,
