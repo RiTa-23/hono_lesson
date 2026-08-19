@@ -1,6 +1,24 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import App from "@/App";
+
+// ルーティング・遅延ロードの機構自体を検証するテストなので、
+// 実際の公開範囲（PUBLISHED_UP_TO）に関わらず全回が公開された状態で検証する
+vi.mock("@/lib/routes", async () => {
+  const actual =
+    await vi.importActual<typeof import("@/lib/routes")>("@/lib/routes");
+  const allPages = actual.computeAllPages(4);
+  const mainFlow = actual.computeMainFlow(4);
+  return {
+    ...actual,
+    PUBLISHED_UP_TO: 4,
+    ALL_PAGES: allPages,
+    MAIN_FLOW: mainFlow,
+    findPage: (path: string) => actual.findPage(path, allPages),
+    getNextPage: (current: string) => actual.getNextPage(current, mainFlow),
+    getPrevPage: (current: string) => actual.getPrevPage(current, mainFlow),
+  };
+});
 
 describe("App（ルーティング・遅延ロード）", () => {
   it("ホームが表示される", async () => {

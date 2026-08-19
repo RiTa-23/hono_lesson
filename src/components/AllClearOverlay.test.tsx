@@ -4,6 +4,15 @@ import { AllClearOverlay, OVERLAY_MS } from "./AllClearOverlay";
 import { MAIN_FLOW } from "@/lib/routes";
 import { clearAllProgress, setProgress } from "@/lib/storage";
 
+// 演出の表示・自動消滅・手動クローズを検証するテストなので、
+// 実際の公開範囲（PUBLISHED_UP_TO）に関わらず全回公開済みの状態で検証する
+// （PUBLISHED_UP_TO<4のときの抑制behaviorはAllClearOverlay.publishGate.test.tsxで検証する）
+vi.mock("@/lib/routes", async () => {
+  const actual =
+    await vi.importActual<typeof import("@/lib/routes")>("@/lib/routes");
+  return { ...actual, PUBLISHED_UP_TO: 4 };
+});
+
 function clearAllQuests() {
   act(() => {
     for (const p of MAIN_FLOW) {

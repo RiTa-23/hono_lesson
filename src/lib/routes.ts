@@ -11,7 +11,7 @@ export type PageDef = {
 
 // 公開設定：この回まで公開する（値を変えてmainにpushすると自動デプロイで反映される）
 // 例: 第2回まで公開したい場合は 2 にする
-export const PUBLISHED_UP_TO = 1;
+export const PUBLISHED_UP_TO: number = 1;
 
 export const HOME: PageDef = { path: "/", title: "よろず屋API講座", file: "Home" };
 
@@ -327,10 +327,14 @@ const SESSION_NUMBER: Partial<Record<NonNullable<PageDef["section"]>, number>> =
   session4: 4,
 };
 
-function isPublished(section: PageDef["section"]): boolean {
+function isPublishedForLimit(section: PageDef["section"], limit: number): boolean {
   if (!section || section === "extra") return true;
   const num = SESSION_NUMBER[section];
-  return num === undefined || num <= PUBLISHED_UP_TO;
+  return num === undefined || num <= limit;
+}
+
+function isPublished(section: PageDef["section"]): boolean {
+  return isPublishedForLimit(section, PUBLISHED_UP_TO);
 }
 
 // サブクエストページなど、ALL_PAGES以外の一覧を表示側で絞り込むときに使う
@@ -338,36 +342,43 @@ export function isPagePublished(page: PageDef): boolean {
   return isPublished(page.section);
 }
 
-export const ALL_PAGES: PageDef[] = [
-  HOME,
-  ...SESSION1_PAGES,
-  ...SESSION2_PAGES,
-  ...SESSION3_PAGES,
-  ...SESSION4_PAGES,
-  ...SESSION_TOP_PAGES,
-  ...EXTRA_PAGES,
-].filter((p) => isPublished(p.section));
+// limit を指定すると、その公開範囲でのページ一覧を計算できる
+// （テストで「今の公開範囲に関わらず全回公開されている状態」を再現する用途などに使う）
+export function computeAllPages(limit: number = PUBLISHED_UP_TO): PageDef[] {
+  return [
+    HOME,
+    ...SESSION1_PAGES,
+    ...SESSION2_PAGES,
+    ...SESSION3_PAGES,
+    ...SESSION4_PAGES,
+    ...SESSION_TOP_PAGES,
+    ...EXTRA_PAGES,
+  ].filter((p) => isPublishedForLimit(p.section, limit));
+}
+
+export function computeMainFlow(limit: number = PUBLISHED_UP_TO): PageDef[] {
+  return [...SESSION1_PAGES, ...SESSION2_PAGES, ...SESSION3_PAGES, ...SESSION4_PAGES].filter(
+    (p) => isPublishedForLimit(p.section, limit)
+  );
+}
+
+export const ALL_PAGES: PageDef[] = computeAllPages();
 
 // 進捗トラッキング対象のメインフロー（サブクエストは含めない）
-export const MAIN_FLOW: PageDef[] = [
-  ...SESSION1_PAGES,
-  ...SESSION2_PAGES,
-  ...SESSION3_PAGES,
-  ...SESSION4_PAGES,
-].filter((p) => isPublished(p.section));
+export const MAIN_FLOW: PageDef[] = computeMainFlow();
 
-export function findPage(path: string): PageDef | undefined {
-  return ALL_PAGES.find((p) => p.path === path);
+export function findPage(path: string, pages: PageDef[] = ALL_PAGES): PageDef | undefined {
+  return pages.find((p) => p.path === path);
 }
 
-export function getNextPage(current: string): PageDef | undefined {
-  const idx = MAIN_FLOW.findIndex((p) => p.path === current);
+export function getNextPage(current: string, flow: PageDef[] = MAIN_FLOW): PageDef | undefined {
+  const idx = flow.findIndex((p) => p.path === current);
   if (idx === -1) return undefined;
-  return MAIN_FLOW[idx + 1];
+  return flow[idx + 1];
 }
 
-export function getPrevPage(current: string): PageDef | undefined {
-  const idx = MAIN_FLOW.findIndex((p) => p.path === current);
+export function getPrevPage(current: string, flow: PageDef[] = MAIN_FLOW): PageDef | undefined {
+  const idx = flow.findIndex((p) => p.path === current);
   if (idx <= 0) return undefined;
-  return MAIN_FLOW[idx - 1];
+  return flow[idx - 1];
 }
