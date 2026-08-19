@@ -73,7 +73,7 @@ export function Glossary2() {
       </Badge>
       <PageHeader
         title="用語集（第2回）"
-        goal="第2回で出てきた用語をいつでも引けるようにする"
+        goal="第2回で出てきた用語を振り返って復習しよう"
       />
       <Accordion type="multiple" className="w-full">
         {TERMS.map((t) => (
