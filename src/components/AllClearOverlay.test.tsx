@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { AllClearOverlay, OVERLAY_MS } from "./AllClearOverlay";
 import { MAIN_FLOW } from "@/lib/routes";
 import { clearAllProgress, setProgress } from "@/lib/storage";
@@ -58,6 +58,19 @@ describe("AllClearOverlay（全クエスト達成演出）", () => {
 
     act(() => {
       setProgress(MAIN_FLOW[0].progressId!, false);
+    });
+    expect(screen.queryByText("全クエスト達成")).not.toBeInTheDocument();
+  });
+
+  it("閉じるボタンで手動で消せる", () => {
+    vi.useFakeTimers();
+    render(<AllClearOverlay />);
+    clearAllQuests();
+    expect(screen.getByText("全クエスト達成")).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(screen.getByRole("button", { name: "閉じる" }));
+      vi.advanceTimersByTime(300);
     });
     expect(screen.queryByText("全クエスト達成")).not.toBeInTheDocument();
   });

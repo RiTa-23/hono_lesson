@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
 import { AchievementStamp } from "@/components/AchievementStamp";
-import { MAIN_FLOW } from "@/lib/routes";
+import { MAIN_FLOW, PUBLISHED_UP_TO } from "@/lib/routes";
 import { getAllProgress } from "@/lib/storage";
 
 // 表示時間（ミリ秒）。テストからも参照する。
@@ -8,6 +9,8 @@ export const OVERLAY_MS = 4000;
 const FADE_MS = 300;
 
 function isAllCleared(): boolean {
+  // 全4回が公開されるまでは、途中までの達成を「全クリ」として演出しない
+  if (PUBLISHED_UP_TO < 4) return false;
   const progress = getAllProgress();
   return MAIN_FLOW.every((p) => p.progressId && progress[p.progressId]);
 }
@@ -56,6 +59,12 @@ export function AllClearOverlay() {
     };
   }, [show]);
 
+  // 手動で閉じる（自動フェードと同じ動きで即座に消す）
+  function handleClose() {
+    setLeaving(true);
+    window.setTimeout(() => setShow(false), FADE_MS);
+  }
+
   if (!show) return null;
 
   return (
@@ -66,7 +75,7 @@ export function AllClearOverlay() {
       <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
       <div
         className={[
-          "relative transition-opacity duration-300",
+          "pointer-events-auto relative transition-opacity duration-300",
           leaving ? "opacity-0" : "opacity-100",
         ].join(" ")}
       >
@@ -87,6 +96,14 @@ export function AllClearOverlay() {
             aria-hidden="true"
             className="pointer-events-none absolute -bottom-[3px] -right-[3px] h-4 w-4 border-b-2 border-r-2 border-gold"
           />
+          <button
+            type="button"
+            onClick={handleClose}
+            aria-label="閉じる"
+            className="absolute right-2 top-2 rounded-sm p-1 text-muted-foreground transition hover:bg-secondary/60 hover:text-foreground"
+          >
+            <X size={18} />
+          </button>
           <div className="border border-gold/50 px-8 py-8 text-center sm:px-12">
             <p className="font-serif text-xs tracking-[0.5em] text-gold">
               冒険者ギルド 公式テキスト

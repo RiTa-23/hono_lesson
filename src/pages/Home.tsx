@@ -108,7 +108,7 @@ export function Home() {
           value={percent}
           className="mt-3 h-2.5 rounded-none border border-primary bg-card [&>div]:bg-gold"
         />
-        {percent === 100 && (
+        {percent === 100 && PUBLISHED_UP_TO === 4 && (
           <div className="relative mt-4 border-2 border-primary bg-card p-1.5">
             <span
               aria-hidden="true"

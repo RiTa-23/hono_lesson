@@ -9,6 +9,10 @@ export type PageDef = {
   minutes?: number; // 所要時間の目安（分）
 };
 
+// 公開設定：この回まで公開する（値を変えてmainにpushすると自動デプロイで反映される）
+// 例: 第2回まで公開したい場合は 2 にする
+export const PUBLISHED_UP_TO = 4;
+
 export const HOME: PageDef = { path: "/", title: "よろず屋API講座", file: "Home" };
 
 export const SESSION1_PAGES: PageDef[] = [
@@ -286,10 +290,6 @@ export const EXTRA_PAGES: PageDef[] = [
     sectionLabel: "サブクエスト",
   },
 ];
-
-// 公開設定：この回まで公開する（値を変えてmainにpushすると自動デプロイで反映される）
-// 例: 第2回まで公開したい場合は 2 にする
-export const PUBLISHED_UP_TO = 4;
 
 const SESSION_NUMBER: Partial<Record<NonNullable<PageDef["section"]>, number>> = {
   session1: 1,
