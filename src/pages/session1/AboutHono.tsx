@@ -39,6 +39,55 @@ export function AboutHono() {
         良いフレームワークがなかったことから生まれました（第3回でそのCloudflareにデプロイします！）。
       </p>
 
+      <h2 className="mt-10 text-xl font-bold">言葉を整理しよう</h2>
+      <p className="mt-3 leading-relaxed">
+        ここから先でよく出てくる言葉を、先にまとめておきます。
+        すべて覚える必要はなく、「なんとなくの役割」が分かれば十分です。
+      </p>
+      <div className="mt-4 overflow-hidden rounded-lg border">
+        <table className="w-full text-sm">
+          <thead className="border-b border-gold bg-secondary/60 font-serif">
+            <tr>
+              <th className="px-4 py-2 text-left font-medium">言葉</th>
+              <th className="px-4 py-2 text-left font-medium">ざっくりした説明</th>
+              <th className="px-4 py-2 text-left font-medium">登場する場面</th>
+            </tr>
+          </thead>
+          <tbody className="[&>tr]:border-t">
+            <tr>
+              <td className="px-4 py-2 font-medium">JavaScript</td>
+              <td className="px-4 py-2">Webブラウザで動くプログラミング言語。今ではサーバー側でも広く使われています。</td>
+              <td className="px-4 py-2">今回書くAPIのコードそのもの</td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2 font-medium">TypeScript</td>
+              <td className="px-4 py-2">JavaScriptに「型（データの種類）のチェック」を足した言語。書いたコードはJavaScriptに変換されて動きます。</td>
+              <td className="px-4 py-2">今回のAPIコード（.ts ファイル）</td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2 font-medium">Node.js</td>
+              <td className="px-4 py-2">ブラウザの外でJavaScriptを動かすための実行環境。昔からよく使われています。</td>
+              <td className="px-4 py-2">HonoやExpressが動く土台の代表例</td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2 font-medium">Bun</td>
+              <td className="px-4 py-2">Node.jsより高速な新しい実行環境。インストールやテストもまとめてこなせます。</td>
+              <td className="px-4 py-2">第1・2回でAPIを動かす環境</td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2 font-medium">Cloudflare Workers</td>
+              <td className="px-4 py-2">Cloudflare社が提供する、世界中のサーバー上でコードを動かせる実行環境。</td>
+              <td className="px-4 py-2">第3回・第4回（本番デプロイ）</td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2 font-medium">RPC</td>
+              <td className="px-4 py-2">APIの関数を、まるで隣のファイルを呼ぶように使えるHonoの機能。フロントと型を共有できます。</td>
+              <td className="px-4 py-2">まとめページのサブクエスト</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <h2 className="mt-10 text-xl font-bold">ExpressではなくHonoを選ぶ理由</h2>
       <p className="mt-3 leading-relaxed">
         Node.jsの世界で昔からよく使われているフレームワークにExpressがあります。
@@ -108,6 +157,12 @@ export default app`}</code>
         </li>
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.json(...)</code> … JSON形式でレスポンスを返す
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">import</code>
+          は「ほかのファイルやライブラリから部品を取り込む」宣言です。
+          1行目は <code className="rounded bg-muted px-1.5 py-0.5 text-xs">'hono'</code> という
+          ライブラリから、Hono本体を取り込んでいます
         </li>
       </ul>
 

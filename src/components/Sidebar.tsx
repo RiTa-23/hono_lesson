@@ -180,14 +180,17 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
           icon={<MapPin size={14} />}
           open={openExtra}
           onToggle={() => setOpenExtra((v) => !v)}
-          progress={{ done: 0, total: 0 }}
+          progress={countProgress(EXTRA_PAGES.filter(isPagePublished))}
+          topPath="/extra"
+          active={currentPath === "/extra"}
+          onNavigate={onNavigate}
         >
           {EXTRA_PAGES.filter(isPagePublished).map((p) => (
             <NavItem
               key={p.path}
               page={p}
               active={currentPath === p.path}
-              done={false}
+              done={!!(p.progressId && progress[p.progressId])}
               onNavigate={onNavigate}
             />
           ))}

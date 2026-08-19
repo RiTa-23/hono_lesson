@@ -292,9 +292,14 @@ export function Home() {
       {/* 前提知識 */}
       <h2 className="mt-10 text-xl font-bold">前提知識</h2>
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
+        <li>ターミナルでの基本的なコマンド操作</li>
+        <li>gitの基本操作</li>
+      </ul>
+
+      <h3 className="mt-6 text-lg font-semibold">あると良い知識（なくても参加できます）</h3>
+      <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>JavaScript / TypeScriptの基本的な文法</li>
         <li>npm などを使ったフロントエンド開発の経験</li>
-        <li>ターミナルでの基本的なコマンド操作</li>
       </ul>
 
       <div className="mt-10 flex justify-center">

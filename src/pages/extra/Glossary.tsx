@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader";
 import { NextLink } from "@/components/NextLink";
+import { ProgressCheck } from "@/components/ProgressCheck";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -36,8 +37,27 @@ const TERMS: { term: string; reading?: string; body: string }[] = [
     body: "データをやりとりするための書き方（フォーマット）。JavaScriptのオブジェクトに似た形で、WebAPIの伝票として広く使われる。",
   },
   {
+    term: "JavaScript",
+    reading: "ジャバスクリプト",
+    body: "Webブラウザで動くプログラミング言語。今ではサーバー側でも広く使われる。Web開発の基本言語。",
+  },
+  {
+    term: "TypeScript",
+    reading: "タイプスクリプト",
+    body: "JavaScriptに「型（データの種類）のチェック」を足した言語。書いたコードはJavaScriptに変換されて動く。今回のAPIコードはTypeScriptで書く（.tsファイル）。",
+  },
+  {
     term: "ステータスコード",
     body: "レスポンスに付く3桁の数字。結果の種類を表す。200=成功、400=お願いがおかしい、404=見つからない、500=サーバーのトラブル。",
+  },
+  {
+    term: "curl",
+    reading: "カール",
+    body: "ターミナルからHTTPリクエストを送るコマンド。ブラウザの代わりにAPIへお願いを送れるので、動作確認によく使う。",
+  },
+  {
+    term: "ポート",
+    body: "パソコンの中の「番地」。1台のパソコンで複数のサーバーを動かせるよう、番号で区別する。今回は3000番がAPI（Hono）、5173番がフロント（Vite）。",
   },
   {
     term: "オリジン",
@@ -69,6 +89,20 @@ const TERMS: { term: string; reading?: string; body: string }[] = [
     body: "画面（Reactなど、ユーザーが見る側）/ データと計算を担当するサーバー側。今回は frontend/ が完成済みで、backend/ を自分で作った。",
   },
   {
+    term: "React",
+    reading: "リアクト",
+    body: "画面（UI）を作るためのJavaScriptの道具（ライブラリ）。今回は完成済みのフロントエンドとして、APIのレスポンスを受け取って商品一覧を表示している。",
+  },
+  {
+    term: "Node.js",
+    reading: "ノードジェイエス",
+    body: "ブラウザの外でJavaScriptを動かすための実行環境。昔から広く使われ、Expressなどのフレームワークもこの上で動く。",
+  },
+  {
+    term: "パッケージマネージャ",
+    body: "ライブラリ（部品）のインストール・更新・管理をする道具。Node.jsの世界では実行環境（Node.js）とパッケージマネージャ（npm）が別々の道具だが、Bunは両方を1つで兼ねる。bun add 部品名 で追加できる。",
+  },
+  {
     term: "Bun",
     reading: "バン",
     body: "Node.jsの代替となる高速なJavaScript実行環境。パッケージ管理やテストもこれ1つでできる。料理で言えば「厨房」。",
@@ -79,8 +113,17 @@ const TERMS: { term: string; reading?: string; body: string }[] = [
     body: "和田裕介さん作の国産Webフレームワーク。「炎」が名前の由来。必要な機能が全部入り（Batteries Included）で、Cloudflare WorkersでもBunでも同じコードが動く。",
   },
   {
+    term: "Cloudflare Workers",
+    body: "Cloudflare社が提供する、世界中のサーバー上でコードを動かす実行環境。第3回・第4回で、ローカル開発のAPIをこの上にデプロイする。",
+  },
+  {
     term: "RPC",
     body: "Honoの機能の1つ。APIの型情報をフロント側と共有して、パスの補完や型チェックが効くクライアントを作れる。サブクエストページ参照。",
+  },
+  {
+    term: "DevTools",
+    reading: "デブツールズ",
+    body: "ブラウザに内蔵された開発者用の「のぞき窓」。F12キーで開く。Networkタブでは画面の裏で飛んでいる通信（リクエスト）を確認できる。",
   },
   {
     term: "ホットリロード",
@@ -96,7 +139,7 @@ export function Glossary() {
       </Badge>
       <PageHeader
         title="用語集（第1回）"
-        goal="第1回で出てきた用語をいつでも引けるようにする"
+        goal="第1回で出てきた用語を振り返って復習しよう"
       />
       <Accordion type="multiple" className="w-full">
         {TERMS.map((t) => (
@@ -115,6 +158,7 @@ export function Glossary() {
           </AccordionItem>
         ))}
       </Accordion>
+      <ProgressCheck id="extra-glossary-1" label="第1回の用語集にひととおり目を通した" />
       <NextLink current="/extra/glossary" />
     </div>
   );
