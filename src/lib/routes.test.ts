@@ -4,6 +4,7 @@ import {
   EXTRA_PAGES,
   MAIN_FLOW,
   SESSION1_PAGES,
+  SESSION_TOP_PAGES,
   findPage,
   getNextPage,
   getPrevPage,
@@ -49,6 +50,19 @@ describe("routes（ページ構成）", () => {
   it("サブクエストページはメインフローに含まれない", () => {
     for (const p of EXTRA_PAGES) {
       expect(MAIN_FLOW.find((m) => m.path === p.path)).toBeUndefined();
+    }
+  });
+
+  it("各回のトップページはメインフローに含まれず、progressIdも持たない", () => {
+    for (const p of SESSION_TOP_PAGES) {
+      expect(MAIN_FLOW.find((m) => m.path === p.path)).toBeUndefined();
+      expect(p.progressId, `${p.path} は進捗トラッキング対象外のはず`).toBeUndefined();
+    }
+  });
+
+  it("各回のトップページがALL_PAGESから引ける", () => {
+    for (const path of ["/session1", "/session2", "/session3", "/session4"]) {
+      expect(findPage(path), `${path} が見つからない`).toBeDefined();
     }
   });
 

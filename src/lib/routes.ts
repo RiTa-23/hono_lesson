@@ -291,6 +291,35 @@ export const EXTRA_PAGES: PageDef[] = [
   },
 ];
 
+// 各回のトップページ（進捗・タイムテーブルの一覧）。ステップではないので
+// progressIdを持たず、MAIN_FLOWにも含めない
+export const SESSION_TOP_PAGES: PageDef[] = [
+  {
+    path: "/session1",
+    file: "session1/Session1Top",
+    title: "第1回：よろず屋APIを作ろう",
+    section: "session1",
+  },
+  {
+    path: "/session2",
+    file: "session2/Session2Top",
+    title: "第2回：堅牢なAPIにしよう",
+    section: "session2",
+  },
+  {
+    path: "/session3",
+    file: "session3/Session3Top",
+    title: "第3回：データベースを導入しよう",
+    section: "session3",
+  },
+  {
+    path: "/session4",
+    file: "session4/Session4Top",
+    title: "第4回：本番デプロイでよろず屋を開店しよう",
+    section: "session4",
+  },
+];
+
 const SESSION_NUMBER: Partial<Record<NonNullable<PageDef["section"]>, number>> = {
   session1: 1,
   session2: 2,
@@ -315,6 +344,7 @@ export const ALL_PAGES: PageDef[] = [
   ...SESSION2_PAGES,
   ...SESSION3_PAGES,
   ...SESSION4_PAGES,
+  ...SESSION_TOP_PAGES,
   ...EXTRA_PAGES,
 ].filter((p) => isPublished(p.section));
 

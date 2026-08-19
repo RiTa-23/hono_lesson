@@ -86,6 +86,9 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
         open={openS1}
         onToggle={() => setOpenS1((v) => !v)}
         progress={countProgress(SESSION1_PAGES)}
+        topPath="/session1"
+        active={currentPath === "/session1"}
+        onNavigate={onNavigate}
       >
         {SESSION1_PAGES.map((p, i) => (
           <NavItem
@@ -106,6 +109,9 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
           open={openS2}
           onToggle={() => setOpenS2((v) => !v)}
           progress={countProgress(SESSION2_PAGES)}
+          topPath="/session2"
+          active={currentPath === "/session2"}
+          onNavigate={onNavigate}
         >
           {SESSION2_PAGES.map((p, i) => (
             <NavItem
@@ -127,6 +133,9 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
           open={openS3}
           onToggle={() => setOpenS3((v) => !v)}
           progress={countProgress(SESSION3_PAGES)}
+          topPath="/session3"
+          active={currentPath === "/session3"}
+          onNavigate={onNavigate}
         >
           {SESSION3_PAGES.map((p, i) => (
             <NavItem
@@ -148,6 +157,9 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
           open={openS4}
           onToggle={() => setOpenS4((v) => !v)}
           progress={countProgress(SESSION4_PAGES)}
+          topPath="/session4"
+          active={currentPath === "/session4"}
+          onNavigate={onNavigate}
         >
           {SESSION4_PAGES.map((p, i) => (
             <NavItem
@@ -198,6 +210,9 @@ function Section({
   open,
   onToggle,
   progress,
+  topPath,
+  active,
+  onNavigate,
   children,
 }: {
   label: string;
@@ -205,31 +220,59 @@ function Section({
   open: boolean;
   onToggle: () => void;
   progress: { done: number; total: number };
+  topPath?: string;
+  active?: boolean;
+  onNavigate?: () => void;
   children: ReactNode;
 }) {
+  const badge =
+    progress.total > 0 &&
+    (progress.done === progress.total ? (
+      <ClearedBadge />
+    ) : (
+      <span className="text-xs font-normal text-muted-foreground">
+        {progress.done}/{progress.total}
+      </span>
+    ));
+
   return (
     <div className="mb-1">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        className="flex w-full items-center gap-2 rounded-sm border-b border-dashed border-gold/60 px-3 py-2 font-serif text-xs font-bold tracking-widest transition hover:bg-secondary"
+      <div
+        className={cn(
+          "flex w-full items-center gap-1 rounded-sm border-b border-dashed border-gold/60 pr-2 font-serif text-xs font-bold tracking-widest transition",
+          active && "bg-primary/10 text-primary"
+        )}
       >
-        {icon}
-        <span className="flex-1 text-left">{label}</span>
-        {progress.total > 0 &&
-          (progress.done === progress.total ? (
-            <ClearedBadge />
-          ) : (
-            <span className="text-xs font-normal text-muted-foreground">
-              {progress.done}/{progress.total}
-            </span>
-          ))}
-        <ChevronDown
-          size={14}
-          className={cn("transition-transform", !open && "-rotate-90")}
-        />
-      </button>
+        {topPath ? (
+          <a
+            href={`#${topPath}`}
+            onClick={onNavigate}
+            aria-current={active ? "page" : undefined}
+            className="flex flex-1 items-center gap-2 rounded-sm px-3 py-2 hover:bg-secondary"
+          >
+            {icon}
+            <span className="flex-1 text-left">{label}</span>
+          </a>
+        ) : (
+          <span className="flex flex-1 items-center gap-2 px-3 py-2">
+            {icon}
+            <span className="flex-1 text-left">{label}</span>
+          </span>
+        )}
+        {badge}
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={open}
+          aria-label={open ? `${label}を閉じる` : `${label}を開く`}
+          className="rounded-sm p-1 transition hover:bg-secondary"
+        >
+          <ChevronDown
+            size={14}
+            className={cn("transition-transform", !open && "-rotate-90")}
+          />
+        </button>
+      </div>
       {open && <div className="ml-3 border-l-2 border-border pl-2">{children}</div>}
     </div>
   );

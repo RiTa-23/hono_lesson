@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, CheckCircle2, Store, Package, ShieldCheck, Database, Rocket } from "lucide-react";
+import { ArrowRight, Store, Package, ShieldCheck, Database, Rocket } from "lucide-react";
 import { AchievementStamp } from "@/components/AchievementStamp";
 import { Callout } from "@/components/Callout";
 import { ClearedBadge } from "@/components/ClearedBadge";
@@ -139,76 +139,132 @@ export function Home() {
       {/* ロードマップ */}
       <h2 className="mt-10 text-xl font-bold">全4回のロードマップ</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <Badge className="w-fit">第1回</Badge>
-              {s1.cleared && <ClearedBadge />}
-            </div>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Store size={16} className="text-primary" />
-              よろず屋APIを作ろう
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm leading-relaxed text-muted-foreground">
-            APIとは？Honoとは？から始めて、商品一覧・購入・売却のAPIを実装。
-            最後はReactのフロントとつないで、画面からアイテムを売り買いします。
-          </CardContent>
-        </Card>
-        <Card className={PUBLISHED_UP_TO < 2 ? "opacity-75" : undefined}>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <Badge variant={PUBLISHED_UP_TO >= 2 ? "default" : "secondary"} className="w-fit">
-                第2回{PUBLISHED_UP_TO < 2 && "（準備中）"}
+        <a href="#/session1" className="block transition hover:opacity-90">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <Badge className="w-fit">第1回</Badge>
+                {s1.cleared && <ClearedBadge />}
+              </div>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Store size={16} className="text-primary" />
+                よろず屋APIを作ろう
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-muted-foreground">
+              APIとは？Honoとは？から始めて、商品一覧・購入・売却のAPIを実装。
+              最後はReactのフロントとつないで、画面からアイテムを売り買いします。
+            </CardContent>
+          </Card>
+        </a>
+        {PUBLISHED_UP_TO >= 2 ? (
+          <a href="#/session2" className="block transition hover:opacity-90">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <Badge className="w-fit">第2回</Badge>
+                  {s2.cleared && <ClearedBadge />}
+                </div>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <ShieldCheck size={16} />
+                  堅牢なAPIにしよう
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm leading-relaxed text-muted-foreground">
+                zodでバリデーション、OpenAPIでドキュメント自動生成、
+                そしてテストコードを書いて、安心して直せるAPIに育てます。
+              </CardContent>
+            </Card>
+          </a>
+        ) : (
+          <Card className="opacity-75">
+            <CardHeader>
+              <Badge variant="secondary" className="w-fit">
+                第2回（準備中）
               </Badge>
-              {s2.cleared && <ClearedBadge />}
-            </div>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <ShieldCheck size={16} />
-              堅牢なAPIにしよう
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm leading-relaxed text-muted-foreground">
-            zodでバリデーション、OpenAPIでドキュメント自動生成、
-            そしてテストコードを書いて、安心して直せるAPIに育てます。
-          </CardContent>
-        </Card>
-        <Card className={PUBLISHED_UP_TO < 3 ? "opacity-75" : undefined}>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <Badge variant={PUBLISHED_UP_TO >= 3 ? "default" : "secondary"} className="w-fit">
-                第3回{PUBLISHED_UP_TO < 3 && "（準備中）"}
+              <CardTitle className="flex items-center gap-2 text-base">
+                <ShieldCheck size={16} />
+                堅牢なAPIにしよう
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-muted-foreground">
+              zodでバリデーション、OpenAPIでドキュメント自動生成、
+              そしてテストコードを書いて、安心して直せるAPIに育てます。
+            </CardContent>
+          </Card>
+        )}
+        {PUBLISHED_UP_TO >= 3 ? (
+          <a href="#/session3" className="block transition hover:opacity-90">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <Badge className="w-fit">第3回</Badge>
+                  {s3.cleared && <ClearedBadge />}
+                </div>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Database size={16} />
+                  データベースを導入しよう
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm leading-relaxed text-muted-foreground">
+                Cloudflare D1とDrizzle ORMでデータを永続化。
+                再起動しても所持金・在庫が消えないAPIに育てます（ローカル環境まで）。
+              </CardContent>
+            </Card>
+          </a>
+        ) : (
+          <Card className="opacity-75">
+            <CardHeader>
+              <Badge variant="secondary" className="w-fit">
+                第3回（準備中）
               </Badge>
-              {s3.cleared && <ClearedBadge />}
-            </div>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Database size={16} />
-              データベースを導入しよう
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm leading-relaxed text-muted-foreground">
-            Cloudflare D1とDrizzle ORMでデータを永続化。
-            再起動しても所持金・在庫が消えないAPIに育てます（ローカル環境まで）。
-          </CardContent>
-        </Card>
-        <Card className={PUBLISHED_UP_TO < 4 ? "opacity-75" : undefined}>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <Badge variant={PUBLISHED_UP_TO >= 4 ? "default" : "secondary"} className="w-fit">
-                第4回{PUBLISHED_UP_TO < 4 && "（準備中）"}
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Database size={16} />
+                データベースを導入しよう
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-muted-foreground">
+              Cloudflare D1とDrizzle ORMでデータを永続化。
+              再起動しても所持金・在庫が消えないAPIに育てます（ローカル環境まで）。
+            </CardContent>
+          </Card>
+        )}
+        {PUBLISHED_UP_TO >= 4 ? (
+          <a href="#/session4" className="block transition hover:opacity-90">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <Badge className="w-fit">第4回</Badge>
+                  {s4.cleared && <ClearedBadge />}
+                </div>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Rocket size={16} />
+                  本番デプロイでよろず屋を開店
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm leading-relaxed text-muted-foreground">
+                本番D1へのマイグレーションとCloudflare Workersへのデプロイで、
+                世界中からアクセスできるお店に仕上げます。
+              </CardContent>
+            </Card>
+          </a>
+        ) : (
+          <Card className="opacity-75">
+            <CardHeader>
+              <Badge variant="secondary" className="w-fit">
+                第4回（準備中）
               </Badge>
-              {s4.cleared && <ClearedBadge />}
-            </div>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Rocket size={16} />
-              本番デプロイでよろず屋を開店
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm leading-relaxed text-muted-foreground">
-            本番D1へのマイグレーションとCloudflare Workersへのデプロイで、
-            世界中からアクセスできるお店に仕上げます。
-          </CardContent>
-        </Card>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Rocket size={16} />
+                本番デプロイでよろず屋を開店
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm leading-relaxed text-muted-foreground">
+              本番D1へのマイグレーションとCloudflare Workersへのデプロイで、
+              世界中からアクセスできるお店に仕上げます。
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* このサイトの使い方 */}
@@ -240,40 +296,6 @@ export function Home() {
         <li>npm などを使ったフロントエンド開発の経験</li>
         <li>ターミナルでの基本的なコマンド操作</li>
       </ul>
-
-      {/* タイムテーブル */}
-      <h2 className="mt-10 text-xl font-bold">第1回のタイムテーブル（目安）</h2>
-      <div className="mt-4 overflow-hidden rounded-sm border border-primary">
-        <table className="w-full text-sm">
-          <thead className="border-b border-gold bg-secondary/60 font-serif">
-            <tr>
-              <th className="px-4 py-2 text-left font-bold">時間</th>
-              <th className="px-4 py-2 text-left font-bold">内容</th>
-            </tr>
-          </thead>
-          <tbody>
-            {SESSION1_PAGES.map((p, i) => (
-              <tr key={p.path} className="border-t border-border">
-                <td className="whitespace-nowrap px-4 py-2 text-muted-foreground">
-                  約{p.minutes ?? "-"}分
-                </td>
-                <td className="px-4 py-2">
-                  <a href={`#${p.path}`} className="font-medium text-primary underline-offset-4 hover:underline">
-                    {String(i + 1).padStart(2, "0")}. {p.title}
-                  </a>
-                  {p.progressId && progress[p.progressId] && (
-                    <CheckCircle2
-                      size={14}
-                      className="ml-2 inline-block text-gold"
-                      aria-label="完了"
-                    />
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
       <div className="mt-10 flex justify-center">
         <a
