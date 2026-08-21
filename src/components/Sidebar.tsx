@@ -128,7 +128,7 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
 
       {PUBLISHED_UP_TO >= 3 && (
         <Section
-          label="第3回：データベースを導入しよう"
+          label="第3回：DBを導入しよう"
           icon={<Database size={14} />}
           open={openS3}
           onToggle={() => setOpenS3((v) => !v)}
@@ -152,7 +152,7 @@ export function Sidebar({ currentPath, onNavigate }: Props) {
 
       {PUBLISHED_UP_TO >= 4 && (
         <Section
-          label="第4回：本番デプロイでよろず屋を開店しよう"
+          label="第4回：本番デプロイしよう"
           icon={<Rocket size={14} />}
           open={openS4}
           onToggle={() => setOpenS4((v) => !v)}
