@@ -139,7 +139,7 @@ export function Home() {
       {/* ロードマップ */}
       <h2 className="mt-10 text-xl font-bold">全4回のロードマップ</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <a href="#/session1" className="block transition hover:opacity-90">
+        <a href="#/session1" className="block h-full transition hover:opacity-90">
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -158,7 +158,7 @@ export function Home() {
           </Card>
         </a>
         {PUBLISHED_UP_TO >= 2 ? (
-          <a href="#/session2" className="block transition hover:opacity-90">
+          <a href="#/session2" className="block h-full transition hover:opacity-90">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -177,7 +177,7 @@ export function Home() {
             </Card>
           </a>
         ) : (
-          <Card className="opacity-75">
+          <Card className="h-full opacity-75">
             <CardHeader>
               <Badge variant="secondary" className="w-fit">
                 第2回（準備中）
@@ -194,7 +194,7 @@ export function Home() {
           </Card>
         )}
         {PUBLISHED_UP_TO >= 3 ? (
-          <a href="#/session3" className="block transition hover:opacity-90">
+          <a href="#/session3" className="block h-full transition hover:opacity-90">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -213,7 +213,7 @@ export function Home() {
             </Card>
           </a>
         ) : (
-          <Card className="opacity-75">
+          <Card className="h-full opacity-75">
             <CardHeader>
               <Badge variant="secondary" className="w-fit">
                 第3回（準備中）
@@ -230,7 +230,7 @@ export function Home() {
           </Card>
         )}
         {PUBLISHED_UP_TO >= 4 ? (
-          <a href="#/session4" className="block transition hover:opacity-90">
+          <a href="#/session4" className="block h-full transition hover:opacity-90">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -249,7 +249,7 @@ export function Home() {
             </Card>
           </a>
         ) : (
-          <Card className="opacity-75">
+          <Card className="h-full opacity-75">
             <CardHeader>
               <Badge variant="secondary" className="w-fit">
                 第4回（準備中）
