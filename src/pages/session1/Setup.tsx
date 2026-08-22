@@ -51,23 +51,35 @@ export function Setup() {
       </Tabs>
 
       <p className="mt-3 leading-relaxed">
-        インストール後、バージョンが表示されればOKです。
+        インストール後、以下のコマンドでバージョンが表示されればOKです。
       </p>
       <CopyBlock
         lang="bash"
         title="確認"
-        code={`bun --version\n# 例: 1.1.38 のように表示されればOK`}
+        code={`bun --version`}
       />
 
       <h2 className="mt-10 text-xl font-bold">2. 講座用リポジトリをcloneする</h2>
       <p className="mt-3 leading-relaxed">
-        フロントエンド（React）が完成済みのリポジトリをcloneします。
-        URLは当日案内されるものを使ってください。
+        任意のディレクトリに移動して、フロントエンド（React）が完成済みのリポジトリをcloneします。
       </p>
       <CopyBlock
         lang="bash"
         title="ターミナル"
-        code={`git clone <当日案内されるリポジトリURL> yorozuya\ncd yorozuya`}
+        code={`git clone https://github.com/RiTa-23/yorozuya.git`}
+      />
+      <Callout variant="info" title="clone先フォルダについて">
+        <p>
+          日本語やスペースを含まないパスにcloneするのがおすすめです
+          （例: <code className="rounded bg-muted px-1.5 py-0.5 text-xs">~/Develop</code> や
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">C:\Develop</code>）。
+        </p>
+      </Callout>
+      <p className="mt-3 leading-relaxed">cloneが完了したらディレクトリに移動します。</p>
+      <CopyBlock
+        lang="bash"
+        title="ターミナル"
+        code={`cd yorozuya`}
       />
       <p className="mt-3 leading-relaxed">cloneしたリポジトリの構成はこうなっています。</p>
       <CopyBlock
@@ -76,13 +88,6 @@ export function Setup() {
         code={`yorozuya/\n├── frontend/   # 完成済みのReactアプリ（店舗の外観）\n└── backend/    # ← これから自分で作ります（倉庫とレジ）`}
       />
 
-      <Callout variant="info" title="clone先フォルダについて">
-        <p>
-          日本語やスペースを含まないパスにcloneするのがおすすめです
-          （例: <code className="rounded bg-muted px-1.5 py-0.5 text-xs">~/Develop</code> や
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">C:\Develop</code>）。
-        </p>
-      </Callout>
 
       <h2 className="mt-10 text-xl font-bold">3. backendディレクトリにHonoを作成する</h2>
       <p className="mt-3 leading-relaxed">

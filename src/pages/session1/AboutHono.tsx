@@ -36,7 +36,7 @@ export function AboutHono() {
           公式ドキュメント
         </a>
         参照）、もともとCloudflare Workers上で動く
-        良いフレームワークがなかったことから生まれました（第3回でそのCloudflareにデプロイします！）。
+        良いフレームワークがなかったことから生まれました。
       </p>
 
       <h2 className="mt-10 text-xl font-bold">言葉を整理しよう</h2>

@@ -302,6 +302,19 @@ export function Home() {
         <li>npm などを使ったフロントエンド開発の経験</li>
       </ul>
 
+      {/* 持ち物・事前準備 */}
+      <h2 className="mt-10 text-xl font-bold">持ち物・事前準備</h2>
+      <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
+        <li>ノートPC（開発できる環境）</li>
+        <li>gitコマンドが使える状態にしておく</li>
+        <li>
+          コードエディタ（<span className="font-medium">VS Code</span>推奨）
+        </li>
+      </ul>
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+        使い慣れているものがあれば何でも構いませんが、当日のサポートはVS Code前提となります。
+      </p>
+
       <div className="mt-10 flex justify-center">
         <a
           href="#/session1/01-about-api"
