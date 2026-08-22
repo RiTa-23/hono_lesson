@@ -19,7 +19,8 @@ export function Setup() {
       <Callout variant="quest">
         <p>
           まずはお店のシステムを作る工事現場を整えましょう。完成済みのフロントエンド（店舗の外観）が入った
-          リポジトリをcloneして、その隣にバックエンド（店の倉庫とレジ）を建てます。
+          リポジトリをcloneします。そのリポジトリの中に、フロントエンドと同じ階層にバックエンド
+          （店の倉庫と窓口）をこれから建てていきます。
         </p>
       </Callout>
 
@@ -63,14 +64,33 @@ export function Setup() {
       <p className="mt-3 leading-relaxed">
         任意のディレクトリに移動して、フロントエンド（React）が完成済みのリポジトリをcloneします。
       </p>
-      <CopyBlock
-        lang="bash"
-        title="ターミナル"
-        code={`git clone https://github.com/RiTa-23/yorozuya.git`}
-      />
-      <Callout variant="info" title="clone先フォルダについて">
+      <Tabs defaultValue="https" className="mt-4">
+        <TabsList>
+          <TabsTrigger value="https">HTTPS</TabsTrigger>
+          <TabsTrigger value="ssh">SSH</TabsTrigger>
+        </TabsList>
+        <TabsContent value="https">
+          <CopyBlock
+            lang="bash"
+            title="ターミナル"
+            code={`git clone https://github.com/RiTa-23/yorozuya.git`}
+          />
+        </TabsContent>
+        <TabsContent value="ssh">
+          <CopyBlock
+            lang="bash"
+            title="ターミナル"
+            code={`git clone git@github.com:RiTa-23/yorozuya.git`}
+          />
+        </TabsContent>
+      </Tabs>
+      <Callout variant="info" title="cloneするときのポイント">
         <p>
-          日本語やスペースを含まないパスにcloneするのがおすすめです
+          SSHはGitHubに事前にSSH鍵を登録している人向けです。
+          特に準備していない場合は<span className="font-medium">HTTPS</span>を選んでください。
+        </p>
+        <p className="mt-2">
+          clone先は日本語やスペースを含まないパスがおすすめです
           （例: <code className="rounded bg-muted px-1.5 py-0.5 text-xs">~/Develop</code> や
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">C:\Develop</code>）。
         </p>
@@ -85,7 +105,7 @@ export function Setup() {
       <CopyBlock
         lang="text"
         title="リポジトリ構成"
-        code={`yorozuya/\n├── frontend/   # 完成済みのReactアプリ（店舗の外観）\n└── backend/    # ← これから自分で作ります（倉庫とレジ）`}
+        code={`yorozuya/\n├── frontend/   # 完成済みのReactアプリ（店舗の外観）\n└── backend/    # ← これから自分で作ります（倉庫と窓口）`}
       />
 
 
@@ -173,14 +193,14 @@ export function Setup() {
 
       <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
       <Quiz
-        question="bun create hono@latest backend を実行すると何が起きる？"
+        question="Bunの説明として正しいものはどれ？"
         choices={[
-          "backendディレクトリにHonoプロジェクトのひな形が作られる",
-          "すでにあるbackendディレクトリの中身がすべて削除される",
-          "フロントエンドのプロジェクトが自動生成される",
+          "Node.jsの代替となるJavaScript実行環境で、パッケージ管理の役割も兼ねる",
+          "Honoの機能を拡張するためのプラグインの一種",
+          "TypeScriptをJavaScriptに変換するためだけの変換ツール",
         ]}
         answerIndex={0}
-        explanation="create honoコマンドは、指定した名前のディレクトリにHonoプロジェクトの雛形（テンプレート）一式を生成するコマンドです。"
+        explanation="Bunは「JavaScriptを実行する環境」と「パッケージのインストール・管理」の両方を1つでこなすオールインワンの道具です。Honoのプラグインではなく、Honoが動く土台（実行環境）にあたります。"
       />
 
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>

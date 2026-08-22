@@ -72,12 +72,12 @@ export function AboutHono() {
             <tr>
               <td className="px-4 py-2 font-medium">Bun</td>
               <td className="px-4 py-2">Node.jsより高速な新しい実行環境。インストールやテストもまとめてこなせます。</td>
-              <td className="px-4 py-2">第1・2回でAPIを動かす環境</td>
+              <td className="px-4 py-2">第1・2・3回でAPIを動かす環境</td>
             </tr>
             <tr>
               <td className="px-4 py-2 font-medium">Cloudflare Workers</td>
               <td className="px-4 py-2">Cloudflare社が提供する、世界中のサーバー上でコードを動かせる実行環境。</td>
-              <td className="px-4 py-2">第3回・第4回（本番デプロイ）</td>
+              <td className="px-4 py-2">第4回（本番デプロイ）</td>
             </tr>
             <tr>
               <td className="px-4 py-2 font-medium">RPC</td>
@@ -121,7 +121,7 @@ export function AboutHono() {
       <Callout variant="tip" title="第3回への伏線">
         <p>
           「どの実行環境でも同じコードが動く」は大きなポイントです。
-          第1・2回ではBunで動かし、第3回でCloudflare Workersにデプロイしますが、
+          第1・2・3回ではBunで動かし、第4回でCloudflare Workersにデプロイしますが、
           APIのコード自体はほぼ書き換えずに動かせます。
         </p>
       </Callout>

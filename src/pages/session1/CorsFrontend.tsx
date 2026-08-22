@@ -17,7 +17,7 @@ export function CorsFrontend() {
 
       <Callout variant="quest">
         <p>
-          いよいよ完成間近です。できあがった倉庫とレジ（API）に、店舗の外観（React）をつなげて、
+          いよいよ完成間近です。できあがった倉庫と窓口（API）に、店舗の外観（React）をつなげて、
           <span className="font-medium">画面からアイテムを売り買いできるよろず屋</span>を開店させましょう。
         </p>
       </Callout>
