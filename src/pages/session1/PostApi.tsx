@@ -24,7 +24,184 @@ export function PostApi() {
         </p>
       </Callout>
 
-      <h2 className="mt-8 text-xl font-bold">1. 冒険者の状態を用意する</h2>
+      <h2 className="mt-8 text-xl font-bold">1. やりとりするデータを決める</h2>
+      <p className="mt-3 leading-relaxed">
+        コードを書く前に、この窓口で<span className="font-medium">どんな伝票をやりとりするか</span>を先に決めます。
+        GETは「見せて」と言うだけで済みましたが、POSTでは冒険者側から
+        「どのアイテムを・いくつ」という注文の中身を渡す必要があります。
+        購入・売却のどちらも、送る伝票と返す伝票は次の形にします。
+      </p>
+
+      <h3 className="mt-8 text-lg font-semibold">冒険者が送るデータ（リクエストボディ）</h3>
+      <div className="mt-4 overflow-hidden rounded-lg border">
+        <table className="w-full text-sm">
+          <thead className="border-b border-gold bg-secondary/60 font-serif">
+            <tr>
+              <th className="px-4 py-2 text-left font-medium">項目</th>
+              <th className="px-4 py-2 text-left font-medium">型</th>
+              <th className="px-4 py-2 text-left font-medium">必須</th>
+              <th className="px-4 py-2 text-left font-medium">意味</th>
+            </tr>
+          </thead>
+          <tbody className="[&>tr]:border-t">
+            <tr>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">itemId</code>
+              </td>
+              <td className="px-4 py-2">数値</td>
+              <td className="px-4 py-2">必須</td>
+              <td className="px-4 py-2">
+                買う（売る）アイテムのid。
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">GET /api/items</code>
+                で返ってくる id と同じものです
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">quantity</code>
+              </td>
+              <td className="px-4 py-2">数値</td>
+              <td className="px-4 py-2">任意</td>
+              <td className="px-4 py-2">個数。省略されたら1個として扱います</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <CopyBlock
+        lang="json"
+        title="リクエストボディの例（ポーションを1本）"
+        code={`{
+  "itemId": 2,
+  "quantity": 1
+}`}
+      />
+
+      <h3 className="mt-8 text-lg font-semibold">お店が返すデータ（レスポンスボディ）</h3>
+      <p className="mt-3 leading-relaxed">
+        売り買いのあとは<span className="font-medium">冒険者の最新の状態</span>を返すことにします。
+        こうしておくと、画面側は返ってきた値をそのまま表示するだけで、
+        「今いくら持っていて、何を持っているか」を更新できます。
+      </p>
+      <div className="mt-4 overflow-hidden rounded-lg border">
+        <table className="w-full text-sm">
+          <thead className="border-b border-gold bg-secondary/60 font-serif">
+            <tr>
+              <th className="px-4 py-2 text-left font-medium">項目</th>
+              <th className="px-4 py-2 text-left font-medium">型</th>
+              <th className="px-4 py-2 text-left font-medium">意味</th>
+            </tr>
+          </thead>
+          <tbody className="[&>tr]:border-t">
+            <tr>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">gold</code>
+              </td>
+              <td className="px-4 py-2">数値</td>
+              <td className="px-4 py-2">取引後の所持金</td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">items</code>
+              </td>
+              <td className="px-4 py-2">配列</td>
+              <td className="px-4 py-2">所持アイテムの一覧（何も持っていなければ空の配列）</td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">items[].itemId</code>
+              </td>
+              <td className="px-4 py-2">数値</td>
+              <td className="px-4 py-2">持っているアイテムのid</td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">items[].quantity</code>
+              </td>
+              <td className="px-4 py-2">数値</td>
+              <td className="px-4 py-2">その所持数</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <CopyBlock
+        lang="json"
+        title="レスポンスの例（所持金500Gでポーション50Gを1本買ったあと）"
+        code={`{
+  "gold": 450,
+  "items": [
+    { "itemId": 2, "quantity": 1 }
+  ]
+}`}
+      />
+
+      <h3 className="mt-8 text-lg font-semibold">失敗したときに返すデータ（エラーレスポンス）</h3>
+      <p className="mt-3 leading-relaxed">
+        在庫切れやお金不足など、注文を受けられないときは
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">message</code>
+        に理由を入れて、ステータスコードと一緒に返します。
+      </p>
+      <div className="mt-4 overflow-hidden rounded-lg border">
+        <table className="w-full text-sm">
+          <thead className="border-b border-gold bg-secondary/60 font-serif">
+            <tr>
+              <th className="px-4 py-2 text-left font-medium">状況</th>
+              <th className="px-4 py-2 text-left font-medium">ステータス</th>
+              <th className="px-4 py-2 text-left font-medium">ボディ</th>
+            </tr>
+          </thead>
+          <tbody className="[&>tr]:border-t">
+            <tr>
+              <td className="px-4 py-2">そのidの商品が存在しない</td>
+              <td className="px-4 py-2">404</td>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{`{ "message": "そんな商品は置いてないよ" }`}</code>
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2">在庫が足りない</td>
+              <td className="px-4 py-2">400</td>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{`{ "message": "在庫が足りないよ" }`}</code>
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2">所持金が足りない</td>
+              <td className="px-4 py-2">400</td>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{`{ "message": "お金が足りないよ" }`}</code>
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2">持っていないアイテムを売ろうとした</td>
+              <td className="px-4 py-2">400</td>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{`{ "message": "そのアイテムは持っていないよ" }`}</code>
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-2">持っている数より多く売ろうとした</td>
+              <td className="px-4 py-2">400</td>
+              <td className="px-4 py-2">
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{`{ "message": "持っている数より多くは売れないよ" }`}</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <Callout variant="tip" title="先に形を決めてから作る">
+        <p>
+          このように「どんなデータを受け取り、どんなデータを返すか」を先に決めることを
+          <span className="font-medium">API設計</span>と呼びます。
+          ここが決まっていれば、あとのコードは「決めた形どおりに動かす」だけの作業になります。
+          第2回では、この形をzodというライブラリでコードとして書き、
+          形の違うデータを自動で弾く方法を学びます。
+        </p>
+      </Callout>
+
+      <h2 className="mt-10 text-xl font-bold">2. 冒険者の状態を用意する</h2>
       <p className="mt-3 leading-relaxed">
         売り買いの結果を覚えておくため、冒険者の所持金と所持アイテムをメモリ上に用意します。
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs">items</code> 配列の下に追記してください。
@@ -45,12 +222,15 @@ app.get('/api/player', (c) => {
 })`}
       />
 
-      <h2 className="mt-10 text-xl font-bold">2. 購入API（POST /api/purchase）</h2>
+      <h2 className="mt-10 text-xl font-bold">3. 購入API（POST /api/purchase）</h2>
       <p className="mt-3 leading-relaxed">
         POSTでは、リクエストの<span className="font-medium">ボディ</span>（伝票の中身）に
         データを載せて送ります。Honoでは
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs">await c.req.json()</code>
-        で取り出せます。
+        で取り出せます。1で決めたとおり、受け取るのは
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">itemId</code> と
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">quantity</code>、
+        返すのは冒険者の状態です。
       </p>
 
       <CopyBlock
@@ -98,7 +278,7 @@ app.post('/api/purchase', async (c) => {
         <li>在庫不足・所持金不足には 400 を返します。お店のルールをコードにしたものです。</li>
       </ul>
 
-      <h2 className="mt-10 text-xl font-bold">3. 売却API（POST /api/sell）</h2>
+      <h2 className="mt-10 text-xl font-bold">4. 売却API（POST /api/sell）</h2>
       <CopyBlock
         lang="ts"
         title="backend/src/index.ts（追記）"
@@ -127,7 +307,7 @@ app.post('/api/sell', async (c) => {
 })`}
       />
 
-      <h2 className="mt-10 text-xl font-bold">4. 動作確認する</h2>
+      <h2 className="mt-10 text-xl font-bold">5. 動作確認する</h2>
       <p className="mt-3 leading-relaxed">
         POSTはブラウザのアドレスバーからは送れないので、curlで確認します。
       </p>
