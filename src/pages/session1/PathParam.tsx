@@ -115,6 +115,57 @@ app.get('/api/items', (c) => {
         </p>
       </Callout>
 
+      <p className="mt-4 leading-relaxed">
+        書き換えたらcurlで確認します。URLに
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?</code> や
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">&amp;</code> が含まれるときは、
+        <span className="font-medium">URL全体をクォート（&quot;&quot;）で囲みます。</span>
+      </p>
+      <Callout variant="tip" title="なぜクォートで囲むの？">
+        <p>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?</code> や
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">&amp;</code> は、
+          ターミナル（シェル）にとって<span className="font-medium">特別な意味を持つ記号</span>だからです。
+          そのまま書くと、curlに渡る前にシェルが勝手に解釈してしまいます。
+        </p>
+        <ul className="mt-2 list-disc space-y-1 pl-5">
+          <li>
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">&amp;</code>
+            … 「このコマンドをバックグラウンドで実行する」という区切り記号。
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?a=1&amp;b=2</code>
+            と書くと <code className="rounded bg-muted px-1.5 py-0.5 text-xs">&amp;</code> より後ろがURLから切り離され、
+            curlには <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?a=1</code> までしか届きません
+          </li>
+          <li>
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?</code>
+            … 「任意の1文字」を表すワイルドカード。運悪く似た名前のファイルが手元にあると、
+            シェルがURLをそのファイル名に置き換えてしまうことがあります
+          </li>
+        </ul>
+        <p className="mt-2">
+          クォートで囲むと「これはただの文字列だから解釈しないで」という指示になり、
+          書いたURLがそのままcurlに渡ります。迷ったら常に囲んでおけば安全です。
+        </p>
+      </Callout>
+      <CopyBlock
+        lang="bash"
+        title="ターミナル"
+        code={`# 100G以下の商品だけ（やくそう・ポーションの2件が返る）
+curl "http://localhost:3000/api/items?maxPrice=100"
+
+# 10G以下の商品だけ（やくそうの1件だけが返る）
+curl "http://localhost:3000/api/items?maxPrice=10"
+
+# クエリパラメータなし（これまでどおり全5件が返る）
+curl http://localhost:3000/api/items`}
+      />
+      <p className="mt-3 leading-relaxed">
+        同じ <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/items</code> でも、
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?maxPrice=</code>
+        の値によって返ってくる件数が変わることを確認してください。
+        ブラウザのアドレスバーに同じURLを入れても同じ結果になります（GETなので）。
+      </p>
+
       <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
       <Quiz
         question="c.req.param('id') で受け取った値をそのまま items.find((i) => i.id === id) に使うと、なぜ見つからないことがある？"
