@@ -67,6 +67,66 @@ app.use('/api/*', cors())`}
         </p>
       </Callout>
 
+      <h3 className="mt-8 text-lg font-semibold">許可するオリジンを絞る</h3>
+      <p className="mt-3 leading-relaxed">
+        引数なしの <code className="rounded bg-muted px-1.5 py-0.5 text-xs">cors()</code> は、
+        <span className="font-medium">どのオリジンからのアクセスも許可する</span>設定
+        （<code className="rounded bg-muted px-1.5 py-0.5 text-xs">Access-Control-Allow-Origin: *</code>）です。
+        まず動かすには手軽ですが、「うちのお店は、このフロントからのアクセスなら許可します」という
+        本来のCORSの考え方からすると、門を開けっ放しにしている状態です。
+        今回のフロントエンドのオリジンだけを許可するように書き換えましょう。
+      </p>
+      <CopyBlock
+        lang="ts"
+        title="backend/src/index.ts（先頭部分・書き換え）"
+        code={`// 今回のフロントエンド（Viteの開発サーバー）だけを許可する
+app.use(
+  '/api/*',
+  cors({
+    origin: 'http://localhost:5173',
+  })
+)`}
+      />
+      <p className="mt-3 leading-relaxed">
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">origin</code>
+        に書くのは<span className="font-medium">オリジン（スキーム＋ホスト＋ポート）だけ</span>です。
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">http://</code> から書き、
+        末尾にスラッシュやパスは付けません。1文字でも違うとブラウザに弾かれます。
+      </p>
+      <p className="mt-3 leading-relaxed">
+        設定できたか、curlでレスポンスヘッダーを見て確認できます。
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">-H &quot;Origin: ...&quot;</code>
+        で「このオリジンの画面から来ました」と名乗ってリクエストする、という意味です。
+      </p>
+      <CopyBlock
+        lang="bash"
+        title="ターミナル"
+        code={`# 許可したオリジンから来た場合
+curl -i -H "Origin: http://localhost:5173" http://localhost:3000/api/items
+# → access-control-allow-origin: http://localhost:5173 が付いて返る
+
+# 許可していないオリジンから来た場合
+curl -i -H "Origin: http://localhost:9999" http://localhost:3000/api/items
+# → access-control-allow-origin が付かない（ブラウザならここでブロックされる）`}
+      />
+      <Callout variant="info" title="curlはブロックされないの？">
+        <p>
+          されません。CORSは<span className="font-medium">ブラウザが行う安全装置</span>であって、
+          サーバーが通信を遮断する仕組みではないからです。
+          サーバーは「このオリジンなら許可する」というヘッダーを付けて返すだけで、
+          それを見て実際に止めるかどうかを判断しているのはブラウザです。
+          そのためcurlでは、上の2つ目のコマンドでも商品一覧のJSON自体は返ってきます。
+          違いはヘッダーの有無だけなので、確認するときは
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">-i</code>
+          を付けてヘッダーごと表示しましょう。
+        </p>
+      </Callout>
+      <p className="mt-3 leading-relaxed">
+        本番環境では、この
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">origin</code>
+        をデプロイ先のフロントのURLに変えることになります（第4回で扱います）。
+      </p>
+
       <h2 className="mt-10 text-xl font-bold">3. フロントエンドを起動する</h2>
       <p className="mt-3 leading-relaxed">
         バックエンドのサーバーは起動したまま、
@@ -138,6 +198,15 @@ bun run dev`}
         <li>
           購入しても画面の数字が変わらない → ホットリロードでバックエンドの状態がリセットされているだけかもしれません。
           もう一度購入してみましょう。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">origin</code>
+          を指定した途端にCORSエラーになる → URLの書き方が完全一致していない可能性が高いです。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">http://localhost:5173/</code>
+          （末尾スラッシュ付き）やポート番号違い、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">127.0.0.1</code>
+          で開いている（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">localhost</code>
+          とは別のオリジン扱い）などが典型例です。
         </li>
         <li>
           Networkタブに <span className="font-medium">OPTIONS</span> という見慣れないリクエストが表示される
