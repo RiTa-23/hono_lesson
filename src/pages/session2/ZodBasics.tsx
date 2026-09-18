@@ -28,10 +28,15 @@ export function ZodBasics() {
       <h2 className="mt-10 text-xl font-bold">2. スキーマを定義してみる</h2>
       <p className="mt-3 leading-relaxed">
         Honoにはまだ組み込まず、まずはzod単体の動きを確認しましょう。
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/src/</code>
+        の中に<code className="rounded bg-muted px-1.5 py-0.5 text-xs">zod-try.ts</code>
+        という新しいファイルを作り、次のコードを貼り付けます
+        （<code className="rounded bg-muted px-1.5 py-0.5 text-xs">index.ts</code>
+        には触りません）。
       </p>
       <CopyBlock
         lang="ts"
-        title="お試し用コード"
+        title="backend/src/zod-try.ts（新規作成・お試し用）"
         code={`import { z } from 'zod'
 
 // 「purchaseのリクエストはこういう形であるべき」というルール
@@ -48,6 +53,49 @@ if (!result.success) {
   console.log('OK：', result.data)
 }`}
       />
+
+      <h3 className="mt-6 text-lg font-bold">動かしてみる</h3>
+      <p className="mt-3 leading-relaxed">
+        このファイルはHonoのサーバーとは無関係な単なるスクリプトなので、
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun run dev</code>
+        は不要です。Bunに直接ファイルを渡して実行します（Bunは
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">.ts</code>
+        をそのまま実行できます）。
+      </p>
+      <CopyBlock lang="bash" title="ターミナル（backendディレクトリで）" code={`bun run src/zod-try.ts`} />
+      <p className="mt-3 leading-relaxed">
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">quantity: -5</code>
+        がルール違反なので、次のようなエラーが表示されれば成功です。
+      </p>
+      <CopyBlock
+        lang="text"
+        title="実行結果（例）"
+        code={`バリデーションエラー： [
+  {
+    origin: "number",
+    code: "too_small",
+    minimum: 0,
+    inclusive: false,
+    path: [ "quantity" ],
+    message: "Too small: expected number to be >0",
+  }
+]`}
+      />
+      <p className="mt-3 leading-relaxed">
+        次に<code className="rounded bg-muted px-1.5 py-0.5 text-xs">quantity: -5</code>
+        を<code className="rounded bg-muted px-1.5 py-0.5 text-xs">quantity: 3</code>
+        に書き換えてもう一度実行し、
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">OK： {'{ itemId: 2, quantity: 3 }'}</code>
+        のように出ることも確認しておきましょう。
+      </p>
+
+      <Callout variant="info" title="お試しファイルは消してOK">
+        <p>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">zod-try.ts</code>
+          はzodの動きを見るためだけのファイルで、この後の手順では使いません。
+          確認が終わったら削除して構いません（残しておいても動作に影響はありません）。
+        </p>
+      </Callout>
 
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
