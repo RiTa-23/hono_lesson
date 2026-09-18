@@ -101,7 +101,12 @@ player.gold -= total`}
       </p>
       <ul className="mt-3 list-disc space-y-1.5 pl-6 text-sm leading-relaxed">
         <li><span className="font-medium">zod</span> … リクエストの形を定義し、検査するライブラリ</li>
-        <li><span className="font-medium">@hono/zod-openapi</span> … zodのスキーマをHonoのルートに直接組み込む仕組み（ついでにAPI仕様書も自動生成される）</li>
+        <li>
+          <span className="font-medium">@hono/zod-openapi</span> … zodのスキーマをHonoのルートに組み込み、
+          さらにそのスキーマからAPI仕様書（OpenAPI）を自動生成するライブラリ。
+          「ルートに組み込む」だけなら<span className="font-medium">@hono/zod-validator</span>
+          という軽量なライブラリもありますが、今回は仕様書とSwagger UIまで一気に作るのでこちらを使います
+        </li>
         <li><span className="font-medium">テストコード</span> … 「quantityがマイナスなら400になる」を自動で確認し続ける仕組み</li>
       </ul>
 

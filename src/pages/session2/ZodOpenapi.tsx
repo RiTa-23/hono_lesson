@@ -23,27 +23,70 @@ export function ZodOpenapi() {
         </p>
       </Callout>
 
+      <Callout variant="info" title="zod-validatorとzod-openapi、どっちを使う？">
+        <p>
+          zodをHonoのルートに組み込む方法は2つあります。
+        </p>
+        <ul className="mt-2 list-disc space-y-1.5 pl-5">
+          <li>
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">@hono/zod-validator</code>
+            … <code className="rounded bg-muted px-1.5 py-0.5 text-xs">zValidator('json', schema)</code>
+            をミドルウェアとして挟むだけの軽量版。違反したリクエストは自動的に400になり、ハンドラでは
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.req.valid('json')</code>
+            で検証済みの値を取り出せます。バリデーションだけが目的ならこれで十分です
+          </li>
+          <li>
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">@hono/zod-openapi</code>
+            … バリデーションに加えて、同じスキーマから<span className="font-medium">OpenAPI仕様書を自動生成</span>
+            できます。そのぶん<code className="rounded bg-muted px-1.5 py-0.5 text-xs">createRoute</code>
+            でリクエスト・レスポンスの形をきちんと書く必要があり、少し記述量が増えます
+          </li>
+        </ul>
+        <p className="mt-2">
+          この講座では次のページでSwagger UI（仕様書を画面で見られるツール）まで作りたいので、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">@hono/zod-openapi</code>
+          を選びます。「検証だけできればよい」場面なら
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">zod-validator</code>
+          の方が手軽なので、覚えておくと使い分けができます。
+        </p>
+      </Callout>
+
       <h2 className="mt-8 text-xl font-bold">1. インストールする</h2>
       <CopyBlock lang="bash" title="ターミナル" code={`bun add @hono/zod-openapi`} />
 
       <h2 className="mt-10 text-xl font-bold">2. HonoをOpenAPIHonoに置き換える</h2>
       <p className="mt-3 leading-relaxed">
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/src/index.ts</code>
-        の先頭を書き換えます。<code className="rounded bg-muted px-1.5 py-0.5 text-xs">@hono/zod-openapi</code>
-        は独自の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">z</code>
-        （zod本体と同じように使えます）と<code className="rounded bg-muted px-1.5 py-0.5 text-xs">OpenAPIHono</code>
-        をセットで提供しています。
+        で書き換えるのは<span className="font-medium">次の2行だけ</span>です。
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">import {'{ cors }'}</code>
+        や<code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.use(...)</code>
+        など、それ以外の行はそのまま残します。
       </p>
       <CopyBlock
         lang="ts"
-        title="backend/src/index.ts（先頭部分）"
-        code={`import { OpenAPIHono, z, createRoute } from '@hono/zod-openapi'
-import { cors } from 'hono/cors'
+        title="変更前（第1回で書いた内容）"
+        code={`import { Hono } from 'hono'
 
-const app = new OpenAPIHono()
-
-app.use('/api/*', cors())`}
+const app = new Hono()`}
       />
+      <CopyBlock
+        lang="ts"
+        title="変更後（この2行に置き換える）"
+        code={`import { OpenAPIHono, z, createRoute } from '@hono/zod-openapi'
+
+const app = new OpenAPIHono()`}
+      />
+      <p className="mt-3 leading-relaxed">
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">@hono/zod-openapi</code>
+        は<code className="rounded bg-muted px-1.5 py-0.5 text-xs">OpenAPIHono</code>
+        に加えて、独自の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">z</code>
+        （zod本体と同じように使えます）と
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">createRoute</code>
+        をセットで提供しています。
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">z</code>と
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">createRoute</code>
+        はこの後の手順で使います。
+      </p>
       <Callout variant="info" title="app.get / app.postはそのまま使える">
         <p>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">OpenAPIHono</code>

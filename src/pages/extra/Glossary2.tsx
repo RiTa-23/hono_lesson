@@ -24,8 +24,12 @@ const TERMS: { term: string; reading?: string; body: string }[] = [
     body: "zodでデータを検証するメソッド。成功・失敗どちらでも例外を投げず、{ success, data | error } の形で結果を返す。",
   },
   {
+    term: "@hono/zod-validator",
+    body: "zodのスキーマをHonoのルートにミドルウェアとして組み込む軽量ライブラリ。zValidator('json', schema) を挟むと違反リクエストは自動的に400になり、ハンドラでは c.req.valid('json') で検証済みの値を取り出せる。仕様書の生成はしない。",
+  },
+  {
     term: "@hono/zod-openapi",
-    body: "zodのスキーマをHonoのルート定義に直接組み込めるライブラリ。バリデーションと、OpenAPI仕様書の自動生成を同時に行える。",
+    body: "zodのスキーマをHonoのルート定義に組み込み、バリデーションとOpenAPI仕様書の自動生成を同時に行えるライブラリ。バリデーションだけなら@hono/zod-validatorでも可能で、仕様書まで欲しいときにこちらを選ぶ。",
   },
   {
     term: "OpenAPIHono",
