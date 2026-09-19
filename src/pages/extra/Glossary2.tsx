@@ -32,6 +32,14 @@ const TERMS: { term: string; reading?: string; body: string }[] = [
     body: "zodのスキーマをHonoのルート定義に組み込み、バリデーションとOpenAPI仕様書の自動生成を同時に行えるライブラリ。バリデーションだけなら@hono/zod-validatorでも可能で、仕様書まで欲しいときにこちらを選ぶ。",
   },
   {
+    term: "app.route()",
+    body: "別ファイルで作ったHonoアプリ（サブアプリ）を、本体のアプリに取り付けるメソッド。app.route('/', tradeApp) のように使う。サブアプリ側にフルパス（/api/purchase など）を書いておけば第1引数は '/' でよい。OpenAPIHono同士なら、サブアプリのcreateRouteの定義も仕様書に自動で集められる。",
+  },
+  {
+    term: "チェーン（メソッドチェーン）",
+    body: "new OpenAPIHono().openapi(...).openapi(...).get(...) のように、メソッドを「.」でつなげて書くこと。こう書くと「どのパスにどんなAPIがあるか」が1つの型にまとまり、testClientやRPCでパス・レスポンスの補完が効くようになる。.openapi は .get より前に書く必要がある。",
+  },
+  {
     term: "OpenAPIHono",
     body: "@hono/zod-openapiが提供するHonoの拡張版。app.get/app.postなど通常のHonoの書き方に加え、app.openapi()が使えるようになる。",
   },

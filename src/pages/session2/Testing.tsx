@@ -27,17 +27,19 @@ export function Testing() {
         Bunにはテストランナーが内蔵されているので、追加のインストールは不要です。
         Honoにも<code className="rounded bg-muted px-1.5 py-0.5 text-xs">hono/testing</code>
         というテスト用のヘルパーが用意されています。
-        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/src/index.test.ts</code>
-        を新規作成してください。
+        テストしたいのは売り買いのAPIなので、その隣に
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/src/routes/trade.test.ts</code>
+        を新規作成してください（Bunは<code className="rounded bg-muted px-1.5 py-0.5 text-xs">.test.ts</code>
+        で終わるファイルを自動的にテストとして見つけてくれます）。
       </p>
       <CopyBlock
         lang="ts"
-        title="backend/src/index.test.ts（新規作成）"
+        title="backend/src/routes/trade.test.ts（新規作成）"
         code={`import { describe, expect, it } from 'bun:test'
 import { testClient } from 'hono/testing'
-import app from './index'
+import { tradeApp } from './trade'
 
-const client = testClient(app)
+const client = testClient(tradeApp)
 
 describe('POST /api/purchase', () => {
   it('正常に購入できる', async () => {
@@ -47,7 +49,8 @@ describe('POST /api/purchase', () => {
 
     expect(res.status).toBe(200)
     const player = await res.json()
-    expect(player.gold).toBeLessThan(500)
+    // 500G でポーション（50G）を1本買ったので 450G になり、所持品に加わる
+    expect(player).toMatchObject({ gold: 450, items: [{ itemId: 2, quantity: 1 }] })
   })
 
   it('quantityがマイナスだと400になる', async () => {
@@ -71,17 +74,25 @@ describe('POST /api/purchase', () => {
       <h2 className="mt-10 text-xl font-bold">2. コードを読み解く</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">testClient(app)</code>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">testClient(tradeApp)</code>
           … Honoアプリを直接テストするためのクライアントです。
           <span className="font-medium">開発サーバーを起動していなくても</span>動きます（サーバーを経由せず、
-          アプリの処理を直接呼び出しているため）。
+          アプリの処理を直接呼び出しているため）。ファイルを分けたおかげで、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">index.ts</code>
+          全体ではなく「売り買いのAPI」だけを切り出してテストできます。
         </li>
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">client.api.purchase.$post(...)</code>
           … パス（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/purchase</code>）が
-          そのままメソッドチェーンの形で補完されます。これは前回
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">createRoute</code>
-          で型付きのルートを定義したおかげです。
+          そのままメソッドチェーンの形で補完されます。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">tradeApp</code>
+          を<code className="rounded bg-muted px-1.5 py-0.5 text-xs">.openapi(...).openapi(...)</code>
+          とチェーンで書いたので、パスもリクエストの形も1つの型にまとまっているためです。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">toMatchObject({'{...}'})</code>
+          … 「レスポンスにこのキーと値が含まれている」を確認します。
+          テストは上から順に実行されるので、1つ目のテストで買った結果（450G・ポーション1本）をそのまま検証しています。
         </li>
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">describe</code> /
@@ -126,16 +137,25 @@ describe('POST /api/purchase', () => {
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">client.api.purchase.$post</code>
-          の形が分からない・補完されない → そのパスが
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.openapi(route, ...)</code>
-          で登録されているか確認しましょう。<code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.post</code>
-          のままのエンドポイントは、この補完の対象になりません。
+          が補完されない・<code className="rounded bg-muted px-1.5 py-0.5 text-xs">client</code>
+          が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">unknown</code>型になる →
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">tradeApp</code>
+          がチェーン（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">new OpenAPIHono().openapi(...).openapi(...)</code>
+          ）で書かれているか確認しましょう。<code className="rounded bg-muted px-1.5 py-0.5 text-xs">tradeApp.openapi(...)</code>
+          を1文ずつ並べた書き方だと、型がまとまらず補完が効きません。
         </li>
         <li>
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">import app from './index'</code>
-          でエラーになる → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">index.ts</code>
-          の末尾で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">export default app</code>
-          しているか確認してください。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">import {'{ tradeApp }'} from './trade'</code>
+          でエラーになる → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/trade.ts</code>
+          で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">export const tradeApp</code>
+          と書いているか、テストファイルを<code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/</code>
+          の中に置いているかを確認してください。
+        </li>
+        <li>
+          2回目以降の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun test</code>
+          でも同じ結果になる？ → なります。テストのたびにファイルが読み直され、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">data.ts</code>
+          の所持金は毎回500Gから始まります。
         </li>
       </ul>
 

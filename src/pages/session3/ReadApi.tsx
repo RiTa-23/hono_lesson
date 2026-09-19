@@ -15,51 +15,52 @@ export function ReadApi() {
         minutes={15}
       />
 
-      <h2 className="text-xl font-bold">1. Drizzleのインスタンスを作る</h2>
+      <h2 className="text-xl font-bold">1. routes/items.ts を書き換える</h2>
       <p className="mt-3 leading-relaxed">
+        商品のAPIは第2回で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/items.ts</code>
+        にまとめたので、書き換えるのはこのファイルだけです。
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env.DB</code>
-        （D1のバインディング）を、Drizzleが扱える形に変換します。
+        （D1のバインディング）をDrizzleが扱える形に変換し、配列操作をクエリに置き換えます。
+        <span className="font-medium">ファイル全体を次の内容に置き換えて</span>ください。
       </p>
       <CopyBlock
         lang="ts"
-        title="backend/src/index.ts（先頭に追記）"
-        code={`import { drizzle } from 'drizzle-orm/d1'
+        title="backend/src/routes/items.ts（全体を置き換え）"
+        code={`import { OpenAPIHono } from '@hono/zod-openapi'
+import { drizzle } from 'drizzle-orm/d1'
 import { eq } from 'drizzle-orm'
-import { items } from './db/schema'`}
-      />
+import { items } from '../db/schema'
+import type { Bindings } from '../types'
 
-      <h2 className="mt-10 text-xl font-bold">2. 商品一覧APIを書き換える</h2>
+// 商品棚のAPI（D1から読み出す）
+export const itemsApp = new OpenAPIHono<{ Bindings: Bindings }>()
+  // 商品一覧を返す
+  .get('/api/items', async (c) => {
+    const db = drizzle(c.env.DB)
+    const allItems = await db.select().from(items)
+    return c.json(allItems)
+  })
+  // 商品を1件返す
+  .get('/api/items/:id', async (c) => {
+    const db = drizzle(c.env.DB)
+    const id = Number(c.req.param('id'))
+
+    const item = await db.select().from(items).where(eq(items.id, id)).get()
+
+    if (!item) {
+      return c.json({ message: 'そんな商品は置いてないよ' }, 404)
+    }
+    return c.json(item)
+  })`}
+      />
       <p className="mt-3 leading-relaxed">
-        第1回で書いた<code className="rounded bg-muted px-1.5 py-0.5 text-xs">const items = [...]</code>
-        の配列宣言は削除し（スキーマの<code className="rounded bg-muted px-1.5 py-0.5 text-xs">items</code>
-        と名前が被るので忘れずに）、ハンドラの中身をDrizzleのクエリに置き換えます。
+        変わったのは3点です。<code className="rounded bg-muted px-1.5 py-0.5 text-xs">import {'{ items }'} from '../data'</code>
+        が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">'../db/schema'</code>
+        からのimportに変わり（名前が同じ<code className="rounded bg-muted px-1.5 py-0.5 text-xs">items</code>
+        なので、古い方を消さないと衝突します）、ハンドラが
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">async</code>
+        になり、中身がDrizzleのクエリになりました。
       </p>
-      <CopyBlock
-        lang="ts"
-        title="backend/src/index.ts（GET /api/items を置き換え）"
-        code={`app.get('/api/items', async (c) => {
-  const db = drizzle(c.env.DB)
-  const allItems = await db.select().from(items)
-  return c.json(allItems)
-})`}
-      />
-
-      <h2 className="mt-10 text-xl font-bold">3. 商品詳細APIを書き換える</h2>
-      <CopyBlock
-        lang="ts"
-        title="backend/src/index.ts（GET /api/items/:id を置き換え）"
-        code={`app.get('/api/items/:id', async (c) => {
-  const db = drizzle(c.env.DB)
-  const id = Number(c.req.param('id'))
-
-  const item = await db.select().from(items).where(eq(items.id, id)).get()
-
-  if (!item) {
-    return c.json({ message: 'そんな商品は置いてないよ' }, 404)
-  }
-  return c.json(item)
-})`}
-      />
 
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
@@ -118,9 +119,21 @@ curl http://localhost:3000/api/items/3`}
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
-          第1回の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">const items = [...]</code>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">import {'{ items }'} from '../data'</code>
           を消し忘れて、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">items</code>
-          という名前がスキーマのimportと衝突する → 配列の宣言は不要になったので削除しましょう。
+          という名前がスキーマのimportと衝突する → このファイルではメモリ上の配列はもう使わないので、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">'../data'</code>
+          のimportは削除しましょう（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">data.ts</code>
+          自体は次のページまで<code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/trade.ts</code>
+          が使うので、まだ残しておきます）。
+        </li>
+        <li>
+          第1回の発展で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">?maxPrice=</code>
+          の絞り込みを付けていた人 → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">'drizzle-orm'</code>
+          から<code className="rounded bg-muted px-1.5 py-0.5 text-xs">lte</code>
+          もimportし、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">db.select().from(items).where(lte(items.price, Number(maxPrice)))</code>
+          のように書けます（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">lte</code>
+          = less than or equal、「以下」）。
         </li>
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">.get()</code>

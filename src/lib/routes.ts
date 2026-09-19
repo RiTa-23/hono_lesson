@@ -11,7 +11,7 @@ export type PageDef = {
 
 // 公開設定：この回まで公開する（値を変えてmainにpushすると自動デプロイで反映される）
 // 例: 第2回まで公開したい場合は 2 にする
-export const PUBLISHED_UP_TO: number = 1;
+export const PUBLISHED_UP_TO: number = 2;
 
 export const HOME: PageDef = { path: "/", title: "よろず屋API講座", file: "Home" };
 
@@ -116,7 +116,7 @@ export const SESSION2_PAGES: PageDef[] = [
     section: "session2",
     progressId: "s2-03-zod-openapi",
     sectionLabel: "第2回 堅牢なAPIにしよう",
-    minutes: 25,
+    minutes: 30,
   },
   {
     path: "/session2/04-swagger-ui",
@@ -200,7 +200,7 @@ export const SESSION3_PAGES: PageDef[] = [
     section: "session3",
     progressId: "s3-06-write-api",
     sectionLabel: "第3回 データベースを導入しよう",
-    minutes: 20,
+    minutes: 25,
   },
   {
     path: "/session3/07-summary",

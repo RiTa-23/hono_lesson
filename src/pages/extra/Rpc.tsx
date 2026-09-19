@@ -30,23 +30,17 @@ export type AppType = typeof routes
 
 export default app`;
 
-const AFTER2_CODE = `const app = new OpenAPIHono()
+const AFTER2_CODE = `import { OpenAPIHono } from '@hono/zod-openapi'
+import { cors } from 'hono/cors'
+import { itemsApp } from './routes/items'
+import { tradeApp } from './routes/trade'
 
-app.use('/api/*', cors())
+const app = new OpenAPIHono()
 
-// app.openapi(...) もチェイン可能。app.get(...) と同じように連鎖させる
-const routes = app
-  .get('/api/items', (c) => c.json(items))
-  .get('/api/items/:id', (c) => {
-    // ...省略...
-  })
-  .get('/api/player', (c) => c.json(player))
-  .openapi(purchaseRoute, (c) => {
-    // ...省略...
-  })
-  .openapi(sellRoute, (c) => {
-    // ...省略...
-  })
+app.use('/api/*', cors({ origin: 'http://localhost:5173' }))
+
+// route() もチェイン可能。取り付けた結果を変数に入れる
+const routes = app.route('/', itemsApp).route('/', tradeApp)
 
 // クライアント側で使えるように「型」としてエクスポート
 export type AppType = typeof routes
@@ -99,8 +93,15 @@ export function Rpc() {
             </TabsContent>
             <TabsContent value="after2">
               <CopyBlock lang="ts" title="backend/src/index.ts（イメージ）" code={AFTER2_CODE} />
-              <Callout variant="tip" title="むしろ型がより正確になる">
+              <Callout variant="tip" title="routes/ 側はすでにチェーン済み">
                 <p>
+                  第2回で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/items.ts</code>
+                  と<code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/trade.ts</code>
+                  を<code className="rounded bg-muted px-1.5 py-0.5 text-xs">.openapi(...).get(...)</code>
+                  のチェーンで書いたので、各ファイルの型はもうまとまっています。
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs">index.ts</code>
+                  側は<code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.route(...)</code>
+                  の戻り値を変数に受けて、その型をexportするだけです。
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs">createRoute</code>
                   で定義したリクエストボディの型（quantityは正の整数、など）もそのまま
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs">AppType</code>

@@ -53,9 +53,16 @@ export function Session2Summary() {
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>zodで「データの形のルール」をスキーマとして定義できる</li>
         <li>
+          backendを<code className="rounded bg-muted px-1.5 py-0.5 text-xs">data.ts</code> /
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">schemas.ts</code> /
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/</code>
+          に分け、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.route()</code>
+          で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">index.ts</code>に取り付けられる
+        </li>
+        <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">@hono/zod-openapi</code>
           の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">createRoute</code> +
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.openapi</code>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">.openapi()</code>
           で、ルート定義そのものにバリデーションを組み込める
         </li>
         <li>そのスキーマ情報から、Swagger UIのドキュメントが自動生成できる</li>

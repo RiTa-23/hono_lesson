@@ -27,12 +27,40 @@ export function SwaggerUi() {
       <CopyBlock lang="bash" title="ターミナル" code={`bun add @hono/swagger-ui`} />
 
       <h2 className="mt-10 text-xl font-bold">2. 仕様書とUIのエンドポイントを追加する</h2>
+      <p className="mt-3 leading-relaxed">
+        仕様書は「アプリ全体」の情報なので、組み立て役の
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">index.ts</code>
+        に追加します。<span className="font-medium">「追加」とコメントした2か所</span>
+        （importと、末尾のエンドポイント2つ）を書き足してください。
+      </p>
       <CopyBlock
         lang="ts"
-        title="backend/src/index.ts（末尾、export default appの前に追記）"
-        code={`import { swaggerUI } from '@hono/swagger-ui'
+        title="backend/src/index.ts（全体。「追加」の行を書き足す）"
+        code={`import { OpenAPIHono } from '@hono/zod-openapi'
+import { cors } from 'hono/cors'
+import { swaggerUI } from '@hono/swagger-ui' // 追加
+import { itemsApp } from './routes/items'
+import { tradeApp } from './routes/trade'
 
-// OpenAPI仕様（JSON）を返すエンドポイント
+const app = new OpenAPIHono()
+
+// 今回のフロントエンド（Viteの開発サーバー）だけを許可する
+app.use(
+  '/api/*',
+  cors({
+    origin: 'http://localhost:5173',
+  })
+)
+
+app.get('/', (c) => {
+  return c.text('Hello Hono!')
+})
+
+// 各ファイルに分けたAPIを、このアプリに取り付ける
+app.route('/', itemsApp)
+app.route('/', tradeApp)
+
+// 追加：OpenAPI仕様（JSON）を返すエンドポイント
 app.doc('/doc', {
   openapi: '3.0.0',
   info: {
@@ -41,14 +69,19 @@ app.doc('/doc', {
   },
 })
 
-// ブラウザで見られるドキュメント画面
-app.get('/ui', swaggerUI({ url: '/doc' }))`}
+// 追加：ブラウザで見られるドキュメント画面
+app.get('/ui', swaggerUI({ url: '/doc' }))
+
+export default app`}
       />
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.doc('/doc', ...)</code>
           … これまでに<code className="rounded bg-muted px-1.5 py-0.5 text-xs">createRoute</code>
           で定義したエンドポイント情報をまとめて、OpenAPI形式のJSONとして返す窓口を作ります。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.route()</code>
+          で取り付けたサブアプリ（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">tradeApp</code>
+          ）の定義も自動的に集められます。
         </li>
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">swaggerUI({'{ url: \'/doc\' }'})</code>
@@ -104,11 +137,20 @@ app.get('/ui', swaggerUI({ url: '/doc' }))`}
           が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">/doc</code>と一致しているか確認しましょう。
         </li>
         <li>
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.get('/api/items', ...)</code>
-          のように<code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.openapi</code>
-          を使っていないエンドポイントは、仕様書（Swagger UI）には表示されません。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/items</code>
+          や<code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/player</code>
+          が仕様書に出てこない → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">.get(...)</code>
+          で書いたエンドポイントは、仕様書（Swagger UI）には表示されません。
           あくまで<code className="rounded bg-muted px-1.5 py-0.5 text-xs">createRoute</code>
+          + <code className="rounded bg-muted px-1.5 py-0.5 text-xs">.openapi(...)</code>
           で定義したものだけが対象です。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.doc</code>
+          が存在しないと言われる → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">index.ts</code>
+          の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">app</code>
+          が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">new OpenAPIHono()</code>
+          になっているか確認しましょう（前のページの手順7）。
         </li>
       </ul>
 

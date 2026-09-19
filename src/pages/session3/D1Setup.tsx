@@ -61,17 +61,51 @@ database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`}
       <p className="mt-3 leading-relaxed">
         Honoアプリに、環境変数（bindings）の型を教えてあげます。これで
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env.DB</code>
-        が型付きで使えるようになります。
+        が型付きで使えるようになります。型は複数のファイルから使うので、専用のファイルに置きます。
       </p>
       <CopyBlock
         lang="ts"
-        title="backend/src/index.ts（先頭部分）"
-        code={`type Bindings = {
+        title="backend/src/types.ts（新規作成）"
+        code={`// wrangler.jsonc で設定した bindings を、TypeScriptに教えるための型
+export type Bindings = {
   DB: D1Database
-}
-
-const app = new OpenAPIHono<{ Bindings: Bindings }>()`}
+}`}
       />
+      <p className="mt-3 leading-relaxed">
+        次に、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env.DB</code>
+        を使うことになる<code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/</code>
+        の2ファイルで、この型を<code className="rounded bg-muted px-1.5 py-0.5 text-xs">OpenAPIHono</code>
+        に渡します。<code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/items.ts</code>
+        と<code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/trade.ts</code>
+        の両方で、importの追加と<code className="rounded bg-muted px-1.5 py-0.5 text-xs">new OpenAPIHono()</code>
+        の行を書き換えます。
+      </p>
+      <CopyBlock
+        lang="ts"
+        title="backend/src/routes/items.ts（importに追加＋1行書き換え）"
+        code={`import type { Bindings } from '../types' // 追加
+
+// new OpenAPIHono() を、次のように書き換える
+export const itemsApp = new OpenAPIHono<{ Bindings: Bindings }>()`}
+      />
+      <CopyBlock
+        lang="ts"
+        title="backend/src/routes/trade.ts（importに追加＋1行書き換え）"
+        code={`import type { Bindings } from '../types' // 追加
+
+// new OpenAPIHono() を、次のように書き換える
+export const tradeApp = new OpenAPIHono<{ Bindings: Bindings }>()`}
+      />
+      <Callout variant="info" title="index.ts はそのままでOK">
+        <p>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">index.ts</code>
+          の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">app</code>
+          は<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env</code>
+          を直接使わない（取り付けと設定だけ）ので、型を渡す必要はありません。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.route()</code>
+          で取り付けるサブアプリの型が違っていても問題なく動きます。
+        </p>
+      </Callout>
       <Callout variant="info" title="D1Databaseの型はどこから来る？">
         <p>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">D1Database</code>

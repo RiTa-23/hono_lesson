@@ -11,8 +11,8 @@ export function WriteApi() {
       <PageHeader
         title="purchase/sellをDB更新処理に書き換える"
         chapter="06"
-        goal="購入・売却APIを、在庫・所持金・所持アイテムをD1に読み書きする実装に書き換えられている"
-        minutes={20}
+        goal="購入・売却APIとplayer取得APIを、在庫・所持金・所持アイテムをD1に読み書きする実装に書き換えられている"
+        minutes={25}
       />
 
       <Callout variant="quest">
@@ -22,12 +22,22 @@ export function WriteApi() {
         </p>
       </Callout>
 
-      <h2 className="mt-8 text-xl font-bold">1. playerとplayer_itemsをimportする</h2>
+      <h2 className="mt-8 text-xl font-bold">1. importを書き換える</h2>
+      <p className="mt-3 leading-relaxed">
+        売り買いのAPIは<code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/trade.ts</code>
+        にまとめてあるので、書き換えるのはこのファイルだけです。まず先頭のimportを次のようにします
+        （<code className="rounded bg-muted px-1.5 py-0.5 text-xs">'../data'</code>
+        からのimportは削除し、Drizzle関連とDBスキーマを追加）。
+      </p>
       <CopyBlock
         lang="ts"
-        title="backend/src/index.ts（importに追記）"
-        code={`import { and, eq } from 'drizzle-orm'
-import { items, player, playerItems } from './db/schema'`}
+        title="backend/src/routes/trade.ts（先頭のimportを置き換え）"
+        code={`import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
+import { drizzle } from 'drizzle-orm/d1'
+import { and, eq } from 'drizzle-orm'
+import { items, player, playerItems } from '../db/schema'
+import { purchaseBodySchema, sellBodySchema, playerSchema, errorSchema } from '../schemas'
+import type { Bindings } from '../types'`}
       />
       <Callout variant="info" title="レスポンスの形は変えない">
         <p>
@@ -35,17 +45,24 @@ import { items, player, playerItems } from './db/schema'`}
           という形は、フロントエンド（React側）が期待しているAPI契約です。中身の実装がD1に変わっても、
           <span className="font-medium">この形だけは絶対に崩さない</span>ようにしましょう。
           そうすればフロントのコードは一切書き換える必要がありません。
+          第2回で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">schemas.ts</code>
+          に書いた<code className="rounded bg-muted px-1.5 py-0.5 text-xs">playerSchema</code>
+          も、そのまま使えます。
         </p>
       </Callout>
 
       <h2 className="mt-10 text-xl font-bold">2. 現在のplayer状態を組み立てるヘルパーを作る</h2>
       <p className="mt-3 leading-relaxed">
-        purchase・sellの両方で「最新のplayer状態を返す」処理が必要になるので、共通の関数にしておきます。
+        purchase・sell・GET /api/player の3か所で「最新のplayer状態を返す」処理が必要になるので、共通の関数にしておきます。
+        2つの<code className="rounded bg-muted px-1.5 py-0.5 text-xs">createRoute</code>
+        の後、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">export const tradeApp</code>
+        の前に追記します。
       </p>
       <CopyBlock
         lang="ts"
-        title="backend/src/index.ts（追記）"
-        code={`async function getPlayerState(db: ReturnType<typeof drizzle>) {
+        title="backend/src/routes/trade.ts（tradeApp の前に追記）"
+        code={`// 現在のplayer状態（{ gold, items }）をDBから組み立てる
+async function getPlayerState(db: ReturnType<typeof drizzle>) {
   const playerRow = await db.select().from(player).where(eq(player.id, 1)).get()
   const ownedItems = await db.select().from(playerItems).where(eq(playerItems.playerId, 1))
 
@@ -57,97 +74,129 @@ import { items, player, playerItems } from './db/schema'`}
       />
 
       <h2 className="mt-10 text-xl font-bold">3. 購入APIを書き換える</h2>
+      <p className="mt-3 leading-relaxed">
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">.openapi(purchaseRoute, ...)</code>
+        のブロックを丸ごと置き換えます。ハンドラが<code className="rounded bg-muted px-1.5 py-0.5 text-xs">async</code>
+        になる点に注意してください。
+      </p>
       <CopyBlock
         lang="ts"
-        title="backend/src/index.ts（app.openapi(purchaseRoute, ...) の中身を置き換え）"
-        code={`app.openapi(purchaseRoute, async (c) => {
-  const db = drizzle(c.env.DB)
-  const { itemId, quantity: rawQuantity } = c.req.valid('json')
-  const quantity = rawQuantity ?? 1
+        title="backend/src/routes/trade.ts（.openapi(purchaseRoute, ...) のブロックを置き換え）"
+        code={`  // アイテムを購入する
+  .openapi(purchaseRoute, async (c) => {
+    const db = drizzle(c.env.DB)
+    const { itemId, quantity: rawQuantity } = c.req.valid('json')
+    const quantity = rawQuantity ?? 1
 
-  const item = await db.select().from(items).where(eq(items.id, itemId)).get()
-  if (!item) {
-    return c.json({ message: 'そんな商品は置いてないよ' }, 404)
-  }
+    const item = await db.select().from(items).where(eq(items.id, itemId)).get()
+    if (!item) {
+      return c.json({ message: 'そんな商品は置いてないよ' }, 404)
+    }
 
-  const total = item.price * quantity
-  if (item.stock < quantity) {
-    return c.json({ message: '在庫が足りないよ' }, 400)
-  }
+    const total = item.price * quantity
+    if (item.stock < quantity) {
+      return c.json({ message: '在庫が足りないよ' }, 400)
+    }
 
-  const playerRow = await db.select().from(player).where(eq(player.id, 1)).get()
-  if (!playerRow || playerRow.gold < total) {
-    return c.json({ message: 'お金が足りないよ' }, 400)
-  }
+    const playerRow = await db.select().from(player).where(eq(player.id, 1)).get()
+    if (!playerRow || playerRow.gold < total) {
+      return c.json({ message: 'お金が足りないよ' }, 400)
+    }
 
-  // 在庫を減らし、お金を受け取る
-  await db.update(items).set({ stock: item.stock - quantity }).where(eq(items.id, itemId))
-  await db.update(player).set({ gold: playerRow.gold - total }).where(eq(player.id, 1))
+    // 在庫を減らし、お金を受け取る
+    await db.update(items).set({ stock: item.stock - quantity }).where(eq(items.id, itemId))
+    await db.update(player).set({ gold: playerRow.gold - total }).where(eq(player.id, 1))
 
-  // 所持品を更新（すでに持っていれば加算、なければ新規追加）
-  const owned = await db
-    .select()
-    .from(playerItems)
-    .where(and(eq(playerItems.playerId, 1), eq(playerItems.itemId, itemId)))
-    .get()
+    // 所持品を更新（すでに持っていれば加算、なければ新規追加）
+    const owned = await db
+      .select()
+      .from(playerItems)
+      .where(and(eq(playerItems.playerId, 1), eq(playerItems.itemId, itemId)))
+      .get()
 
-  if (owned) {
-    await db
-      .update(playerItems)
-      .set({ quantity: owned.quantity + quantity })
-      .where(eq(playerItems.id, owned.id))
-  } else {
-    await db.insert(playerItems).values({ playerId: 1, itemId, quantity })
-  }
+    if (owned) {
+      await db
+        .update(playerItems)
+        .set({ quantity: owned.quantity + quantity })
+        .where(eq(playerItems.id, owned.id))
+    } else {
+      await db.insert(playerItems).values({ playerId: 1, itemId, quantity })
+    }
 
-  return c.json(await getPlayerState(db))
-})`}
+    return c.json(await getPlayerState(db), 200)
+  })`}
       />
 
       <h2 className="mt-10 text-xl font-bold">4. 売却APIを書き換える</h2>
       <CopyBlock
         lang="ts"
-        title="backend/src/index.ts（app.openapi(sellRoute, ...) の中身を置き換え）"
-        code={`app.openapi(sellRoute, async (c) => {
-  const db = drizzle(c.env.DB)
-  const { itemId, quantity: rawQuantity } = c.req.valid('json')
-  const quantity = rawQuantity ?? 1
+        title="backend/src/routes/trade.ts（.openapi(sellRoute, ...) のブロックを置き換え）"
+        code={`  // アイテムを売却する（買取価格は半額！）
+  .openapi(sellRoute, async (c) => {
+    const db = drizzle(c.env.DB)
+    const { itemId, quantity: rawQuantity } = c.req.valid('json')
+    const quantity = rawQuantity ?? 1
 
-  const item = await db.select().from(items).where(eq(items.id, itemId)).get()
-  const owned = await db
-    .select()
-    .from(playerItems)
-    .where(and(eq(playerItems.playerId, 1), eq(playerItems.itemId, itemId)))
-    .get()
+    const item = await db.select().from(items).where(eq(items.id, itemId)).get()
+    const owned = await db
+      .select()
+      .from(playerItems)
+      .where(and(eq(playerItems.playerId, 1), eq(playerItems.itemId, itemId)))
+      .get()
 
-  if (!item || !owned || owned.quantity < quantity) {
-    return c.json({ message: '持っている数より多くは売れないよ' }, 400)
-  }
+    if (!item || !owned || owned.quantity < quantity) {
+      return c.json({ message: '持っている数より多くは売れないよ' }, 400)
+    }
 
-  const refund = Math.floor(item.price / 2) * quantity
+    const refund = Math.floor(item.price / 2) * quantity
 
-  await db.update(items).set({ stock: item.stock + quantity }).where(eq(items.id, itemId))
+    await db.update(items).set({ stock: item.stock + quantity }).where(eq(items.id, itemId))
 
-  const playerRow = await db.select().from(player).where(eq(player.id, 1)).get()
-  await db
-    .update(player)
-    .set({ gold: (playerRow?.gold ?? 0) + refund })
-    .where(eq(player.id, 1))
-
-  if (owned.quantity === quantity) {
-    await db.delete(playerItems).where(eq(playerItems.id, owned.id))
-  } else {
+    const playerRow = await db.select().from(player).where(eq(player.id, 1)).get()
     await db
-      .update(playerItems)
-      .set({ quantity: owned.quantity - quantity })
-      .where(eq(playerItems.id, owned.id))
-  }
+      .update(player)
+      .set({ gold: (playerRow?.gold ?? 0) + refund })
+      .where(eq(player.id, 1))
 
-  return c.json(await getPlayerState(db))
-})`}
+    if (owned.quantity === quantity) {
+      await db.delete(playerItems).where(eq(playerItems.id, owned.id))
+    } else {
+      await db
+        .update(playerItems)
+        .set({ quantity: owned.quantity - quantity })
+        .where(eq(playerItems.id, owned.id))
+    }
+
+    return c.json(await getPlayerState(db), 200)
+  })`}
       />
 
-      <h2 className="mt-10 text-xl font-bold">5. 動作確認する</h2>
+      <h2 className="mt-10 text-xl font-bold">5. GET /api/player もDBから返す</h2>
+      <p className="mt-3 leading-relaxed">
+        所持金・所持品を返すAPIも、メモリ上の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">player</code>
+        ではなくDBから組み立てるようにします。ここを忘れると、購入は保存されているのに
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/player</code>
+        だけ常に500Gを返す、という状態になります。
+      </p>
+      <CopyBlock
+        lang="ts"
+        title="backend/src/routes/trade.ts（.get('/api/player', ...) のブロックを置き換え）"
+        code={`  // 所持金と所持アイテムを返す
+  .get('/api/player', async (c) => {
+    const db = drizzle(c.env.DB)
+    return c.json(await getPlayerState(db))
+  })`}
+      />
+
+      <h2 className="mt-10 text-xl font-bold">6. data.ts を削除する</h2>
+      <p className="mt-3 leading-relaxed">
+        これで<code className="rounded bg-muted px-1.5 py-0.5 text-xs">data.ts</code>
+        のメモリ上のデータを使うファイルはなくなりました。
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/src/data.ts</code>
+        は削除して構いません（残っていても動きますが、「使われていないデータ」が残るのは混乱のもとです）。
+      </p>
+
+      <h2 className="mt-10 text-xl font-bold">7. 動作確認する</h2>
       <CopyBlock
         lang="bash"
         title="ターミナル"
@@ -184,6 +233,23 @@ curl http://localhost:3000/api/player
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">select().from(...).where(...)</code>
           は常に配列を返すため、1件だけ欲しいときは必ず<code className="rounded bg-muted px-1.5 py-0.5 text-xs">.get()</code>
           を付けます。
+        </li>
+        <li>
+          購入はできるのに<code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/player</code>
+          が500Gのまま → 手順5の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">.get('/api/player', ...)</code>
+          の書き換え忘れです。<code className="rounded bg-muted px-1.5 py-0.5 text-xs">return c.json(player)</code>
+          のままだと、メモリ上の古いデータを返し続けます。
+        </li>
+        <li>
+          第2回で書いた<code className="rounded bg-muted px-1.5 py-0.5 text-xs">routes/trade.test.ts</code>
+          が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun test</code>
+          で失敗するようになった → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">tradeApp</code>
+          が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env.DB</code>
+          を必要とするようになったためで、想定どおりの挙動です。テスト用のD1を用意する方法（
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">@cloudflare/vitest-pool-workers</code>
+          など）はこの講座の範囲外なので、いったんテストファイルを削除するか、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">describe.skip</code>
+          にしておいて構いません。
         </li>
         <li>
           複数の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">update</code>
