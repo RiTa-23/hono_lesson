@@ -335,7 +335,7 @@ echo $BASH_VERSION`}
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">git version 2.xx.x.windows.1</code>
           と
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">5.x.xx(1)-release</code>
-          のようにバージョンが2行表示されればOKです。2行目が空になる場合は、PowerShellなど別のターミナルで実行しています。
+          のようにバージョンが2行表示されればOKです。2行目にバージョン番号が出ない場合は、PowerShellなどGit Bash以外のターミナルで実行しています。
         </p>
         <p className="mt-2">
           「Git Bash」が見つからない場合は、
