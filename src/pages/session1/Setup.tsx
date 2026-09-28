@@ -51,6 +51,19 @@ export function Setup() {
         </TabsContent>
       </Tabs>
 
+      <Callout variant="warn" title="Windowsの方は、ここから先はGit Bashで">
+        <p>
+          講座のコマンド（特にcurl）はMac/Linuxのターミナルと同じ書き方になっていて、
+          PowerShellではそのまま動かないものがあります。Bunのインストールが終わったら、
+          以降のコマンドはすべて<span className="font-medium">Git Bash</span>
+          （Git for Windowsに付属）で実行してください。
+        </p>
+        <p className="mt-2">
+          VS Codeのターミナルなら、右上の「＋」の横の「∨」から「Git Bash」を選べます。
+          「既定のプロファイルの選択」でGit Bashにしておくと、毎回切り替えずに済みます。
+        </p>
+      </Callout>
+
       <p className="mt-3 leading-relaxed">
         インストール後、以下のコマンドでバージョンが表示されればOKです。
       </p>
@@ -208,6 +221,7 @@ export function Setup() {
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun: command not found</code>
           → ターミナルを開き直すか、インストール時に表示されたPATH設定のコマンドを実行してください。
+          WindowsでPowerShellからインストールした直後は、Git Bashも一度開き直すと認識されます。
         </li>
         <li>
           ポート3000がすでに使われている → ポートは「パソコンの中の番地」のようなものです。

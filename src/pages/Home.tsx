@@ -306,7 +306,11 @@ export function Home() {
       <h2 className="mt-10 text-xl font-bold">持ち物・事前準備</h2>
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>ノートPC（開発できる環境）</li>
-        <li>gitコマンドが使える状態にしておく</li>
+        <li>
+          gitコマンドが使える状態にしておく
+          （Windowsの方は<span className="font-medium">Git for Windows</span>でインストールしてください。
+          付属の<span className="font-medium">Git Bash</span>を講座のターミナルとして使います）
+        </li>
         <li>
           コードエディタ（<span className="font-medium">VS Code</span>推奨）
         </li>
