@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { AllClearOverlay, OVERLAY_MS } from "./AllClearOverlay";
+import { AllClearOverlay } from "./AllClearOverlay";
 import { MAIN_FLOW } from "@/lib/routes";
 import { SESSION_CLEAR_CLOSED_EVENT } from "@/lib/clear";
 import { clearAllProgress, setProgress } from "@/lib/storage";
@@ -57,15 +57,46 @@ describe("AllClearOverlay（全クエスト達成演出）", () => {
     expect(screen.getByText("すべてのクエストを達成した！")).toBeInTheDocument();
   });
 
-  it("表示時間が経つと自動で消える", () => {
+  it("講座修了証として、戦績と最終称号を表示する", () => {
+    render(<AllClearOverlay />);
+    clearAllQuests();
+    closeSessionClear();
+    expect(screen.getByRole("dialog", { name: "講座修了証" })).toBeInTheDocument();
+    expect(screen.getByText("「伝説のよろず屋」")).toBeInTheDocument();
+    expect(screen.getByText(`${MAIN_FLOW.length} / ${MAIN_FLOW.length}`)).toBeInTheDocument();
+    const exp = MAIN_FLOW.reduce((sum, p) => sum + (p.minutes ?? 0), 0);
+    expect(screen.getByText(`+${exp} EXP`)).toBeInTheDocument();
+  });
+
+  it("時間が経っても自動では消えない（閉じるまで残る）", () => {
     vi.useFakeTimers();
     render(<AllClearOverlay />);
     clearAllQuests();
     closeSessionClear();
-    expect(screen.getByText("全クエスト達成")).toBeInTheDocument();
-
     act(() => {
-      vi.advanceTimersByTime(OVERLAY_MS);
+      vi.advanceTimersByTime(30000);
+    });
+    expect(screen.getByText("全クエスト達成")).toBeInTheDocument();
+  });
+
+  it("講座修了をXにポストするボタンがある", () => {
+    render(<AllClearOverlay />);
+    clearAllQuests();
+    closeSessionClear();
+    const link = screen.getByRole("link", { name: /でポストする/ });
+    const text = new URL(link.getAttribute("href")!).searchParams.get("text")!;
+    expect(text).toContain("全4回を完走した！");
+    expect(text).toContain("最終称号「伝説のよろず屋」");
+  });
+
+  it("Escキーで消せる", () => {
+    vi.useFakeTimers();
+    render(<AllClearOverlay />);
+    clearAllQuests();
+    closeSessionClear();
+    act(() => {
+      fireEvent.keyDown(window, { key: "Escape" });
+      vi.advanceTimersByTime(300);
     });
     expect(screen.queryByText("全クエスト達成")).not.toBeInTheDocument();
   });

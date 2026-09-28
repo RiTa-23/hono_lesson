@@ -8,7 +8,11 @@ import {
   SESSION_CLEAR_CLOSED_EVENT,
   type SessionNumber,
 } from "@/lib/clear";
+import { rankStars } from "@/lib/share";
+import { useCountUp } from "@/lib/useCountUp";
 import { cn } from "@/lib/utils";
+import { ConfettiBurst } from "@/components/Confetti";
+import { ShareOnXButton } from "@/components/ShareOnXButton";
 
 const FADE_MS = 300;
 
@@ -38,7 +42,7 @@ const SESSION_INFO: Record<
   4: {
     kanji: "肆",
     title: "本番デプロイでよろず屋を開店しよう",
-    honor: "よろず屋の店主",
+    honor: "よろず屋マスター",
     flavor: "よろず屋は世界に向けて店を開いた。どこの冒険者でも、このAPIに手が届く。",
   },
 };
@@ -53,52 +57,6 @@ const T = {
 };
 const EXP_COUNT_MS = 700;
 
-// 紙吹雪（描画のたびに変わらないよう、位置は決め打ちで生成する）
-const CONFETTI_COLORS = ["bg-gold", "bg-[#b3402a]", "bg-primary"];
-const CONFETTI = Array.from({ length: 28 }, (_, i) => {
-  const angle = (i / 28) * Math.PI * 2 + (i % 2 ? 0.12 : -0.08);
-  const dist = 190 + ((i * 53) % 150);
-  return {
-    tx: Math.round(Math.cos(angle) * dist),
-    ty: Math.round(Math.sin(angle) * dist * 0.8 - 40),
-    rot: ((i * 67) % 360) - 180,
-    color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-    diamond: i % 4 === 0,
-    delay: (i % 5) * 25,
-  };
-});
-
-// X（旧Twitter）の投稿画面に渡すハッシュタグ（#は付けない）
-const SHARE_HASHTAGS = ["よろず屋API講座", "Hono"];
-
-// 達成内容を載せたX（旧Twitter）の投稿画面のURL。サイトのトップページを添える
-function buildShareUrl({
-  session,
-  title,
-  honor,
-  exp,
-  rank,
-}: {
-  session: SessionNumber;
-  title: string;
-  honor: string;
-  exp: number;
-  rank: number;
-}): string {
-  const stars = "★".repeat(rank) + "☆".repeat(4 - rank);
-  const text = [
-    `よろず屋API講座 第${session}回「${title}」を踏破した！`,
-    `獲得報酬：+${exp} EXP／称号「${honor}」`,
-    `ギルドランク ${stars}`,
-  ].join("\n");
-  const params = new URLSearchParams({
-    text,
-    url: `${window.location.origin}${window.location.pathname}`,
-    hashtags: SHARE_HASHTAGS.join(","),
-  });
-  return `https://twitter.com/intent/tweet?${params.toString()}`;
-}
-
 function delay(ms: number): CSSProperties {
   return { animationDelay: `${ms}ms` };
 }
@@ -112,7 +70,6 @@ type Shown = { session: SessionNumber; rank: number; allClear: boolean };
 export function SessionClearOverlay() {
   const [shown, setShown] = useState<Shown | null>(null);
   const [leaving, setLeaving] = useState(false);
-  const [exp, setExp] = useState(0);
   const clearedRef = useRef<SessionNumber[]>(getClearedSessions());
   const dialogRef = useRef<HTMLDivElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
@@ -146,26 +103,7 @@ export function SessionClearOverlay() {
   const totalExp = shown
     ? getSessionFlow(shown.session).reduce((sum, p) => sum + (p.minutes ?? 0), 0)
     : 0;
-
-  // 経験値のカウントアップ
-  useEffect(() => {
-    if (!shown) return;
-    setExp(0);
-    const steps = 20;
-    let step = 0;
-    let interval: number | undefined;
-    const start = window.setTimeout(() => {
-      interval = window.setInterval(() => {
-        step += 1;
-        setExp(Math.round((totalExp * step) / steps));
-        if (step >= steps) window.clearInterval(interval);
-      }, EXP_COUNT_MS / steps);
-    }, T.rewards);
-    return () => {
-      window.clearTimeout(start);
-      window.clearInterval(interval);
-    };
-  }, [shown, totalExp]);
+  const exp = useCountUp(totalExp, shown, { delayMs: T.rewards, durationMs: EXP_COUNT_MS });
 
   // 開いたら報告書にフォーカスを移し、閉じたら元の場所へ戻す
   useEffect(() => {
@@ -379,22 +317,13 @@ export function SessionClearOverlay() {
                     : "次の依頼書はただいま準備中。公開をお楽しみに！"}
                 </p>
               )}
-              <a
-                href={buildShareUrl({
-                  session: n,
-                  title: info.title,
-                  honor: info.honor,
-                  exp: totalExp,
-                  rank: shown.rank,
-                })}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-sm border border-primary bg-card px-4 py-2 font-serif text-sm font-bold text-foreground transition hover:bg-secondary/60"
-              >
-                <XLogo />
-                でポストする
-                <span className="sr-only">（新しいタブで開く）</span>
-              </a>
+              <ShareOnXButton
+                text={[
+                  `よろず屋API講座 第${n}回「${info.title}」を踏破した！`,
+                  `獲得報酬：+${totalExp} EXP／称号「${info.honor}」`,
+                  `ギルドランク ${rankStars(shown.rank)}`,
+                ].join("\n")}
+              />
               {!shown.allClear && (
                 <button
                   type="button"
@@ -410,41 +339,8 @@ export function SessionClearOverlay() {
       </div>
 
       {/* 判子の衝撃で舞う紙吹雪 */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 overflow-hidden motion-reduce:hidden"
-      >
-        <div className="absolute left-1/2 top-1/2">
-          {CONFETTI.map((c, i) => (
-            <span
-              key={i}
-              className={cn(
-                "absolute animate-confetti opacity-0",
-                c.color,
-                c.diamond ? "h-2 w-2" : "h-3 w-1.5"
-              )}
-              style={
-                {
-                  "--tx": `${c.tx}px`,
-                  "--ty": `${c.ty}px`,
-                  "--rot": `${c.rot}deg`,
-                  animationDelay: `${T.impact + c.delay}ms`,
-                } as CSSProperties
-              }
-            />
-          ))}
-        </div>
-      </div>
+      <ConfettiBurst delayMs={T.impact} />
     </div>
-  );
-}
-
-// Xのロゴ（lucide-reactにはブランドアイコンがないため直書き）
-function XLogo() {
-  return (
-    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" role="img" aria-label="X">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
   );
 }
 

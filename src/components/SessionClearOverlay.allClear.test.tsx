@@ -59,8 +59,8 @@ describe("SessionClearOverlay（全クリとの連携）", () => {
       fireEvent.click(screen.getByRole("button", { name: /知らせを受け取る/ }));
       vi.advanceTimersByTime(300);
     });
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    expect(screen.getByText("全クエスト達成")).toBeInTheDocument();
+    expect(screen.queryByText(/QUEST CLEAR/)).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "講座修了証" })).toBeInTheDocument();
   });
 
   it("Escで閉じた場合も全クリ演出が続く", () => {

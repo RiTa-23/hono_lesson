@@ -82,6 +82,18 @@ export default {
             transform: "translate(var(--tx), calc(var(--ty) + 90px)) rotate(calc(var(--rot) * 2)) scale(1)",
           },
         },
+        // 画面の上から揺れながら降りそそぐ紙吹雪（--sway で横揺れの幅を変える）
+        "confetti-fall": {
+          "0%": { opacity: "1", transform: "translate(0, 0) rotate(0deg)" },
+          "50%": { transform: "translate(var(--sway), 55vh) rotate(360deg)" },
+          "90%": { opacity: "1" },
+          "100%": { opacity: "0", transform: "translate(0, 110vh) rotate(720deg)" },
+        },
+        // 修了証の題字: 字間を詰めながら浮かび上がる
+        "title-in": {
+          "0%": { opacity: "0", letterSpacing: "1em" },
+          "100%": { opacity: "1", letterSpacing: "0.3em" },
+        },
         // 新しく灯ったランクの星
         "star-pop": {
           "0%": { opacity: "0", transform: "scale(0)" },
@@ -99,6 +111,8 @@ export default {
         "report-thud": "report-thud 0.3s ease-out",
         "reveal-up": "reveal-up 0.35s ease-out",
         confetti: "confetti 1.6s cubic-bezier(0.15, 0.7, 0.3, 1) forwards",
+        "confetti-fall": "confetti-fall 3s linear forwards",
+        "title-in": "title-in 0.7s ease-out",
         "star-pop": "star-pop 0.45s ease-out",
         twinkle: "twinkle 1.8s ease-in-out infinite",
       },

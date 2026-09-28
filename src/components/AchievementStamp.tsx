@@ -1,9 +1,17 @@
+import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
 // 全クエスト達成時の大型判子（朱色 #b3402a 直書き・ProgressCheckの判子と同系デザイン）
-export function AchievementStamp({ className }: { className?: string }) {
+export function AchievementStamp({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: CSSProperties;
+}) {
   return (
     <span
+      style={style}
       className={cn(
         "inline-flex -rotate-[8deg] animate-stamp-in items-center rounded",
         "border-[3px] border-[#b3402a] bg-[#b3402a] px-6 py-3",
