@@ -1,19 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { AchievementStamp } from "@/components/AchievementStamp";
-import { MAIN_FLOW, PUBLISHED_UP_TO } from "@/lib/routes";
-import { getAllProgress } from "@/lib/storage";
+import { isAllCleared } from "@/lib/clear";
 
 // 表示時間（ミリ秒）。テストからも参照する。
 export const OVERLAY_MS = 4000;
 const FADE_MS = 300;
-
-function isAllCleared(): boolean {
-  // 全4回が公開されるまでは、途中までの達成を「全クリ」として演出しない
-  if (PUBLISHED_UP_TO < 4) return false;
-  const progress = getAllProgress();
-  return MAIN_FLOW.every((p) => p.progressId && progress[p.progressId]);
-}
 
 // 全メインフローのクエストが揃った瞬間に表示する達成演出。
 // 「未達成 → 全達成」の遷移したときだけ発火し、自動でフェードアウトする。
