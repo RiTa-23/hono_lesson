@@ -3,6 +3,7 @@ import { ArrowRight, Store, Package, ShieldCheck, Database, Rocket } from "lucid
 import { AchievementStamp } from "@/components/AchievementStamp";
 import { Callout } from "@/components/Callout";
 import { ClearedBadge } from "@/components/ClearedBadge";
+import { CopyBlock } from "@/components/CopyBlock";
 import { ProgressReset } from "@/components/ProgressReset";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -318,6 +319,37 @@ export function Home() {
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         使い慣れているものがあれば何でも構いませんが、当日のサポートはVS Code前提となります。
       </p>
+
+      <Callout variant="info" title="Windowsの方：Git Bashが使えるか確認しよう">
+        <ol className="list-decimal space-y-2 pl-5">
+          <li>スタートメニューで「Git Bash」と検索し、起動できるか確認します</li>
+          <li>開いたGit Bashで、以下の2つのコマンドを実行します</li>
+        </ol>
+        <CopyBlock
+          lang="bash"
+          title="Git Bash"
+          code={`git --version
+echo $BASH_VERSION`}
+        />
+        <p>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">git version 2.xx.x.windows.1</code>
+          と
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">5.x.xx(1)-release</code>
+          のようにバージョンが2行表示されればOKです。2行目が空になる場合は、PowerShellなど別のターミナルで実行しています。
+        </p>
+        <p className="mt-2">
+          「Git Bash」が見つからない場合は、
+          <a
+            href="https://git-scm.com/downloads/win"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary underline-offset-4 hover:underline"
+          >
+            Git for Windows
+          </a>
+          をインストールしてください。インストーラーの設定はデフォルトのままでGit Bashも一緒に入ります。
+        </p>
+      </Callout>
 
       <div className="mt-10 flex justify-center">
         <a
