@@ -5,6 +5,7 @@ import {
   getClearedSessions,
   getSessionFlow,
   isAllCleared,
+  SESSION_CLEAR_CLOSED_EVENT,
   type SessionNumber,
 } from "@/lib/clear";
 import { cn } from "@/lib/utils";
@@ -67,15 +68,47 @@ const CONFETTI = Array.from({ length: 28 }, (_, i) => {
   };
 });
 
+// X（旧Twitter）の投稿画面に渡すハッシュタグ（#は付けない）
+const SHARE_HASHTAGS = ["よろず屋API講座", "Hono"];
+
+// 達成内容を載せたX（旧Twitter）の投稿画面のURL。サイトのトップページを添える
+function buildShareUrl({
+  session,
+  title,
+  honor,
+  exp,
+  rank,
+}: {
+  session: SessionNumber;
+  title: string;
+  honor: string;
+  exp: number;
+  rank: number;
+}): string {
+  const stars = "★".repeat(rank) + "☆".repeat(4 - rank);
+  const text = [
+    `よろず屋API講座 第${session}回「${title}」を踏破した！`,
+    `獲得報酬：+${exp} EXP／称号「${honor}」`,
+    `ギルドランク ${stars}`,
+  ].join("\n");
+  const params = new URLSearchParams({
+    text,
+    url: `${window.location.origin}${window.location.pathname}`,
+    hashtags: SHARE_HASHTAGS.join(","),
+  });
+  return `https://twitter.com/intent/tweet?${params.toString()}`;
+}
+
 function delay(ms: number): CSSProperties {
   return { animationDelay: `${ms}ms` };
 }
 
-type Shown = { session: SessionNumber; rank: number };
+// allClear: この回のクリアで全クリになった（閉じたあとに全クリ演出が続く）
+type Shown = { session: SessionNumber; rank: number; allClear: boolean };
 
 // ある回のメインフローのクエストが揃った瞬間に表示する「達成報告書」。
 // 「未達成 → 達成」に変わった回についてだけ発火する。
-// 全回がそろった瞬間は AllClearOverlay に任せるため表示しない。
+// 閉じたら SESSION_CLEAR_CLOSED_EVENT を発火し、全クリなら AllClearOverlay がそれを受けて続く。
 export function SessionClearOverlay() {
   const [shown, setShown] = useState<Shown | null>(null);
   const [leaving, setLeaving] = useState(false);
@@ -89,8 +122,8 @@ export function SessionClearOverlay() {
       const cleared = getClearedSessions();
       const newly = cleared.find((n) => !clearedRef.current.includes(n));
       clearedRef.current = cleared;
-      if (newly && !isAllCleared()) {
-        setShown({ session: newly, rank: cleared.length });
+      if (newly) {
+        setShown({ session: newly, rank: cleared.length, allClear: isAllCleared() });
         setLeaving(false);
         return;
       }
@@ -155,7 +188,10 @@ export function SessionClearOverlay() {
 
   function handleClose() {
     setLeaving(true);
-    window.setTimeout(() => setShown(null), FADE_MS);
+    window.setTimeout(() => {
+      setShown(null);
+      window.dispatchEvent(new CustomEvent(SESSION_CLEAR_CLOSED_EVENT));
+    }, FADE_MS);
   }
 
   if (!shown) return null;
@@ -313,7 +349,21 @@ export function SessionClearOverlay() {
               className="mt-6 flex animate-reveal-up flex-col items-center gap-2 [animation-fill-mode:backwards]"
               style={delay(T.actions)}
             >
-              {nextTop && nextInfo ? (
+              {shown.allClear ? (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    これで全ての回の依頼を達成した。ギルドから特別な知らせがあるようだ…
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className="mt-1 inline-flex items-center gap-2 rounded-sm border border-primary bg-primary px-5 py-2.5 font-serif text-sm font-bold text-primary-foreground transition hover:opacity-90"
+                  >
+                    知らせを受け取る
+                    <ArrowRight size={16} />
+                  </button>
+                </>
+              ) : nextTop && nextInfo ? (
                 <a
                   href={`#${nextTop.path}`}
                   onClick={handleClose}
@@ -329,13 +379,31 @@ export function SessionClearOverlay() {
                     : "次の依頼書はただいま準備中。公開をお楽しみに！"}
                 </p>
               )}
-              <button
-                type="button"
-                onClick={handleClose}
-                className="rounded-sm px-3 py-1.5 text-xs text-muted-foreground underline-offset-4 transition hover:text-foreground hover:underline"
+              <a
+                href={buildShareUrl({
+                  session: n,
+                  title: info.title,
+                  honor: info.honor,
+                  exp: totalExp,
+                  rank: shown.rank,
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-sm border border-primary bg-card px-4 py-2 font-serif text-sm font-bold text-foreground transition hover:bg-secondary/60"
               >
-                報告書をしまう
-              </button>
+                <XLogo />
+                でポストする
+                <span className="sr-only">（新しいタブで開く）</span>
+              </a>
+              {!shown.allClear && (
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="rounded-sm px-3 py-1.5 text-xs text-muted-foreground underline-offset-4 transition hover:text-foreground hover:underline"
+                >
+                  報告書をしまう
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -368,6 +436,15 @@ export function SessionClearOverlay() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Xのロゴ（lucide-reactにはブランドアイコンがないため直書き）
+function XLogo() {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" role="img" aria-label="X">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
   );
 }
 

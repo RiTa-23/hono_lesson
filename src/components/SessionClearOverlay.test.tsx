@@ -90,6 +90,27 @@ describe("SessionClearOverlay（回ごとのクリア演出）", () => {
     expect(screen.queryByRole("link", { name: /第3回へ進む/ })).not.toBeInTheDocument();
   });
 
+  it("達成内容を載せたXの投稿画面を新しいタブで開くボタンがある", () => {
+    render(<SessionClearOverlay />);
+    clearQuests(SESSION1_PAGES);
+    const link = screen.getByRole("link", { name: /でポストする/ });
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+
+    const url = new URL(link.getAttribute("href")!);
+    expect(url.origin + url.pathname).toBe("https://twitter.com/intent/tweet");
+    const exp = SESSION1_PAGES.reduce((sum, p) => sum + (p.minutes ?? 0), 0);
+    const text = url.searchParams.get("text")!;
+    expect(text).toContain("第1回「Honoでよろず屋APIを作ろう」を踏破した！");
+    expect(text).toContain(`+${exp} EXP`);
+    expect(text).toContain("称号「駆け出しAPI職人」");
+    expect(text).toContain("ギルドランク ★☆☆☆");
+    expect(url.searchParams.get("hashtags")).toBe("よろず屋API講座,Hono");
+    expect(url.searchParams.get("url")).toBe(
+      `${window.location.origin}${window.location.pathname}`
+    );
+  });
+
   it("初回マウント時点で達成済みの回では表示しない", () => {
     clearQuests(SESSION1_PAGES);
     render(<SessionClearOverlay />);

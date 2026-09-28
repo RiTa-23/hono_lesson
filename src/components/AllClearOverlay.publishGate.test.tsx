@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import { AllClearOverlay } from "./AllClearOverlay";
 import { MAIN_FLOW } from "@/lib/routes";
+import { SESSION_CLEAR_CLOSED_EVENT } from "@/lib/clear";
 import { clearAllProgress, setProgress } from "@/lib/storage";
 
 // 「全4回が公開されていない間は全クリ演出を出さない」を検証するため、
@@ -21,6 +22,7 @@ describe("AllClearOverlay（公開範囲による抑制）", () => {
       for (const p of MAIN_FLOW) {
         if (p.progressId) setProgress(p.progressId, true);
       }
+      window.dispatchEvent(new CustomEvent(SESSION_CLEAR_CLOSED_EVENT));
     });
 
     expect(screen.queryByText("全クエスト達成")).not.toBeInTheDocument();

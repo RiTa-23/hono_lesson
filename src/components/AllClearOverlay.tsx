@@ -1,43 +1,56 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { AchievementStamp } from "@/components/AchievementStamp";
-import { isAllCleared } from "@/lib/clear";
+import { isAllCleared, SESSION_CLEAR_CLOSED_EVENT } from "@/lib/clear";
 
 // 表示時間（ミリ秒）。テストからも参照する。
 export const OVERLAY_MS = 4000;
 const FADE_MS = 300;
 
-// 全メインフローのクエストが揃った瞬間に表示する達成演出。
+// 全メインフローのクエストが揃ったときに表示する達成演出。
 // 「未達成 → 全達成」の遷移したときだけ発火し、自動でフェードアウトする。
+// 全クリの瞬間は最後の回のクリア演出（SessionClearOverlay）も出るため、
+// そちらが閉じられる（SESSION_CLEAR_CLOSED_EVENT）のを待ってから表示する。
 // 初回マウント時点で既に全達成済みの場合は表示しない（Home側の常時表示に任せる）。
 export function AllClearOverlay() {
   const [show, setShow] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const clearedRef = useRef(isAllCleared());
+  // 全達成したが、回クリア演出が閉じられるのを待っている状態
+  const pendingRef = useRef(false);
 
   useEffect(() => {
     const onUpdate = () => {
       const cleared = isAllCleared();
       if (cleared && !clearedRef.current) {
-        setShow(true);
-        setLeaving(false);
+        pendingRef.current = true;
       } else if (!cleared) {
-        // 表示中に未達成へ戻されたら即非表示（達成状態が崩れたため）
+        // 待機中・表示中に未達成へ戻されたら取り消す（達成状態が崩れたため）
+        pendingRef.current = false;
         setShow(false);
         setLeaving(false);
       }
       clearedRef.current = cleared;
     };
+    const onSessionClearClosed = () => {
+      if (!pendingRef.current) return;
+      pendingRef.current = false;
+      setShow(true);
+      setLeaving(false);
+    };
     const onClear = () => {
       clearedRef.current = false;
+      pendingRef.current = false;
       setShow(false);
       setLeaving(false);
     };
     window.addEventListener("progress-updated", onUpdate);
     window.addEventListener("progress-cleared", onClear);
+    window.addEventListener(SESSION_CLEAR_CLOSED_EVENT, onSessionClearClosed);
     return () => {
       window.removeEventListener("progress-updated", onUpdate);
       window.removeEventListener("progress-cleared", onClear);
+      window.removeEventListener(SESSION_CLEAR_CLOSED_EVENT, onSessionClearClosed);
     };
   }, []);
 

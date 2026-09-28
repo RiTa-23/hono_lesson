@@ -5,6 +5,10 @@ import { getAllProgress } from "@/lib/storage";
 
 export type SessionNumber = 1 | 2 | 3 | 4;
 
+// 回クリア演出（SessionClearOverlay）が閉じられたときに発火するイベント。
+// 全クリの瞬間は必ずどこかの回のクリアと重なるため、全クリ演出はこのイベントを待ってから表示する
+export const SESSION_CLEAR_CLOSED_EVENT = "session-clear-closed";
+
 export const SESSION_NUMBERS: SessionNumber[] = [1, 2, 3, 4];
 
 // 公開中のメインフローのうち、指定した回のページ
