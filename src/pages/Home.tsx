@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, Store, Package, ShieldCheck, Database, Rocket } from "lucide-react";
 import { AchievementStamp } from "@/components/AchievementStamp";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Callout } from "@/components/Callout";
 import { ClearedBadge } from "@/components/ClearedBadge";
+import { CopyBlock } from "@/components/CopyBlock";
 import { ProgressReset } from "@/components/ProgressReset";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -306,7 +313,11 @@ export function Home() {
       <h2 className="mt-10 text-xl font-bold">持ち物・事前準備</h2>
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>ノートPC（開発できる環境）</li>
-        <li>gitコマンドが使える状態にしておく</li>
+        <li>
+          gitコマンドが使える状態にしておく
+          （Windowsの方は<span className="font-medium">Git for Windows</span>でインストールしてください。
+          付属の<span className="font-medium">Git Bash</span>を講座のターミナルとして使います）
+        </li>
         <li>
           コードエディタ（<span className="font-medium">VS Code</span>推奨）
         </li>
@@ -314,6 +325,75 @@ export function Home() {
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         使い慣れているものがあれば何でも構いませんが、当日のサポートはVS Code前提となります。
       </p>
+
+      <Callout variant="info" title="Windowsの方：Git Bashが使えるか確認しよう">
+        <ol className="list-decimal space-y-2 pl-5">
+          <li>スタートメニューで「Git Bash」と検索し、起動できるか確認します</li>
+          <li>開いたGit Bashで、以下の2つのコマンドを実行します</li>
+        </ol>
+        <CopyBlock
+          lang="bash"
+          title="Git Bash"
+          code={`git --version
+echo $BASH_VERSION`}
+        />
+        <p>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">git version 2.xx.x.windows.1</code>
+          と
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">5.x.xx(1)-release</code>
+          のようにバージョンが2行表示されればOKです。2行目にバージョン番号が出ない場合は、PowerShellなどGit Bash以外のターミナルで実行しています。
+        </p>
+        <p className="mt-2">
+          「Git Bash」が見つからない場合は、下の手順でGit for Windowsをインストールしてください。
+        </p>
+        <Accordion type="single" collapsible>
+          <AccordionItem value="git-for-windows" className="border-b-0">
+            <AccordionTrigger>Git for Windowsのインストール手順（Git Bashが見つからなかった方向け）</AccordionTrigger>
+            <AccordionContent className="leading-relaxed">
+              <ol className="list-decimal space-y-2 pl-5">
+                <li>
+                  <a
+                    href="https://git-scm.com/install/windows"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary underline-offset-4 hover:underline"
+                  >
+                    Git for Windowsのダウンロードページ
+                  </a>
+                  を開き、「Click here to download」のリンクからインストーラーをダウンロードします
+                  （ARM搭載のPCの方は「Git for Windows/ARM64 Setup」を選んでください）
+                </li>
+                <li>
+                  ダウンロードした
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs">Git-〜-64-bit.exe</code>
+                  を実行します。「このアプリがデバイスに変更を加えることを許可しますか？」と表示されたら「はい」を選びます
+                </li>
+                <li>
+                  設定画面がいくつも続きますが、基本は何も変えずに「Next」で進めればOKです。
+                  Git Bashもこのまま一緒にインストールされます
+                </li>
+                <li>
+                  「Choosing the default editor used by Git」の画面だけは、
+                  「Use Visual Studio Code as Git's default editor」を選んでおくと安心です
+                  （初期値のVimは操作に慣れが必要なため）
+                </li>
+                <li>最後に「Install」を押し、完了したら「Finish」を押します</li>
+                <li>
+                  VS Codeを開いていた場合は一度閉じて開き直してから、上の手順1・2で確認します
+                </li>
+              </ol>
+              <p className="mt-3">
+                コマンドで入れたい方は、PowerShellで以下を実行してもインストールできます。
+              </p>
+              <CopyBlock
+                lang="powershell"
+                title="PowerShell"
+                code={`winget install --id Git.Git -e --source winget`}
+              />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </Callout>
 
       <div className="mt-10 flex justify-center">
         <a
