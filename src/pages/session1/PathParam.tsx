@@ -4,6 +4,7 @@ import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
 import { Quiz } from "@/components/Quiz";
+import { UrlAnatomyFigure } from "@/components/figures/UrlAnatomyFigure";
 
 export function PathParam() {
   return (
@@ -32,6 +33,8 @@ export function PathParam() {
         Honoではパスに <code className="rounded bg-muted px-1.5 py-0.5 text-xs">:id</code>
         と書くことで、その部分を変数として受け取れます。
       </p>
+
+      <UrlAnatomyFigure />
 
       <CopyBlock
         lang="ts"

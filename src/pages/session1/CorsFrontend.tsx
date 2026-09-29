@@ -4,6 +4,7 @@ import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
+import { CorsFigure } from "@/components/figures/CorsFigure";
 
 export function CorsFrontend() {
   return (
@@ -35,6 +36,8 @@ export function CorsFrontend() {
         <span className="font-medium">CORS（Cross-Origin Resource Sharing）</span>です。
         Honoには組み込みのCORSミドルウェアがあります（Batteries Included！）。
       </p>
+
+      <CorsFigure />
 
       <h2 className="mt-10 text-xl font-bold">2. CORSミドルウェアを設定する</h2>
       <p className="mt-3 leading-relaxed">

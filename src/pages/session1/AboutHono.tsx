@@ -3,6 +3,8 @@ import { Callout } from "@/components/Callout";
 import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
+import { ExpressVsHonoFigure } from "@/components/figures/ExpressVsHonoFigure";
+import { HonoStrengthsFigure } from "@/components/figures/HonoStrengthsFigure";
 
 export function AboutHono() {
   return (
@@ -108,15 +110,28 @@ export function AboutHono() {
         ヘルパーが揃っています。
       </blockquote>
 
+      <ExpressVsHonoFigure />
+
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>ルーティング・JSONレスポンス・CORSなど、必要な機能が最初から入っている</li>
         <li>TypeScriptとの相性が抜群（型補完がしっかり効く）</li>
         <li>基本的な書き方がExpressとほぼ同じで、学習コストが低い</li>
-        <li>
-          Cloudflare Workers・Bun・Node.js・Denoなど、
-          <span className="font-medium">どの実行環境でも同じコードが動く</span>
-        </li>
       </ul>
+
+      <h3 className="mt-8 text-lg font-semibold">Honoの強み</h3>
+      <p className="mt-2 leading-relaxed">
+        Honoのいいところを、ひとことずつにまとめるとこの4つです。
+      </p>
+
+      <HonoStrengthsFigure />
+
+      <p className="mt-3 text-sm leading-relaxed">
+        「型を共有できる」は、サブクエスト「
+        <a href="#/extra/rpc" className="text-primary underline-offset-4 hover:underline">
+          RPCで型安全な連携
+        </a>
+        」で体験できます。
+      </p>
 
       <Callout variant="tip" title="第3回への伏線">
         <p>
