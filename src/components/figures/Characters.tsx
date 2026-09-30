@@ -10,27 +10,36 @@ const PALETTE: Record<string, string> = {
   K: "#2b2118", // 輪郭（焦茶）
   S: "#f3cfa5", // 肌
   s: "#d9a27a", // 肌の影
-  h: "#4a2a14", // 髪の影
+  h: "#4a2a14", // 濃い焦茶（棚の継ぎ目・剣の柄）
   G: "#d9ae4c", // 金
   g: "#9c7426", // 金の影
   Y: "#f7e3a1", // 金のハイライト
   R: "#c0462c", // 朱
   r: "#7e2a1b", // 朱の影
-  T: "#8b6a45", // 革
-  t: "#5e4630", // 革の影
   W: "#f4efe3", // 白（刃・瓶の光・白ひげ）
-  e: "#b9b0a2", // 白髪の影
+  e: "#b9b0a2", // 白の影（白ひげ・袖口・瓶の口）
   M: "#b7bdc1", // 鋼
   N: "#7d9c3f", // やくそう
   n: "#4f6a26", // やくそうの影
   B: "#4f7fa8", // 青い薬
   b: "#2f5577", // 青い薬の影
-  Z: "#3a3440", // 冒険者の黒髪
-  z: "#5f5868", // 黒髪のハイライト
-  P: "#6e4a9e", // 冒険者のマント（紫）
-  i: "#47306b", // マントの影
-  y: "#e8c34a", // 冒険者の袖（黄色）
-  c: "#4fa89a", // 冒険者の髪飾り（緑）
+  F: "#4a9e2c", // 冒険者のフードと服（緑）
+  f: "#2f7327", // 緑の影
+  l: "#78c24a", // 緑のハイライト（服・草の先）
+  H: "#8c5a32", // 冒険者の茶髪
+  o: "#1d4a22", // フードの内側の暗がり
+  j: "#5e3a20", // 茶髪の影・眉・口
+  q: "#b07a45", // 茶髪のハイライト
+  A: "#8a4f2c", // 革（冒険者の籠手・ブーツ・背負い袋、革袋）
+  a: "#5a3120", // 革の影・たすき
+  O: "#b0703f", // 革のハイライト・ブーツの折り返し
+  m: "#7d8388", // 鋼の影
+  w: "#dcd6cb", // 店主の灰色の髪・ひげ・眉
+  c: "#8e877c", // 灰色の眉の影・口ひげの縁・ひげの毛筋
+  p: "#e8927a", // ほおの赤み
+  E: "#e6dcc0", // 冒険者の袖口（生成り）
+  Z: "#3a3440", // 冒険者のズボン（黒）
+  z: "#5f5868", // ズボンのハイライト
   U: "#3d4280", // 魔法使いの紺（帽子・ローブ）
   u: "#272b57", // 紺の影
   v: "#5c63a8", // 紺のハイライト
@@ -154,124 +163,297 @@ function Sprite({
 }
 
 // ---- スプライトデータ ----
+// どのスプライトも「基準の大きさ px」の半分（px / DETAIL）を1ドットとして描く。
+// 図の側は従来どおり px（1マスの大きさ）を指定すればよく、ドットの細かさだけがここで決まる
+const DETAIL = 2;
 
-// 冒険者：黒っぽいツンツンのくせ毛に緑の髪飾り、青い瞳、背中に流れる紫のマント、黄色の袖、
-// 茶色の革のベストと籠手、金の留め具のベルト、青い腰布、黄土色のズボンと茶色のブーツ（20×28ドット）
-// 右（店主の方）へ斜めに向いている。マントと後ろ髪は背中側（左）に流れる
+// 冒険者：緑のとんがりフードに茶色の髪、緑の服に革のたすきとベルト、生成りの袖口と茶色の籠手、
+// 黒いズボンと折り返しのある茶色のブーツ。寝袋とロープを付けた背負い袋を背負っている（34×60ドット）
+// 右（店主の方）へ斜めに向いている。背負い袋は背中側（左）に見える
 const ADVENTURER_BASE: Rows = [
-  ".........K..K.......",
-  "......K.KZKKZK.K....",
-  ".....KZKZZZZZZKZK...",
-  "....KZZZZzZZZzZZZK..",
-  "...KZZZZZZZZZZZZZZK.",
-  "....KZZZZZZZZZZZZZK.",
-  "...KZZZZZZZZScZSZZK.",
-  "...KZZZZZSSSSSSSSK..",
-  "..KZZZZZSKKSSSKKSK..",
-  "...KZZZZSWBSSSWBSK..",
-  "....KZZZSSSSSSSSK...",
-  "....KZZKSSSSSSSK....",
-  ".....KZKKSSSSKK.....",
-  "...KiPPPPPPPPPPK....",
-  "..KiPPiPPPPPPiPPK...",
-  ".KiPKyyKdddddKyyK...",
-  ".KiPKyyKdYdYdKyyK...",
-  ".KiPKhhKdddddKhhK...",
-  ".KiPKddKhhYhhKddK...",
-  ".KiPKddKBBBBBKddK...",
-  ".KiPKKKKBbBbBKKKK...",
-  ".KiPPK.KBBBBBK......",
-  "..KiPK.KgggggK......",
-  "...KiK.KgK.KgK......",
-  "....K..KgK.KgK......",
-  "......KddK.KddK.....",
-  "......KhdK.KdhK.....",
-  "......KKKK.KKKK.....",
+  ".................KKKKKKKK.........",
+  "..............KKKllllllffKK.......",
+  ".............KlllFFFFFFFFffK......",
+  "...........KKlFFFFFfffffffffK.....",
+  "..........KllFFFFFfffffffffffK....",
+  ".........KlFFFFFFffoojjjjjoffK....",
+  "........KffFFFFFffojHHHHHHjofK....",
+  ".........KffFFFffojHHqqqHHHHofK...",
+  "..........KfFFFffjHHqqHHHHHHjfK...",
+  "....KKKKKKDKlFffojHHHHHjHHHHjfK...",
+  "..KKLDDKKDDKlFffojHHjHHHjHHHjfK...",
+  ".KLLLLLDDKDKlFffojHjHHjHHjHHjfK...",
+  ".KLLDDDDDKDKlFffojjSjHSjSSjHjfK...",
+  "KLLDLLLDDDKKlFffooSjjjSSjjjSjfK...",
+  "KDLDLDLDLDDKlFffooSKKSSSSKKSofK...",
+  "KDLDLLLDDDKKlFffooSKKSSSSKKsofK...",
+  ".KDDDDDDDKDKlFffoosSSSSsSSSsofK...",
+  ".KDDDDDDDKDKlFffoosSSSSSSSSsofK...",
+  "..KKDDDKKDDKfFFffoosSSjjSSsoffK...",
+  ".KaaKKKKKKKKffffffoosSSSSsoffK....",
+  "KOOOOOOOOOK.KffffffoossssooffK....",
+  "KOAAAAAAAaaKKKKKKKKKKKKKKKKKKa....",
+  "KOAAAAAaaKKfKaallllllollfffaKKK...",
+  "KaaaaaaaaaafKaalFFFFFFlfffaaKfK...",
+  "KOAAAAAaaKffMMMlFFFFFofffaafKffK..",
+  "KaaaaaaaaKlfMKmlFFFFFfMMMafffKfK..",
+  "KaaaaaaaaKffmmmlFFFFffMamafffKfK..",
+  "KKKKKKKKaKfffKalFFFfffmmmfffKKKKK.",
+  "KKOOOOOaKKKKKKalFFfffaaalfffKEEeK.",
+  "KKOAAAAaKEEEeKalFFfffaalFfffKeeeK.",
+  "KKKKKKKKKeeeeKafffffaaffffffKKKKK.",
+  "KKOAMAaKKKKKKaaffffaafffffffKOaaK.",
+  "KKOAmAaKOOaaKaafffaaffffffffKOaaK.",
+  "KKOAAAaKOAaaKKKKKKKKKKMMMMKKKOAaaK",
+  "KKaaaaaKOAAaaKaaaaaaaaMaamaaKOAaaK",
+  "KKKKKKKKOAAaaKKKKKKKKKmmmmKKKaAaaK",
+  "KLLDDKaKaAAaaKfllllllllllfffKaaaaK",
+  "KDKKdKaKaAAaaKfFFFFFFFFFFFfffKaaK.",
+  "KLKKDKaaKaaaK.KlFFFFFFFFFFfffKKKK.",
+  "KDKKdKaaKaaaK.KlFFFFFFFFFFfffK....",
+  "KLKKDKaaaKKKK.KffffffffffffffK....",
+  "KDKKdKaaaaK...KffffffffffffffK....",
+  "KLKKDKKKKK...KfffffffffffffffK....",
+  "KLDDdK.......KKKKKKKKKKKKKKKKKK...",
+  ".KDdK........KzzzzzK..KzzzzzK.....",
+  "..KK.........KzZZZZK..KzZZZZK.....",
+  ".............KzZZZZK..KzZZZZK.....",
+  "..............KzZZZK..KzZZZZK.....",
+  "..............KzZZZK..KzZZZZK.....",
+  "............KKKKKKKK..KKKKKKKK....",
+  "............KOOOOOAK..KOOOOOAK....",
+  "............KAAAAAAK..KAAAAAAK....",
+  "............KKKKKKKK..KKKKKKKK....",
+  ".............KOOaaK....KOOaaK.....",
+  ".............KOAaaK....KOAaaK.....",
+  "............KOAAaaK....KOAAaaKK...",
+  "...........KOAAAaaK...KOAAAAAaaKK.",
+  "...........KaaaaaaK...KaaaaaaaaaK.",
+  "...........KaaaaaaK...KaaaaaaaaaK.",
+  "...........KKKKKKKK...KKKKKKKKKKK.",
 ];
-// 2コマ目：目を閉じた絵（まばたき）。体は動かさないので、足が地面から浮いて見えることはない
+// 2コマ目：目を閉じた絵（まばたき。目の上の段を肌色にして、下の段だけ残す）。体は動かさないので、足が地面から浮いて見えることはない
 const ADVENTURER_BLINK: Record<number, string> = {
-  8: "..KZZZZZSSSSSSSSSK..",
-  9: "...KZZZZSKKSSSKKSK..",
+  14: "KDLDLDLDLDDKlFffooSSSSSSSSSSofK...",
 };
 const ADVENTURER: Rows[] = [ADVENTURER_BASE, ADVENTURER_BASE.map((row, i) => ADVENTURER_BLINK[i] ?? row)];
 const ADVENTURER_H = ADVENTURER_BASE.length;
-const ADVENTURER_CENTER = 10; // 体の中心の列
+const ADVENTURER_CENTER = 21; // 体の中心の列
 
-// 店主：紺のとんがり帽子（先が垂れ、金のバックルの帯）、白い眉と団子鼻、もじゃもじゃの白ひげ、
-// 金の縁取りの紺のローブを着た魔法使いのおじいさん（20×24ドット。下の2行はカウンターに隠れる）
+// 店主：つばの広い紺のとんがり帽子（つばの両端が垂れ、先が右へ折れて垂れる。茶色の革の帯に金の四角いバックル）、
+// 垂れた灰色の眉と団子鼻、赤いほお、八の字の口ひげ（あいだに小さな口）、毛筋の入った先細りの灰色のあごひげ。
+// 前の開いた紺のローブ（襟に金の縁取り）の下に茶色のベストと金の丸いブローチ。魔法使いのおじいさん
+// （40×48ドット。下の4行はカウンターに隠れる）。横の髪は顔やひげとの境目に輪郭線を引かず、影色でなじませている
 const SHOPKEEPER_BASE: Rows = [
-  "..........KK........",
-  ".........KvUK.......",
-  "........KvUUUK......",
-  "........KvUUUUKK....",
-  ".......KvUUUUUUUK...",
-  ".......KUUUUUUuuK...",
-  "......KvUUUUKuuuK...",
-  "......KUUUUUuKuK....",
-  ".....KGGGKYYKGGGK...",
-  "...KKuUUUUUUUUUUuKK.",
-  "..KuuuuuuuuuuuuuuuuK",
-  "....KWSSSSSSSSWK....",
-  "....KSWWSSSSWWSK....",
-  "....KSSKSSSSKSSK....",
-  "...KWWSSSssSSSWWK...",
-  "...KWWSWWWWWWSWWK...",
-  "..KWWWWWeeeeWWWWWK..",
-  ".KWWWWWWWWWWWWWWWWK.",
-  ".KeWWWWWWWWWWWWWWeK.",
-  "KUUKWWWWWWWWWWWWKUUK",
-  "KUGUKeWWWWWWWWeKUGUK",
-  "KUGUUKeWWWWWWeKUUGUK",
-  "KUGUUUKWWWWWWKUUUGUK",
-  "KKKKKKKKKKKKKKKKKKKK",
+  ".....................KKKKKK.............",
+  "..................KKKvvvuuKKKKK.........",
+  ".................KvvvUUUuuKuvuuK........",
+  "................KvUUUUUUUuuKuUuuK.......",
+  "...............KvUUUUUUUUuuKuuUuuK......",
+  "..............KvUUUUUUUUUUuuKuuUuuK.....",
+  ".............KvUUUUUUUUUUUUuuKuuUuuK....",
+  ".............KvUUUUUUUUUUUUUuuKuuUuuK...",
+  "............KvUUUUUUUUUUUUUuuK.KuuuuK...",
+  "............KvUUUUUUUUUUUUUuuK..KuuuuK..",
+  "............KuuuuuuuuuuuuuuuuuK..KuuuK..",
+  "...........KuuuuuKKKKKKuuuuuuuK...KuuK..",
+  ".........KKKKKKKKKGYYGKKKKKKKKK....KuuK.",
+  ".........KOOOOOOOKYAAgKOOOOOOaK....KuuK.",
+  "........KaaaaaaaaKGAAgKaaaaaaaK....KuuK.",
+  "......KKKKKKKKKKKKGggGKKKKKKKKKKK...KK..",
+  "..KKKKvvvvvvvvvvvKKKKKKvvvvvvvvuuKKK.K..",
+  ".KvvvvUuuuuuuuuuuuuuuuuuuuuuuuuuUvuuK...",
+  "KvUUuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuK..",
+  "KvUuuuuKKKKKKKKKKKKKKKKKKKKKKKKKuuuuuuK.",
+  "KuuuKKKeWWWeSSSSSSSSSSSSSSSsWWWeKKKuuuK.",
+  "KuuK...KWwweSSSSSSSSSSSSSSSsWwweK..KuuuK",
+  ".KK....KewwewWWwwSSSSSSSwwWWwwweK...KuuK",
+  ".......KewwecwwwweSSSSSewwwwcwweK....KK.",
+  ".......KewweSSKKSSSSSSSSKKcsWwweK.......",
+  "......KWeweSSSKKSSSssSSSKKSsewweK.......",
+  "......KWeweSSSKKSSsSSsSSKKSSsWweeK......",
+  "......KWeweSpSSSSSsSSsSSSSSpsWweeK......",
+  "......KWewessssssWWWWWWssssssWweeK......",
+  "......KWeweewwwWWWWssWWWWwwweWweeK......",
+  "......KeeeeWcwWWWwcaacwWWWwceeeeeK......",
+  "......KeWWWcwWwwccwwwwccwwWwcWWeeK......",
+  "......KewewcccwwwwwwwwwwwwccceeeK.......",
+  "......KKeeeeweewwwwwewwwwweweeeeKK......",
+  "......KKeKeeeeewwcwwewwcweeeeKeKuK......",
+  "......KuKuKeeKeewcwwewwceeKeKuKuuK......",
+  ".....KvUvuuKKAKeecwwewwceKAKvUvuuK......",
+  ".....KvUUUuGKAAKecweewecKAaKGUUUuuK.....",
+  ".....KvUUUuGKAaAKcKKKKeKAaaKGUUUuuK.....",
+  ".....KvUUUuGKAaaAKGYYgKAaaaKGUUUuuK.....",
+  ".....KvUUUuGKAaaaKYGggKaaaKGUUUUuuK.....",
+  ".....KvUUUUuGKAaaKgggGKaaaKGUUUUuuK.....",
+  ".....KvUUUUuGKAaaaKKKKaaaaKGUUUUuuK.....",
+  ".....KvUUUUuGKAaaaaaaaaaaaKGUUUUuuK.....",
+  "....KvUUUUUuGKAaaaaaaaaaaaKGUUUUUuuK....",
+  "....KuuuuuuuGKAaaaaaaaaaaaKGuuuuuuuK....",
+  "....KuuuuuuuGKAaaaaaaaaaaaKGuuuuuuuK....",
+  "....KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK....",
 ];
 // 2コマ目：片手を上げて「いらっしゃい」と手を振る（1コマ目と違う行だけ書く）
 const SHOPKEEPER_WAVE: Record<number, string> = {
-  13: ".KK.KSSKSSSSKSSK....",
-  14: "KSSKWWSSSssSSSWWK...",
-  15: "KSSKWWSWWWWWWSWWK...",
-  16: "KSSKWWWWeeeeWWWWWK..",
-  17: "KUUKWWWWWWWWWWWWWWK.",
-  18: "KUUKWWWWWWWWWWWWWeK.",
+  25: "..KKKKKWeweSSSKKSSSssSSSKKSsewweK.......",
+  26: ".KSsSsKWeweSSSKKSSsSSsSSKKSSsWweeK......",
+  27: ".KSsSsKKeweSpSSSSSsSSsSSSSSpsWweeK......",
+  28: ".KSSSSKSKwessssssWWWWWWssssssWweeK......",
+  29: ".KSSSSSSKweewwwWWWWssWWWWwwweWweeK......",
+  30: ".KSSSSSKeeeWcwWWWwcaacwWWWwceeeeeK......",
+  31: ".KsSSSsKeWWcwWwwccwwwwccwwWwcWWeeK......",
+  32: ".KKsssKKeewcccwwwwwwwwwwwwccceeeK.......",
+  33: ".KvvvvuuKeeeweewwwwwewwwwweweeeeKK......",
+  34: "KvUUUUuuKKeeeeewwcwwewwcweeeeKeKuK......",
+  35: "KvUUUUuuKuKeeKeewcwwewwceeKeKuKuuK......",
+  36: "KvUUUUUuuKuKKAKeecwwewwceKAKvUvuuK......",
+  37: "KuUUUUUuuKuGKAAKecweewecKAaKGUUUuuK.....",
+  38: "KuUUUUUuuKuGKAaAKcKKKKeKAaaKGUUUuuK.....",
+  39: ".KvUUUUuuKuGKAaaAKGYYgKAaaaKGUUUuuK.....",
+  40: ".KuUUUuuKvuGKAaaaKYGggKaaaKGUUUUuuK.....",
+  41: ".KuuuuuuKvUuGKAaaKgggGKaaaKGUUUUuuK.....",
+  42: "..KuuuuuKvUuGKAaaaKKKKaaaaKGUUUUuuK.....",
+  43: "..KKKKKKKvUuGKAaaaaaaaaaaaKGUUUUuuK.....",
+  44: "....KvvvvUUuGKAaaaaaaaaaaaKGUUUUUuuK....",
 };
 const SHOPKEEPER: Rows[] = [SHOPKEEPER_BASE, SHOPKEEPER_BASE.map((row, i) => SHOPKEEPER_WAVE[i] ?? row)];
-const SHOPKEEPER_HIDDEN_ROWS = 2; // カウンターに隠れる下の行数
-const SHOPKEEPER_CENTER = 10; // 体の中心の列
+const SHOPKEEPER_HIDDEN_ROWS = 4; // カウンターに隠れる下の行数
+const SHOPKEEPER_CENTER = 20; // 体の中心の列
 
-// ポーションの小瓶（4×6ドット）
+// ポーションの小瓶（8×12ドット）。"1" が薬の色、"2" がその影
+const POTION_TEMPLATE: Rows = [
+  "..KKKK..",
+  "..KLDK..",
+  "..KDdK..",
+  "..KKKK..",
+  "..KWeK..",
+  ".KW11eK.",
+  "KW11112K",
+  "K1W1112K",
+  "K111122K",
+  "K211122K",
+  ".K2222K.",
+  "..KKKK..",
+];
+const tintPotion = (main: string, dark: string): Rows =>
+  POTION_TEMPLATE.map((row) => row.replaceAll("1", main).replaceAll("2", dark));
 const POTIONS = {
-  red: [".dd.", ".KK.", "KRRK", "KRYK", "KrRK", ".KK."],
-  blue: [".dd.", ".KK.", "KBBK", "KBWK", "KbBK", ".KK."],
-  gold: [".dd.", ".KK.", "KGGK", "KGYK", "KgGK", ".KK."],
+  red: tintPotion("R", "r"),
+  blue: tintPotion("B", "b"),
+  gold: tintPotion("G", "g"),
 } satisfies Record<string, Rows>;
+const POTION_W = POTION_TEMPLATE[0].length;
+const POTION_H = POTION_TEMPLATE.length;
 
 // 小物（宝箱から出てくる・棚に並ぶ）
 const ITEMS = {
-  hammer: ["KKKKKKK", "KMMMMMK", "KMMMMMK", "KKKDKKK", "..KDK..", "..KDK..", "..KDK..", "..KKK.."],
-  bag: ["..KK..", ".KtdK.", "KTTTTK", "KTGYTK", "KTTTTK", ".KKKK."],
+  // ハンマー（14×16ドット）
+  hammer: [
+    "KKKKKKKKKKKKKK",
+    "KWWMMMMMMMMMmK",
+    "KWMMMMMMMMMMmK",
+    "KMMMMMMMMMMMmK",
+    "KmmmmmmmmmmmmK",
+    "KKKKKLDdKKKKKK",
+    ".....KDdK.....",
+    ".....KLdK.....",
+    ".....KDdK.....",
+    ".....KDdK.....",
+    ".....KLdK.....",
+    ".....KDdK.....",
+    ".....KDdK.....",
+    ".....KLdK.....",
+    ".....KddK.....",
+    ".....KKKK.....",
+  ],
+  // 金の紋章の革袋（12×12ドット）
+  bag: [
+    "....KKKK....",
+    "...KOAAaK...",
+    "....KaaK....",
+    "...KKGGKK...",
+    "..KOAAAAaK..",
+    ".KOAAAAAAaK.",
+    "KOAAAGGAAAaK",
+    "KAAAGYYGAAaK",
+    "KAAAAGGAAAaK",
+    "KAAAAAAAAaaK",
+    ".KaaaaaaaaK.",
+    "..KKKKKKKK..",
+  ],
 } satisfies Record<string, Rows>;
 
-// 商品棚（26×30ドット）：上段にポーション、中段にやくそうと袋、下段に剣と盾
+// 棚だけに並ぶ商品：やくそうの鉢（14×14）、剣（24×7）、金の盾（14×13）
+const HERB: Rows = [
+  "....KK..KK....",
+  "...KNlK.KlK...",
+  "..KNlNK.KNNK..",
+  ".KKNNnKKNNnKK.",
+  "KlNKNnKNnKNlK.",
+  "KNNNKnKnKNNnK.",
+  ".KnNNKnKNNnK..",
+  "..KKnnKnnKK...",
+  "....KKnKK.....",
+  ".....KnK......",
+  "....KKdKK.....",
+  "...KDLDdDK....",
+  "...KdDDddK....",
+  "....KKKKK.....",
+];
+const SHOP_SWORD: Rows = [
+  "......KKK...............",
+  "......KGKKKKKKKKKKKKKK..",
+  "KKKKKKKGKWWWWWWWWWWWWKK.",
+  "KGKhhhKGKMMMMMMMMMMMMMMK",
+  "KKKKKKKGKmmmmmmmmmmmmKK.",
+  "......KgKKKKKKKKKKKKKK..",
+  "......KKK...............",
+];
+const SHIELD: Rows = [
+  ".KKKKKKKKKKKK.",
+  "KMWMMMMMMMMMmK",
+  "KMGGGGGGGGGGmK",
+  "KMGYYGGGGGGgmK",
+  "KMGYGGYYGGGgmK",
+  "KMGGGYWYGGggmK",
+  "KMGGGGYGGGggmK",
+  ".KMGGGGGGggmK.",
+  ".KMGGGGGgggmK.",
+  "..KMGGgggmK...",
+  "...KMmgmmK....",
+  "....KMmmK.....",
+  ".....KKK......",
+];
+
+// 商品棚（52×60ドット）：上段にポーション、中段にやくそうと袋、下段に剣と盾
 function buildShelf(): Rows {
-  const w = 26;
-  const h = 30;
-  const g = Array.from({ length: h }, () => Array<string>(w).fill("V"));
-  for (let y = 0; y < h; y++) {
-    g[y][0] = g[y][w - 1] = "K";
-    g[y][1] = g[y][w - 2] = "D";
-  }
+  const w = 52;
+  const h = 60;
+  // 奥の板：8ドットごとに板の継ぎ目
+  const g = Array.from({ length: h }, () => Array.from({ length: w }, (_, x): string => (x % 8 === 3 ? "h" : "V")));
+  // 横板（上が明るく下が暗い）。top は板の上端の輪郭の行
+  const board = (top: number) => {
+    ["K", "L", "D", "d", "K"].forEach((c, i) => {
+      for (let x = 0; x < w; x++) g[top + i][x] = c;
+    });
+  };
+  board(0);
+  board(18);
+  board(37);
   for (let x = 0; x < w; x++) {
-    g[0][x] = "K";
-    g[1][x] = x > 0 && x < w - 1 ? "L" : "K";
+    g[h - 4][x] = "K";
+    g[h - 3][x] = "D";
+    g[h - 2][x] = "d";
     g[h - 1][x] = "K";
   }
-  for (const by of [10, 20]) {
-    for (let x = 1; x < w - 1; x++) {
-      g[by][x] = "L";
-      g[by + 1][x] = "d";
-    }
+  // 左右の側板（光は左から）
+  for (let y = 0; y < h; y++) {
+    ["K", "L", "D", "d", "K"].forEach((c, i) => {
+      g[y][i] = c;
+      g[y][w - 5 + i] = c;
+    });
   }
-  for (let x = 1; x < w - 1; x++) g[h - 2][x] = "d";
 
   const put = (sprite: Rows, ox: number, oy: number) =>
     sprite.forEach((row, yy) =>
@@ -279,101 +461,148 @@ function buildShelf(): Rows {
         if (c !== ".") g[oy + yy][ox + xx] = c;
       })
     );
-  put(POTIONS.red, 4, 4);
-  put(POTIONS.blue, 11, 4);
-  put(POTIONS.gold, 18, 4);
-  put(["..K.K..", ".KNKNK.", "KNnNnNK", ".KNNNK.", "..KnK..", "..KdK..", "..KKK.."], 3, 12);
-  put(ITEMS.bag, 12, 13);
-  put(ITEMS.bag, 18, 13);
-  put(["..........KK", "KKKKKKKKKKWK", "KhhGWWWWWWWK", "KKKKKKKKKKK."], 2, 23);
-  put([".KKKKK.", "KMGGGMK", "KGGYGGK", "KMGGGMK", ".KMMMK.", "..KKK.."], 17, 22);
+  put(POTIONS.red, 9, 6);
+  put(POTIONS.blue, 22, 6);
+  put(POTIONS.gold, 35, 6);
+  put(HERB, 7, 23);
+  put(ITEMS.bag, 23, 25);
+  put(ITEMS.bag, 34, 25);
+  put(SHOP_SWORD, 7, 49);
+  put(SHIELD, 33, 43);
   return g.map((r) => r.join(""));
 }
 const SHELF = buildShelf();
-export const SHELF_PX = 5;
-export const SHELF_W = 26 * SHELF_PX;
-export const SHELF_H = 30 * SHELF_PX;
+const SHELF_DOT = 5 / DETAIL;
+export const SHELF_W = SHELF[0].length * SHELF_DOT;
+export const SHELF_H = SHELF.length * SHELF_DOT;
 
-// 木のカウンター（幅・高さはドット数）
+// 木のカウンター（幅・高さはドット数）：天板の下に、縁が面取りされた板を並べた前板
 function buildCounter(w: number, h: number): Rows {
-  const rows = ["K".repeat(w), "K" + "L".repeat(w - 2) + "K", "K" + "L".repeat(w - 2) + "K", "K".repeat(w)];
-  rows.push("K" + "d".repeat(w - 2) + "K");
-  for (let y = 0; y < h - 7; y++) {
-    const r = ("K" + "D".repeat(w - 2) + "K").split("");
-    for (let x = 6; x < w - 1; x += 8) r[x] = "d";
+  const row = (edge: string, fill: string) => edge + fill.repeat(w - 2) + edge;
+  const rows = [row("K", "K"), row("K", "L"), row("K", "L"), row("K", "D"), row("K", "K"), row("K", "d")];
+  const bodyH = h - rows.length - 2;
+  // 前板は1枚14ドット前後。幅を均等に割って、右端で板が途中で切れないようにする
+  const inner = w - 2;
+  const panels = Math.max(1, Math.round(inner / 14));
+  const starts = Array.from({ length: panels + 1 }, (_, i) => Math.round((i * inner) / panels));
+  for (let y = 0; y < bodyH; y++) {
+    const r = row("K", "D").split("");
+    for (let x = 1; x < w - 1; x++) {
+      const k = starts.findIndex((s) => s > x - 1) - 1;
+      const col = x - 1 - starts[k];
+      const pw = starts[k + 1] - starts[k];
+      if (col === 0) r[x] = "d"; // 板の継ぎ目
+      // 面取り：内側の枠の左上を暗く、右下を明るく
+      if (bodyH >= 6 && y >= 1 && y <= bodyH - 2 && col >= 2 && col <= pw - 2) {
+        if (y === 1 || col === 2) r[x] = "d";
+        else if (y === bodyH - 2 || col === pw - 2) r[x] = "L";
+      }
+    }
     rows.push(r.join(""));
   }
-  rows.push("K" + "d".repeat(w - 2) + "K", "K".repeat(w));
+  rows.push(row("K", "d"), row("K", "K"));
   return rows;
 }
 
-// 床（幅はドット数）。wood＝板張りの店内、grass＝草原
+// 床（幅はドット数）。wood＝板張りの店内、grass＝草原（上の2行は地面より上に伸びる草の先）
 function buildFloor(w: number, variant: "wood" | "grass"): Rows {
+  const line = (f: (x: number) => string) => Array.from({ length: w }, (_, x) => f(x)).join("");
   if (variant === "grass") {
     return [
-      Array.from({ length: w }, (_, x) => (x % 5 === 1 || x % 7 === 3 ? "N" : ".")).join(""),
-      "N".repeat(w),
-      Array.from({ length: w }, (_, x) => (x % 4 === 0 ? "n" : "N")).join(""),
-      Array.from({ length: w }, (_, x) => (x % 6 === 2 ? "d" : "D")).join(""),
+      line((x) => (x % 7 === 2 || x % 11 === 5 ? "l" : ".")),
+      line((x) => ((x % 7 >= 1 && x % 7 <= 3) || x % 11 === 5 || x % 11 === 6 || x % 5 === 0 ? "N" : ".")),
+      line((x) => (x % 9 === 4 ? "l" : "N")),
+      line((x) => (x % 4 === 0 ? "n" : "N")),
+      line((x) => (x % 3 === 1 ? "n" : x % 5 === 2 ? "N" : "n")),
+      line((x) => (x % 6 === 2 ? "d" : "D")),
+      line((x) => (x % 13 === 6 ? "L" : x % 5 === 1 ? "d" : "D")),
+      line((x) => (x % 9 === 3 ? "D" : "d")),
     ];
   }
-  const rows = ["K".repeat(w)];
-  for (let y = 0; y < 3; y++) {
-    rows.push(Array.from({ length: w }, (_, x) => ((x + y * 7) % 12 === 0 ? "d" : "D")).join(""));
-  }
-  return rows;
+  // 板張り：板は3行分の高さで、継ぎ目の位置を段ごとにずらす
+  const plank = (y: number, offset: number) =>
+    line((x) => ((x + offset) % 24 === 0 ? "d" : y === 0 ? "L" : "D"));
+  return [
+    "K".repeat(w),
+    plank(0, 0),
+    plank(1, 0),
+    plank(2, 0),
+    "d".repeat(w),
+    plank(1, 12),
+    plank(2, 12),
+    plank(2, 12),
+  ];
 }
 
-// 開いた宝箱（16×13ドット）：ふたの裏が見え、中に金貨が詰まっている
+// 開いた宝箱（32×26ドット）：ふたの内側は暗く、中には金貨の山。金の帯と錠前つき
 const CHEST: Rows = [
-  "..KKKKKKKKKKKK..",
-  ".KDLLLLLLLLLLDK.",
-  ".KDDDDDDDDDDDDK.",
-  ".KVVVVVVVVVVVVK.",
-  "KKKKKKKKKKKKKKKK",
-  "KYGYYGYGYYGYGYYK",
-  "KKKKKKKKKKKKKKKK",
-  "KGDDDDDKKDDDDDGK",
-  "KGDDDDKYGKDDDDGK",
-  "KGDDDDDKKDDDDDGK",
-  "KGDDDDDDDDDDDDGK",
-  "KGGGGGGGGGGGGGGK",
-  "KKKKKKKKKKKKKKKK",
+  "...KKKKKKKKKKKKKKKKKKKKKKKKK....",
+  "..KLGgLLLLLLLLLLLLLLLLLLLLGgK...",
+  "..KLGgDDDDDDDDDDDDDDDDDDDDGgLK..",
+  "..KLGgDDDDDDDDDDDDDDDDDDDDGgDK..",
+  "..KdGgddddddddddddddddddddGgdK..",
+  "..KLGgDDDDDDDDDDDDDDDDDDDDGgDK..",
+  "..KLGgDDDDDDDDDDDDDDDDDDDDGgDK..",
+  "..KLGgDDDDDDKKKKDDDKKKLKKKKgDK..",
+  "..KVVVKKKKVKYYGgKVKKKKKYYGgKVK..",
+  "..KVVKYYGgKVKKKKVKYYGgKKKKKVVK..",
+  "..KVVVKKKKKKKKVVKKKKKKKKKKVKKKK.",
+  "..KYKKKKGKYYGgKKYYGgKKYYGgKYYGgK",
+  "..KKYYGgKgKKKKKKKKKKKKKKKKKKKKK.",
+  "KKKKKKKKKKKKKYYGgKKYYGgKKYYGgKKK",
+  "KGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGK",
+  "KggggggggggggKKKKKKggggggggggggK",
+  "KLDDGgDDDDDDDKGYYGKDDDDDDDGgDddK",
+  "KLDDGgDDDDDDDKGKKgKDDDDDDDGgDddK",
+  "KLDDGgDDDDDDDKGKKgKDDDDDDDGgDddK",
+  "KLDDGgDDDDDDDKggggKDDDDDDDGgDddK",
+  "KdddGgdddddddKKKKKKdddddddGgdddK",
+  "KLDDGgDDDDDDDDDDDDDDDDDDDDGgDddK",
+  "KLDDGgDDDDDDDDDDDDDDDDDDDDGgDddK",
+  "KdddGgddddddddddddddddddddGgdddK",
+  "KdddGgddddddddddddddddddddGgdddK",
+  "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK",
 ];
 
-// 立て札（22×16ドット）。文字はSVGのtextで重ねる
-const SIGNPOST: Rows = [
-  "KKKKKKKKKKKKKKKKKKKKKK",
-  "KLLLLLLLLLLLLLLLLLLLLK",
-  "KLLLLLLLLLLLLLLLLLLLLK",
-  "KLLLLLLLLLLLLLLLLLLLLK",
-  "KLLLLLLLLLLLLLLLLLLLLK",
-  "KLLLLLLLLLLLLLLLLLLLLK",
-  "KddddddddddddddddddddK",
-  "KKKKKKKKKKKKKKKKKKKKKK",
-  ".........KDdK.........",
-  ".........KDdK.........",
-  ".........KDdK.........",
-  ".........KDdK.........",
-  ".........KDdK.........",
-  ".........KDdK.........",
-  ".........KDdK.........",
-  ".........KKKK.........",
-];
-
+// 立て札（44×32ドット）：鋲を打った木の板と支柱。文字はSVGのtextで重ねる
+function buildSignpost(): Rows {
+  const w = 44;
+  const h = 32;
+  const boardH = 16;
+  const postL = 18;
+  const g = Array.from({ length: h }, () => Array<string>(w).fill("."));
+  for (let y = 0; y < boardH; y++) {
+    for (let x = 0; x < w; x++) {
+      const edge = y === 0 || y === boardH - 1 || x === 0 || x === w - 1;
+      // 木目：ところどころに横の筋
+      const grain = (y === 5 && x % 13 > 4) || (y === 10 && x % 11 < 6);
+      g[y][x] = edge ? "K" : y >= boardH - 3 ? "d" : grain ? "D" : "L";
+    }
+  }
+  for (const [x, y] of [[2, 2], [w - 3, 2], [2, boardH - 5], [w - 3, boardH - 5]]) g[y][x] = "M";
+  for (let y = boardH; y < h; y++) {
+    ["K", "L", "D", "D", "D", "d", "d", "K"].forEach((c, i) => {
+      g[y][postL + i] = y === h - 1 ? "K" : c;
+    });
+  }
+  return g.map((r) => r.join(""));
+}
+const SIGNPOST = buildSignpost();
 
 // ---- 公開コンポーネント ----
+// px はどれも「基準の大きさ」。実際の1ドットは px / DETAIL
 
 type Pos = { x: number; y: number; px?: number };
 
 // 冒険者（(x, y)＝足元の中心）。ときどきまばたきする
 export function Adventurer({ x, y, px = 5 }: Pos) {
+  const dot = px / DETAIL;
   return (
     <Sprite
       frames={ADVENTURER}
-      x={x - ADVENTURER_CENTER * px}
-      y={y - ADVENTURER_H * px}
-      px={px}
+      x={x - ADVENTURER_CENTER * dot}
+      y={y - ADVENTURER_H * dot}
+      px={dot}
       period={3.2}
       timing="blink"
     />
@@ -382,14 +611,24 @@ export function Adventurer({ x, y, px = 5 }: Pos) {
 
 // 店主（(x, y)＝カウンター上面の中心）。カウンターより先に描くと下半身が隠れる
 export function Shopkeeper({ x, y, px = 5 }: Pos) {
-  return <Sprite frames={SHOPKEEPER} x={x - SHOPKEEPER_CENTER * px} y={y - (SHOPKEEPER_BASE.length - SHOPKEEPER_HIDDEN_ROWS) * px} px={px} period={1.4} />;
+  const dot = px / DETAIL;
+  return (
+    <Sprite
+      frames={SHOPKEEPER}
+      x={x - SHOPKEEPER_CENTER * dot}
+      y={y - (SHOPKEEPER_BASE.length - SHOPKEEPER_HIDDEN_ROWS) * dot}
+      px={dot}
+      period={1.4}
+    />
+  );
 }
 
 // カウンター（(x, y)＝上面の中心。width/height は描画サイズ）
 export function Counter({ x, y, width = 160, height = 56, px = 5 }: { x: number; y: number; width?: number; height?: number; px?: number }) {
-  const w = Math.round(width / px);
-  const h = Math.round(height / px);
-  return <Sprite frames={[buildCounter(w, h)]} x={x - (w * px) / 2} y={y} px={px} />;
+  const dot = px / DETAIL;
+  const w = Math.round(width / dot);
+  const h = Math.round(height / dot);
+  return <Sprite frames={[buildCounter(w, h)]} x={x - (w * dot) / 2} y={y} px={dot} />;
 }
 
 // 床（(x, y)＝床の上面の左端）
@@ -406,24 +645,27 @@ export function Floor({
   px?: number;
   variant?: "wood" | "grass";
 }) {
-  // 草原は1行目が草の先（地面より上）なので、その分だけ上にずらす
-  const top = variant === "grass" ? y - px : y;
-  return <Sprite frames={[buildFloor(Math.round(width / px), variant)]} x={x} y={top} px={px} />;
+  const dot = px / DETAIL;
+  // 草原は上の2行が草の先（地面より上）なので、その分だけ上にずらす
+  const top = variant === "grass" ? y - 2 * dot : y;
+  return <Sprite frames={[buildFloor(Math.round(width / dot), variant)]} x={x} y={top} px={dot} />;
 }
 
 // 開いた宝箱（(x, y)＝左下）
 export function Chest({ x, y, px = 4 }: Pos) {
-  return <Sprite frames={[CHEST]} x={x} y={y - CHEST.length * px} px={px} />;
+  const dot = px / DETAIL;
+  return <Sprite frames={[CHEST]} x={x} y={y - CHEST.length * dot} px={dot} />;
 }
 
 // 立て札（(x, y)＝支柱の足元の中心）。label は板に書く文字
 export function Signpost({ x, y, px = 3, label }: Pos & { label: string }) {
-  const left = x - 11 * px;
-  const top = y - SIGNPOST.length * px;
+  const dot = px / DETAIL;
+  const left = x - (SIGNPOST[0].length / 2) * dot;
+  const top = y - SIGNPOST.length * dot;
   return (
     <g>
-      <Sprite frames={[SIGNPOST]} x={left} y={top} px={px} />
-      <text x={x} y={top + 4.6 * px} textAnchor="middle" fontSize={11} fontWeight="bold" fill={PALETTE.K} className="font-serif">
+      <Sprite frames={[SIGNPOST]} x={left} y={top} px={dot} />
+      <text x={x} y={top + 9.2 * dot} textAnchor="middle" fontSize={11} fontWeight="bold" fill={PALETTE.K} className="font-serif">
         {label}
       </text>
     </g>
@@ -432,16 +674,18 @@ export function Signpost({ x, y, px = 3, label }: Pos & { label: string }) {
 
 // 小物（(x, y)＝中心）
 export function Item({ x, y, kind, px = 3 }: Pos & { kind: keyof typeof ITEMS }) {
+  const dot = px / DETAIL;
   const rows = ITEMS[kind];
-  return <Sprite frames={[rows]} x={x - (rows[0].length * px) / 2} y={y - (rows.length * px) / 2} px={px} />;
+  return <Sprite frames={[rows]} x={x - (rows[0].length * dot) / 2} y={y - (rows.length * dot) / 2} px={dot} />;
 }
 
 // ポーションの小瓶（(x, y)＝瓶の中心）
 export function Potion({ x, y, tone = "gold", px = 3 }: { x: number; y: number; tone?: keyof typeof POTIONS; px?: number }) {
-  return <Sprite frames={[POTIONS[tone]]} x={x - 2 * px} y={y - 3 * px} px={px} />;
+  const dot = px / DETAIL;
+  return <Sprite frames={[POTIONS[tone]]} x={x - (POTION_W / 2) * dot} y={y - (POTION_H / 2) * dot} px={dot} />;
 }
 
 // 商品棚（(x, y)＝左上）
 export function Shelf({ x, y }: { x: number; y: number }) {
-  return <Sprite frames={[SHELF]} x={x} y={y} px={SHELF_PX} />;
+  return <Sprite frames={[SHELF]} x={x} y={y} px={SHELF_DOT} />;
 }
