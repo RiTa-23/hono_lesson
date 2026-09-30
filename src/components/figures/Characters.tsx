@@ -529,24 +529,25 @@ function buildFloor(w: number, variant: "wood" | "grass"): Rows {
   ];
 }
 
-// 開いた宝箱（32×26ドット）：ふたの内側は暗く、中には金貨の山。金の帯と錠前つき
+// 開いた宝箱（32×26ドット）：ふたは奥へ倒れて内側の面が見え、箱の中には金貨が山盛り。
+// 金貨の山のすそは箱の手前の縁に隠れる。金の帯と錠前つき
 const CHEST: Rows = [
-  "...KKKKKKKKKKKKKKKKKKKKKKKKK....",
-  "..KLGgLLLLLLLLLLLLLLLLLLLLGgK...",
-  "..KLGgDDDDDDDDDDDDDDDDDDDDGgLK..",
-  "..KLGgDDDDDDDDDDDDDDDDDDDDGgDK..",
-  "..KdGgddddddddddddddddddddGgdK..",
-  "..KLGgDDDDDDDDDDDDDDDDDDDDGgDK..",
-  "..KLGgDDDDDDDDDDDDDDDDDDDDGgDK..",
-  "..KLGgDDDDDDKKKKDDDKKKLKKKKgDK..",
-  "..KVVVKKKKVKYYGgKVKKKKKYYGgKVK..",
-  "..KVVKYYGgKVKKKKVKYYGgKKKKKVVK..",
-  "..KVVVKKKKKKKKVVKKKKKKKKKKVKKKK.",
-  "..KYKKKKGKYYGgKKYYGgKKYYGgKYYGgK",
-  "..KKYYGgKgKKKKKKKKKKKKKKKKKKKKK.",
-  "KKKKKKKKKKKKKYYGgKKYYGgKKYYGgKKK",
+  "................................",
+  "....KKKKKKKKKKKKKKKKKKKKKKKK....",
+  "...KDDgDDDDDDDDDDDDDDDDDDgDK....",
+  "...KDdgddddddddddddddddddgdDK...",
+  "...KagaaaaaaaaaaaaaaaaaaaagaK...",
+  "..KDdgddddddddddddddddddddgdK...",
+  "..KDdgddddddddggggddddddddgdDK..",
+  "..KagaaaaaaaKgYYGGgKggggaaagaK..",
+  ".KDdgdddggggYYggggYgYYGGgggggK..",
+  ".VVVgKKgYYGggggGGggggggggYYGGgV.",
+  ".VVVYYgggggYYGGggYYGGgGgggggggV.",
+  ".VVgggYYGGgggggggggggggYYgYYGGg.",
+  "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK",
   "KGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGK",
-  "KggggggggggggKKKKKKggggggggggggK",
+  "KggggggggggggggggggggggggggggggK",
+  "KLDDGgDDDDDDDKKKKKKDDDDDDDGgDddK",
   "KLDDGgDDDDDDDKGYYGKDDDDDDDGgDddK",
   "KLDDGgDDDDDDDKGKKgKDDDDDDDGgDddK",
   "KLDDGgDDDDDDDKGKKgKDDDDDDDGgDddK",
