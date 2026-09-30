@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Store, Package, ShieldCheck, Database, Rocket } from "lucide-react";
+import { ArrowRight, Store, Package, ShieldCheck, Database, Rocket, Users } from "lucide-react";
 import { AchievementStamp } from "@/components/AchievementStamp";
 import {
   Accordion,
@@ -99,6 +99,25 @@ export function Home() {
           　APIというのを作ればよいらしい。頼んだぞ、エンジニアよ！」
         </p>
       </Callout>
+
+      {/* こんな人におすすめ */}
+      <section className="mt-8 rounded-md border-2 border-primary bg-card p-6">
+        <h2 className="flex items-center gap-2 font-bold">
+          <Users size={18} className="text-primary" />
+          こんな人におすすめ
+        </h2>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          「バックエンドって難しそう…」「フレームワーク何を選べばいいの？」という方にピッタリの、
+          初心者向けハンズオンです。「APIとは何か」の説明から、環境構築、GET/POSTの実装、
+          そして完成済みの画面から実際に売り買いするところまで、その日のうちに体験できます。
+        </p>
+        <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
+          <li>バックエンド開発・API開発に初めて触れる人</li>
+          <li>話題の国産フレームワーク Hono が気になっている人</li>
+          <li>TypeScriptでサーバーサイドも書いてみたい人</li>
+          <li>RPG風の題材で楽しく手を動かしながら学びたい人</li>
+        </ul>
+      </section>
 
       {/* 全体進捗 */}
       <section className="mt-8 rounded-md border-2 border-primary bg-card p-6">
