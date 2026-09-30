@@ -62,10 +62,6 @@ export function Setup() {
           VS Codeのターミナルなら、右上の「＋」の横の「∨」から「Git Bash」を選べます。
           「既定のプロファイルの選択」でGit Bashにしておくと、毎回切り替えずに済みます。
         </p>
-        <p className="mt-2">
-          それでもPowerShellやコマンドプロンプトで進めたい場合の書き換え方は、
-          ページ下部の「よくあるつまずき」にもまとめています。
-        </p>
       </Callout>
 
       <p className="mt-3 leading-relaxed">
@@ -226,31 +222,6 @@ export function Setup() {
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun: command not found</code>
           → ターミナルを開き直すか、インストール時に表示されたPATH設定のコマンドを実行してください。
           WindowsでPowerShellからインストールした直後は、Git Bashも一度開き直すと認識されます。
-        </li>
-        <li>
-          PowerShellやコマンドプロンプトでcurlコマンドが動かない →
-          <span className="font-medium">Git Bash</span>
-          に切り替えるのが一番確実ですが、どうしてもそのまま使いたい場合は次のように書き換えます。
-          <ul className="mt-1.5 list-disc space-y-1 pl-6">
-            <li>
-              <code className="rounded bg-muted px-1.5 py-0.5 text-xs">curl</code>
-              ではなく
-              <code className="rounded bg-muted px-1.5 py-0.5 text-xs">curl.exe</code>
-              と入力する（PowerShellの「curl」は別コマンドの別名なので、.exeまで書いて本物を呼びます）
-            </li>
-            <li>
-              JSONボディにはシングルクォートが使えないので
-              <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                -d "&#123;\"itemId\": 2, \"quantity\": 1&#125;"
-              </code>
-              のようにダブルクォートで囲み、内側の「"」を「\"」と書く
-            </li>
-            <li>
-              行末の
-              <code className="rounded bg-muted px-1.5 py-0.5 text-xs">\</code>
-              で折り返した複数行コマンドは、1行に繋げてから実行する
-            </li>
-          </ul>
         </li>
         <li>
           ポート3000がすでに使われている → ポートは「パソコンの中の番地」のようなものです。
