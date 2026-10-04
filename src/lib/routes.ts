@@ -55,11 +55,11 @@ export const SESSION1_PAGES: PageDef[] = [
   {
     path: "/session1/05-path-param",
     file: "session1/PathParam",
-    title: "商品詳細と404",
+    title: "商品詳細・絞り込みと404",
     section: "session1",
     progressId: "s1-05-path-param",
     sectionLabel: "第1回 Honoでよろず屋APIを作ろう",
-    minutes: 15,
+    minutes: 20,
   },
   {
     path: "/session1/06-post-api",

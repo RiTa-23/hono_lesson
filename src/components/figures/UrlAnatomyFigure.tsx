@@ -12,7 +12,7 @@ const toneClass = {
 
 const URLS: { title: string; pieces: Piece[] }[] = [
   {
-    title: "パスパラメータ（この章で使う）",
+    title: "パスパラメータ（手順1で使う）",
     pieces: [
       { text: "http://localhost:3000", label: "オリジン", tone: "muted" },
       { text: "/api/items/", label: "パス", tone: "path" },
@@ -20,7 +20,7 @@ const URLS: { title: string; pieces: Piece[] }[] = [
     ],
   },
   {
-    title: "クエリパラメータ（発展で使う）",
+    title: "クエリパラメータ（手順3で使う）",
     pieces: [
       { text: "http://localhost:3000", label: "オリジン", tone: "muted" },
       { text: "/api/items", label: "パス", tone: "path" },

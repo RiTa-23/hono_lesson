@@ -344,8 +344,12 @@ import { items } from '../data'
 
 // 商品棚のAPI（第1回のコードをそのまま移動）
 export const itemsApp = new OpenAPIHono()
-  // 商品一覧を返す
+  // 商品一覧を返す（?maxPrice=100 のように価格で絞り込める）
   .get('/api/items', (c) => {
+    const maxPrice = c.req.query('maxPrice')
+    if (maxPrice) {
+      return c.json(items.filter((i) => i.price <= Number(maxPrice)))
+    }
     return c.json(items)
   })
   // 商品を1件返す
@@ -359,11 +363,6 @@ export const itemsApp = new OpenAPIHono()
     return c.json(item)
   })`}
       />
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-        第1回の発展で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">?maxPrice=</code>
-        の絞り込みを実装した人は、その<code className="rounded bg-muted px-1.5 py-0.5 text-xs">if</code>
-        文も一緒に持ってきてください。
-      </p>
 
       <h2 className="mt-10 text-xl font-bold">7. index.ts を「組み立て役」に書き換える</h2>
       <p className="mt-3 leading-relaxed">
