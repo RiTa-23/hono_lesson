@@ -16,7 +16,11 @@ const TERMS: { term: string; reading?: string; body: string }[] = [
   },
   {
     term: "wrangler login",
-    body: "ローカルのwranglerコマンドが、自分のCloudflareアカウントを操作できるように認証する手順。ブラウザでログインして許可する。",
+    body: "ローカルのwranglerコマンドが、自分のCloudflareアカウントを操作できるように認証する手順。ブラウザでログインして許可する。ログインできているかはwrangler whoamiで確認できる。",
+  },
+  {
+    term: "wrangler d1 create",
+    body: "Cloudflare上にD1データベースを新規作成するコマンド。実行するとdatabase_idが発行されるので、wrangler.jsoncのdatabase_id（第3回では仮の値）を本物に差し替えて使う。ログインが必要。",
   },
   {
     term: "wrangler deploy",

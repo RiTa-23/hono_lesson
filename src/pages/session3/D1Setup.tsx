@@ -9,53 +9,109 @@ export function D1Setup() {
   return (
     <div>
       <PageHeader
-        title="D1データベースを作る"
-        chapter="02"
-        goal="wranglerコマンドでD1データベースを作成し、backendから使える状態になっている"
+        title="ローカルD1をbackendにつなぐ"
+        chapter="03"
+        goal="wrangler.jsoncにD1の設定を書き、c.env.DBを型付きで使える状態になっている"
         minutes={15}
       />
 
-      <h2 className="text-xl font-bold">1. D1データベースを作成する</h2>
-      <p className="mt-3 leading-relaxed">
-        backendディレクトリで、次のコマンドを実行します。
-      </p>
-      <CopyBlock lang="bash" title="ターミナル" code={`bun wrangler d1 create yorozuya-db`} />
-      <p className="mt-3 leading-relaxed">
-        実行すると、次のような案内と<code className="rounded bg-muted px-1.5 py-0.5 text-xs">database_id</code>
-        が表示されます。この<code className="rounded bg-muted px-1.5 py-0.5 text-xs">database_id</code>
-        は次の手順で使うので、コピーしておいてください。
-      </p>
-      <CopyBlock
-        lang="text"
-        title="出力例"
-        code={`✅ Successfully created DB 'yorozuya-db'
+      <Callout variant="info" title="第3回では、Cloudflareのアカウントは必要ありません">
+        <p>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">--local</code>
+          を付けて使うD1は、手元のマシンの中に作られるSQLiteのファイルです
+          （<code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/.wrangler/</code>
+          の下に自動で作られます）。そのため、この回では
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler login</code>
+          や<code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler d1 create</code>
+          は実行しません。Cloudflare上に本物のD1を作るのは第4回です。
+        </p>
+      </Callout>
 
-[[d1_databases]]
-binding = "DB"
-database_name = "yorozuya-db"
-database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`}
-      />
-
-      <h2 className="mt-10 text-xl font-bold">2. wrangler.jsoncに設定を追記する</h2>
+      <h2 className="mt-8 text-xl font-bold">1. wrangler.jsoncにD1の設定を追記する</h2>
       <p className="mt-3 leading-relaxed">
-        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/wrangler.jsonc</code>
-        を開いて、表示された情報を追記します。
+        前のページで作った<code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/wrangler.jsonc</code>
+        に、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">d1_databases</code>
+        の設定を足します。ファイル全体が次のようになるように書いてください。
       </p>
       <CopyBlock
         lang="jsonc"
-        title="backend/wrangler.jsonc（追記）"
+        title="backend/wrangler.jsonc（d1_databasesを追記）"
         code={`{
+  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "backend",
-  // ...既存の設定...
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "yorozuya-db",
-      "database_id": "さっき表示されたIDに置き換える"
+      "database_id": "local-yorozuya-db",
+      "migrations_dir": "drizzle/migrations"
     }
   ]
 }`}
       />
+      <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">binding</code>
+          … コードから見える名前。<code className="rounded bg-muted px-1.5 py-0.5 text-xs">"DB"</code>
+          にすると<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env.DB</code>
+          で受け取れます。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">database_name</code>
+          … データベースの名前。この後のコマンドで
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">yorozuya-db</code>
+          と指定するときの名前です。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">database_id</code>
+          … Cloudflare上のデータベースを一意に指すID。
+          <span className="font-medium">
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">--local</code>
+            で動かしている間は参照されないので、今は仮の文字列でかまいません
+          </span>
+          （第4回で、本物のIDに差し替えます）。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">migrations_dir</code>
+          … マイグレーションSQLの置き場所。wranglerは既定で
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">./migrations</code>
+          を見にいきますが、次のページで導入するdrizzle-kitは
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">./drizzle/migrations</code>
+          に出力します。両者の場所を合わせるための設定です。
+        </li>
+      </ul>
+      <Callout variant="warn" title="migrations_dirを書き忘れると、後で必ずつまずく">
+        <p>
+          この1行がないと、このあとの依頼No.05（マイグレーション）で
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">No migrations present at ...\backend\migrations</code>
+          と言われて止まります。SQLは生成できているのに「ない」と言われるのは、
+          wranglerが別の場所を探しているからです。
+        </p>
+      </Callout>
+
+      <h2 className="mt-10 text-xl font-bold">2. Workersの型を生成する</h2>
+      <p className="mt-3 leading-relaxed">
+        D1を扱う型（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">D1Database</code>
+        など）は、wranglerに生成してもらいます。
+      </p>
+      <CopyBlock lang="bash" title="ターミナル（backendディレクトリで）" code={`bun wrangler types`} />
+      <p className="mt-3 leading-relaxed">
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/worker-configuration.d.ts</code>
+        というファイルが生成されます。中にはCloudflare Workersの型定義（
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">D1Database</code>
+        もここにあります）と、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler.jsonc</code>
+        の設定から作られたバインディングの型が入っています。自動生成されるファイルなので、
+        自分で編集する必要はありません。
+      </p>
+      <Callout variant="tip" title="wrangler.jsoncを変えたら、もう一度実行する">
+        <p>
+          バインディングを追加・変更したときは、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler types</code>
+          を実行し直すと型も追いついてきます。
+        </p>
+      </Callout>
 
       <h2 className="mt-10 text-xl font-bold">3. Honoのコードから型を参照できるようにする</h2>
       <p className="mt-3 leading-relaxed">
@@ -106,45 +162,50 @@ export const tradeApp = new OpenAPIHono<{ Bindings: Bindings }>()`}
           で取り付けるサブアプリの型が違っていても問題なく動きます。
         </p>
       </Callout>
-      <Callout variant="info" title="D1Databaseの型はどこから来る？">
-        <p>
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">D1Database</code>
-          は、Cloudflare Workersの型定義パッケージ（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">@cloudflare/workers-types</code>
-          ）に含まれるグローバルな型です。<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun create hono@latest</code>
-          でCloudflare Workers向けテンプレートを選んでいれば、すでにインストール・設定済みのはずです。
-        </p>
-      </Callout>
 
       <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
       <Quiz
-        question="wrangler.jsoncのd1_databasesに設定するdatabase_idは何のため？"
+        question={`wrangler.jsoncのd1_databasesで binding に "DB" と書くと、どうなる？`}
         choices={[
-          "作成したD1データベースを一意に特定し、backendから接続できるようにするため",
-          "データベースのパスワードとして使うため",
-          "フロントエンドのAPI通信先URLを決めるため",
+          "Honoのコードから c.env.DB としてD1データベースを受け取れるようになる",
+          "D1データベースの名前が「DB」に変更される",
+          "データベースのパスワードが「DB」に設定される",
         ]}
         answerIndex={0}
-        explanation="database_idは、wrangler d1 createで作成したD1データベースの識別子です。wrangler.jsoncに登録することで、backendのコードからc.env.DB経由でそのデータベースにアクセスできるようになります。"
+        explanation="bindingは「コードから見えるときの名前」です。binding に DB と書いたので c.env.DB、たとえば CACHE と書けば c.env.CACHE として受け取れます。database_nameはコマンドで指定するデータベース自身の名前で、別のものです。"
       />
 
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">database_id</code>
-          をコピーし忘れて、プレースホルダーのまま残ってしまう → もう一度
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler d1 list</code>
-          を実行すれば、作成済みのデータベース一覧とIDを確認できます。
+          エディタで<code className="rounded bg-muted px-1.5 py-0.5 text-xs">Cannot find name 'D1Database'</code>
+          と出る → 手順2の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler types</code>
+          を実行したか確認してください。実行済みなのに赤線が消えない場合は、エディタのTypeScriptを読み込み直します
+          （VS Codeならコマンドパレットで
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">TypeScript: Restart TS Server</code>）。
         </li>
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler.jsonc</code>
-          を編集しても反映されない → bindingsの設定変更は開発サーバーの再起動が必要な場合があります。
+          を編集しても反映されない → 設定ファイルの変更は再起動が必要です。
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun run dev</code>
           をCtrl+Cで止めて、もう一度起動してみましょう。
         </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler d1 list</code>
+          でデータベースを確認しようとしたらログインを求められた → これはCloudflare上の一覧を取りに行くコマンドです。
+          ローカルのD1は一覧に出ないので、第3回では使いません（第4回で使います）。
+        </li>
+        <li>
+          JSONCのカンマ・波かっこを崩してしまい、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">Unexpected token</code>
+          のようなエラーになる → 上のコードブロックをコピーして、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">database_id</code>
+          などの値だけ書き換えるのが安全です。
+        </li>
       </ul>
 
-      <ProgressCheck id="s3-02-d1-setup" label="D1データベースを作成し、wrangler.jsoncに設定できた" />
-      <NextLink current="/session3/02-d1-setup" />
+      <ProgressCheck id="s3-03-d1-setup" label="wrangler.jsoncにD1の設定を書き、c.env.DBを型付きで使えるようになった" />
+      <NextLink current="/session3/03-d1-setup" />
     </div>
   );
 }

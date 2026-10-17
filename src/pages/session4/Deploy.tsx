@@ -15,19 +15,27 @@ export function Deploy() {
         minutes={15}
       />
 
-      <h2 className="text-xl font-bold">1. Cloudflareにログインする</h2>
-      <CopyBlock lang="bash" title="ターミナル（backendディレクトリで）" code={`bun wrangler login`} />
+      <h2 className="text-xl font-bold">1. デプロイ用のscriptを確認する</h2>
       <p className="mt-3 leading-relaxed">
-        ブラウザが開くので、Cloudflareアカウントでログインし、アクセスを許可してください。
-        すでにログイン済みの場合はこの手順は不要です。
+        第3回の依頼No.02で、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/package.json</code>
+        に<code className="rounded bg-muted px-1.5 py-0.5 text-xs">deploy</code>
+        のscriptを追加しました。入っているか確認しておきましょう。
+      </p>
+      <CopyBlock
+        lang="jsonc"
+        title="backend/package.json（該当部分）"
+        code={`  "scripts": {
+    "dev": "wrangler dev --port 3000",
+    "deploy": "wrangler deploy"
+  }`}
+      />
+      <p className="mt-3 leading-relaxed">
+        ログインは依頼No.01の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler login</code>
+        で済んでいるので、このままデプロイできます。
       </p>
 
       <h2 className="mt-10 text-xl font-bold">2. デプロイする</h2>
-      <p className="mt-3 leading-relaxed">
-        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun create hono@latest</code>
-        で作成したプロジェクトには、すでにデプロイ用のscriptが入っています。
-      </p>
-      <CopyBlock lang="bash" title="ターミナル" code={`bun run deploy`} />
+      <CopyBlock lang="bash" title="ターミナル（backendディレクトリで）" code={`bun run deploy`} />
       <p className="mt-3 leading-relaxed">
         内部的には<code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler deploy</code>
         が実行されます。しばらく待つと、次のようなURLが表示されます。
@@ -66,21 +74,31 @@ Current Version ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`}
 
       <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
       <Quiz
-        question="wrangler loginは何のための操作？"
+        question="bun run deploy を実行すると、何が起きる？"
         choices={[
-          "自分のCloudflareアカウントに対して、デプロイなどの操作を許可するための認証",
-          "D1データベースのパスワードを設定する操作",
-          "GitHubリポジトリとCloudflareを連携する操作",
+          "wrangler deployが走り、backendのコードがCloudflare Workersにアップロードされて公開される",
+          "ローカルの開発サーバーが再起動される",
+          "D1データベースの中身がすべて初期化される",
         ]}
         answerIndex={0}
-        explanation="wrangler loginは、ローカルのwranglerコマンドがあなたのCloudflareアカウントを操作できるように認証する手順です。ログインしていないとwrangler deployやd1コマンドは実行できません。"
+        explanation="deployのscriptの中身はwrangler deployです。wrangler.jsoncの設定（name・main・d1_databases）を見ながら、コードをCloudflare Workersにアップロードして公開します。"
       />
 
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>
-          学校・会社のネットワークでブラウザ認可がブロックされる → 個人のスマホのテザリングなど、
-          別のネットワークで試すか、別の端末でログインを済ませてから戻ってきましょう。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">error: Script not found "deploy"</code>
+          → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">package.json</code>
+          に<code className="rounded bg-muted px-1.5 py-0.5 text-xs">{'"deploy": "wrangler deploy"'}</code>
+          が入っていません。手順1のとおり追加するか、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler deploy</code>
+          を直接実行してください。
+        </li>
+        <li>
+          ログインしていないと言われる → 依頼No.01の
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler login</code>
+          をもう一度実行し、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler whoami</code>
+          でアカウントが表示されるか確認しましょう。
         </li>
         <li>
           デプロイ後もlocalhost:3000を叩き続けて「反映されない」と混乱する →

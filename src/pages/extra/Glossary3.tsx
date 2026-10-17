@@ -31,8 +31,32 @@ const TERMS: { term: string; reading?: string; body: string }[] = [
     body: "データベースの構造（テーブルなど）を作成・変更する作業、またはそのためのSQLファイル。drizzle-kitで生成し、wrangler d1 migrations applyで反映する。",
   },
   {
-    term: "wrangler d1 create",
-    body: "Cloudflare上にD1データベースを新規作成するコマンド。実行するとdatabase_idが発行され、wrangler.jsoncに登録して使う。",
+    term: "wrangler",
+    body: "Cloudflare公式のコマンドラインツール。Workersの開発サーバー起動・D1の操作・デプロイをこれ1つで行う。bunテンプレートには同梱されていないのでbun add -D wranglerで追加し、コマンド本体の実行にはNode.js v22以上が必要。",
+  },
+  {
+    term: "wrangler dev",
+    body: "workerd（Cloudflareと同じランタイム）でbackendを起動する開発サーバー。c.env.DBが使えるのはこの状態のときだけ。既定ポートは8787なので、この講座では--port 3000を付けて起動する。",
+  },
+  {
+    term: "workerd",
+    body: "Cloudflare Workersのランタイム（実行環境）そのもの。wrangler devは手元でこれを動かしている。Bunで直接実行している間はこれが使われないため、D1のバインディングもアプリに渡されない。",
+  },
+  {
+    term: "wrangler.jsonc",
+    body: "wranglerの設定ファイル。Worker名（name）・入口のファイル（main）・compatibility_date・d1_databasesなどを書く。bunテンプレートには無いので自分で新規作成する。",
+  },
+  {
+    term: "database_id",
+    body: "Cloudflare上のD1データベースを一意に指すID。--localで動かしている間は参照されないため、第3回では仮の文字列でよい（第4回で本物のIDに差し替える）。",
+  },
+  {
+    term: "migrations_dir",
+    body: "wranglerがマイグレーションSQLを探す場所の設定（wrangler.jsoncのd1_databasesの中に書く）。既定は./migrationsなので、drizzle-kitのoutと同じdrizzle/migrationsに揃えておく。",
+  },
+  {
+    term: "wrangler types / worker-configuration.d.ts",
+    body: "bun wrangler typesで生成される型定義ファイル。D1DatabaseなどWorkersの型と、wrangler.jsoncのバインディングの型が入る。これがないとD1Databaseが「見つからない型」になる。",
   },
   {
     term: "d1_databases（wrangler.jsoncの設定）",
