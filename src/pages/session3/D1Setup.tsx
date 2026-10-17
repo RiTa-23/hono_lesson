@@ -105,6 +105,67 @@ export function D1Setup() {
         の設定から作られたバインディングの型が入っています。自動生成されるファイルなので、
         自分で編集する必要はありません。
       </p>
+      <p className="mt-3 leading-relaxed">
+        ただし、このままだとエディタのProblemsパネルに
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">worker-configuration.d.ts</code>
+        の赤いエラーが数十件並びます。第1回に作った
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">tsconfig.json</code>
+        にはブラウザ用の型（DOM）やBunの型が入っていて、生成されたWorkersの型と同じ名前がぶつかるためです。
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/tsconfig.json</code>
+        に2行足して、ぶつからないようにします。
+      </p>
+      <CopyBlock
+        lang="json"
+        title="backend/tsconfig.json（lib と skipLibCheck を追記）"
+        code={`{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["ESNext"],
+    "skipLibCheck": true,
+    "types": ["bun"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx"
+  }
+}`}
+      />
+      <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">"lib": ["ESNext"]</code>
+          … ブラウザ用の型（DOM）を読み込まないようにします。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">lib</code>
+          を書かないと、TypeScriptはDOMの型を自動で読み込みます。Workersにはブラウザの画面（DOM）がないので、外しておくのが正確です。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">"skipLibCheck": true</code>
+          … ライブラリの型定義ファイル（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">.d.ts</code>
+          ）同士の食い違いはチェックしないようにします。テストで使うBunの型とWorkersの型の重複は残るため、これも必要です。
+          自分で書いた<code className="rounded bg-muted px-1.5 py-0.5 text-xs">src/</code>
+          のコードは、これまでどおりチェックされます。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">"types": ["bun"]</code>
+          … そのまま残します。消すと、テストの
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">import ... from 'bun:test'</code>
+          が型エラーになります。
+        </li>
+      </ul>
+      <p className="mt-3 leading-relaxed">
+        保存すると、エディタが設定を読み込み直してProblemsパネルのエラーが消えます。
+        しばらく待っても残っている場合は、VS Codeのコマンドパレットで
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">TypeScript: Restart TS Server</code>
+        を実行してください。
+      </p>
+      <Callout variant="warn" title="@cloudflare/workers-types は入れない">
+        <p>
+          ネットで調べると「<code className="rounded bg-muted px-1.5 py-0.5 text-xs">types</code>
+          に<code className="rounded bg-muted px-1.5 py-0.5 text-xs">@cloudflare/workers-types</code>
+          を指定する」という解決策が見つかりますが、これは
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler types</code>
+          が今の形になる前の方法です。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">worker-configuration.d.ts</code>
+          がその代わりになるので、両方を入れるとまた型がぶつかります。
+        </p>
+      </Callout>
       <Callout variant="tip" title="wrangler.jsoncを変えたら、もう一度実行する">
         <p>
           バインディングを追加・変更したときは、
@@ -183,6 +244,17 @@ export const tradeApp = new OpenAPIHono<{ Bindings: Bindings }>()`}
           を実行したか確認してください。実行済みなのに赤線が消えない場合は、エディタのTypeScriptを読み込み直します
           （VS Codeならコマンドパレットで
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">TypeScript: Restart TS Server</code>）。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler types</code>
+          のあと、Problemsパネルに
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">Definitions of the following identifiers conflict with those in another file</code>
+          や<code className="rounded bg-muted px-1.5 py-0.5 text-xs">Subsequent variable declarations must have the same type</code>
+          が大量に出る → 手順2の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">tsconfig.json</code>
+          の修正（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">lib</code>
+          と<code className="rounded bg-muted px-1.5 py-0.5 text-xs">skipLibCheck</code>
+          の追記）が抜けています。<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun run dev</code>
+          は型チェックをしないのでサーバーは動きますが、自分のコードのエラーが埋もれてしまうので、必ず直しておきましょう。
         </li>
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler.jsonc</code>
