@@ -10,7 +10,7 @@ export function Migration() {
     <div>
       <PageHeader
         title="マイグレーションを実行する（ローカル）"
-        chapter="04"
+        chapter="05"
         goal="スキーマからマイグレーションSQLを生成し、ローカルのD1にテーブルと初期データを反映できている"
         minutes={15}
       />
@@ -55,8 +55,23 @@ export function Migration() {
       <p className="mt-3 leading-relaxed">
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs">--local</code>
         を付けると、手元のマシン上でシミュレーションされたD1（本番とは別物）にテーブルが作られます。
+        実体は<code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/.wrangler/</code>
+        の下に置かれるSQLiteファイルで、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun run dev</code>
+        （wrangler dev）が使うものと同じです。Cloudflareへのログインも不要なので、
         まずはここで安心して試行錯誤しましょう。
       </p>
+      <Callout variant="info" title="このコマンドが見ているのはmigrations_dir">
+        <p>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">migrations apply</code>
+          は、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler.jsonc</code>
+          の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">migrations_dir</code>
+          に書いた場所（この講座では
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">drizzle/migrations</code>）
+          にあるSQLを、古い順に適用していきます。
+          どのファイルを適用したかはD1側に記録されるので、同じコマンドを2回実行しても
+          テーブルが二重に作られることはありません。
+        </p>
+      </Callout>
 
       <h2 className="mt-10 text-xl font-bold">3. 初期データを投入する</h2>
       <p className="mt-3 leading-relaxed">
@@ -116,10 +131,43 @@ INSERT INTO player (gold) VALUES (500);`}
           のシングルクォートやカンマを書き間違えてSQLエラーになる → エラーメッセージに表示される行番号を頼りに、
           カンマの数や引用符の対応を確認しましょう。
         </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">No migrations present at ...\backend\migrations</code>
+          と言われる → SQLは生成できているのに、wranglerが別の場所（既定の
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">./migrations</code>）を探しています。
+          依頼No.03の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">migrations_dir</code>
+          と、依頼No.04の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">out</code>
+          が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">drizzle/migrations</code>
+          で揃っているか確認してください。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">seed.sql</code>
+          を2回実行してしまい、商品が重複して登録される →
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler d1 execute yorozuya-db --local --command "DELETE FROM items"</code>
+          で一度空にしてから、もう一度投入し直せます（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">player</code>
+          も同様です）。
+        </li>
+        <li>
+          （Windows）<code className="rounded bg-muted px-1.5 py-0.5 text-xs">workerd.exe</code>
+          が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">access violation</code>
+          や<code className="rounded bg-muted px-1.5 py-0.5 text-xs">vcruntime140_1.dll が見つかりません</code>
+          で落ちる →{" "}
+          <a
+            href="https://aka.ms/vs/17/release/vc_redist.x64.exe"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary underline-offset-4 hover:underline"
+          >
+            Microsoft Visual C++ 再頒布可能パッケージ（x64）
+          </a>
+          を入れてから、ターミナルを開き直して再実行してください（
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">--local</code>
+          のD1はworkerd上で動くため、これが必要になります）。
+        </li>
       </ul>
 
-      <ProgressCheck id="s3-04-migration" label="ローカルのD1にマイグレーションと初期データを反映できた" />
-      <NextLink current="/session3/04-migration" />
+      <ProgressCheck id="s3-05-migration" label="ローカルのD1にマイグレーションと初期データを反映できた" />
+      <NextLink current="/session3/05-migration" />
     </div>
   );
 }

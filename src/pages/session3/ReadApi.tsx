@@ -10,7 +10,7 @@ export function ReadApi() {
     <div>
       <PageHeader
         title="items一覧・詳細をDBから取得する"
-        chapter="05"
+        chapter="06"
         goal="GET /api/items と GET /api/items/:id を、配列操作からDrizzle経由のD1クエリに書き換えられている"
         minutes={15}
       />
@@ -96,7 +96,12 @@ export const itemsApp = new OpenAPIHono<{ Bindings: Bindings }>()
         </li>
       </ul>
 
-      <h2 className="mt-10 text-xl font-bold">4. 動作確認する</h2>
+      <h2 className="mt-10 text-xl font-bold">2. 動作確認する</h2>
+      <p className="mt-3 leading-relaxed">
+        開発サーバーを<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun run dev</code>
+        （依頼No.02で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler dev</code>
+        に差し替えたもの）で起動したまま、別のターミナルで叩いてみましょう。
+      </p>
       <CopyBlock
         lang="bash"
         title="ターミナル"
@@ -153,10 +158,27 @@ curl http://localhost:3000/api/items/3`}
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">where()</code>
           だけでは配列が返る点に注意してください。
         </li>
+        <li>
+          500エラーになり、ターミナルに
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
+            TypeError: undefined is not an object (evaluating 'this.client.prepare')
+          </code>
+          と出る → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env.DB</code>
+          がundefinedです。サーバーがBunで直接起動されている（依頼No.02のdev script書き換えが済んでいない、
+          または古いサーバーが残っている）可能性が高いので、Ctrl+Cで止めて
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun run dev</code>
+          で起動し直してください。起動時のターミナルにwranglerの表示が出ていればOKです。
+        </li>
+        <li>
+          商品が0件（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">[]</code>）で返ってくる →
+          テーブルはあるが中身が空の状態です。依頼No.05の
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">seed.sql</code>
+          の投入が済んでいるか確認しましょう。
+        </li>
       </ul>
 
-      <ProgressCheck id="s3-05-read-api" label="items一覧・詳細のAPIをD1から取得するように書き換えられた" />
-      <NextLink current="/session3/05-read-api" />
+      <ProgressCheck id="s3-06-read-api" label="items一覧・詳細のAPIをD1から取得するように書き換えられた" />
+      <NextLink current="/session3/06-read-api" />
     </div>
   );
 }

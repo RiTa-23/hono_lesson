@@ -10,7 +10,7 @@ export function DrizzleSetup() {
     <div>
       <PageHeader
         title="Drizzle ORMをセットアップする"
-        chapter="03"
+        chapter="04"
         goal="Drizzle ORMを導入し、items・player・player_itemsのテーブル定義（スキーマ）を書けるようになっている"
         minutes={15}
       />
@@ -84,6 +84,19 @@ export default defineConfig({
         でスキーマファイルの場所を、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">out</code>
         で生成されるマイグレーションSQLの出力先を指定しています。実際にDBへ反映する作業は次のページで行います。
       </p>
+      <Callout variant="warn" title="outとmigrations_dirは必ず揃える">
+        <p>
+          ここで指定した<code className="rounded bg-muted px-1.5 py-0.5 text-xs">out</code>
+          （<code className="rounded bg-muted px-1.5 py-0.5 text-xs">./drizzle/migrations</code>）は、
+          依頼No.03で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler.jsonc</code>
+          に書いた<code className="rounded bg-muted px-1.5 py-0.5 text-xs">migrations_dir</code>
+          と同じ場所でなければいけません。
+          「SQLを出力する側（drizzle-kit）」と「SQLを探す側（wrangler）」が別々の場所を見ていると、
+          次のページのマイグレーションが
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">No migrations present at ...</code>
+          で止まります。
+        </p>
+      </Callout>
 
       <Callout variant="tip" title="player_itemsがitemIdとplayerIdの両方を持つ理由">
         <p>
@@ -120,8 +133,8 @@ export default defineConfig({
         </li>
       </ul>
 
-      <ProgressCheck id="s3-03-drizzle-setup" label="Drizzle ORMを導入し、3つのテーブルのスキーマを定義できた" />
-      <NextLink current="/session3/03-drizzle-setup" />
+      <ProgressCheck id="s3-04-drizzle-setup" label="Drizzle ORMを導入し、3つのテーブルのスキーマを定義できた" />
+      <NextLink current="/session3/04-drizzle-setup" />
     </div>
   );
 }

@@ -10,7 +10,7 @@ export function WriteApi() {
     <div>
       <PageHeader
         title="purchase/sellをDB更新処理に書き換える"
-        chapter="06"
+        chapter="07"
         goal="購入・売却APIとplayer取得APIを、在庫・所持金・所持アイテムをD1に読み書きする実装に書き換えられている"
         minutes={25}
       />
@@ -259,8 +259,8 @@ curl http://localhost:3000/api/player
         </li>
       </ul>
 
-      <ProgressCheck id="s3-06-write-api" label="購入・売却APIをD1の読み書きに書き換え、再起動してもデータが残ることを確認した" />
-      <NextLink current="/session3/06-write-api" />
+      <ProgressCheck id="s3-07-write-api" label="購入・売却APIをD1の読み書きに書き換え、再起動してもデータが残ることを確認した" />
+      <NextLink current="/session3/07-write-api" />
     </div>
   );
 }

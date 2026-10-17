@@ -73,6 +73,12 @@ export function D1Intro() {
           の組み合わせで、第1回の配列・オブジェクトをデータベースのテーブルに置き換えていきます。
           APIのURLやレスポンスの形（フロントとの約束）は変えません。中身の実装だけを差し替えます。
         </p>
+        <p className="mt-2">
+          ただしD1は、Cloudflare Workersのランタイム上でしか動きません。
+          そこで次のページでは、そのランタイムを手元で動かすための道具
+          （<code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler</code>）を先に整えます。
+          今回はすべてローカルで完結するので、Cloudflareのアカウントはまだ必要ありません。
+        </p>
       </Callout>
 
       <OrmChainFigure />
