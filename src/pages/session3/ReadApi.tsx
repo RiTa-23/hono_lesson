@@ -28,15 +28,21 @@ export function ReadApi() {
         title="backend/src/routes/items.ts（全体を置き換え）"
         code={`import { OpenAPIHono } from '@hono/zod-openapi'
 import { drizzle } from 'drizzle-orm/d1'
-import { eq } from 'drizzle-orm'
+import { eq, lte } from 'drizzle-orm'
 import { items } from '../db/schema'
 import type { Bindings } from '../types'
 
 // 商品棚のAPI（D1から読み出す）
 export const itemsApp = new OpenAPIHono<{ Bindings: Bindings }>()
-  // 商品一覧を返す
+  // 商品一覧を返す（?maxPrice=100 のように価格で絞り込める）
   .get('/api/items', async (c) => {
     const db = drizzle(c.env.DB)
+    const maxPrice = c.req.query('maxPrice')
+
+    if (maxPrice) {
+      const cheapItems = await db.select().from(items).where(lte(items.price, Number(maxPrice)))
+      return c.json(cheapItems)
+    }
     const allItems = await db.select().from(items)
     return c.json(allItems)
   })
@@ -78,6 +84,13 @@ export const itemsApp = new OpenAPIHono<{ Bindings: Bindings }>()
           にあたります。
         </li>
         <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">.where(lte(items.price, Number(maxPrice)))</code>
+          … <code className="rounded bg-muted px-1.5 py-0.5 text-xs">WHERE price &lt;= ?</code>
+          にあたります（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">lte</code>
+          = less than or equal、「以下」）。第1回の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">filter</code>
+          で書いていた絞り込みを、DBに任せる形になりました。
+        </li>
+        <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">.get()</code>
           … 結果を配列ではなく1件（またはundefined）で受け取ります。
         </li>
@@ -93,6 +106,7 @@ export const itemsApp = new OpenAPIHono<{ Bindings: Bindings }>()
         lang="bash"
         title="ターミナル"
         code={`curl http://localhost:3000/api/items
+curl "http://localhost:3000/api/items?maxPrice=100"
 curl http://localhost:3000/api/items/3`}
       />
       <p className="mt-3 leading-relaxed">
@@ -133,12 +147,10 @@ curl http://localhost:3000/api/items/3`}
           が使うので、まだ残しておきます）。
         </li>
         <li>
-          第1回の発展で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">?maxPrice=</code>
-          の絞り込みを付けていた人 → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">'drizzle-orm'</code>
-          から<code className="rounded bg-muted px-1.5 py-0.5 text-xs">lte</code>
-          もimportし、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">db.select().from(items).where(lte(items.price, Number(maxPrice)))</code>
-          のように書けます（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">lte</code>
-          = less than or equal、「以下」）。
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">lte is not defined</code>
+          のようなエラーになる → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">'drizzle-orm'</code>
+          からのimportに<code className="rounded bg-muted px-1.5 py-0.5 text-xs">lte</code>
+          を足し忘れています（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">{'import { eq, lte }'}</code>）。
         </li>
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">.get()</code>

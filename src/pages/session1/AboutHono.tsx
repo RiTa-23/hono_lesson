@@ -3,6 +3,8 @@ import { Callout } from "@/components/Callout";
 import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
+import { ExpressVsHonoFigure } from "@/components/figures/ExpressVsHonoFigure";
+import { HonoStrengthsFigure } from "@/components/figures/HonoStrengthsFigure";
 
 export function AboutHono() {
   return (
@@ -108,15 +110,28 @@ export function AboutHono() {
         ヘルパーが揃っています。
       </blockquote>
 
+      <ExpressVsHonoFigure />
+
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm leading-relaxed">
         <li>ルーティング・JSONレスポンス・CORSなど、必要な機能が最初から入っている</li>
         <li>TypeScriptとの相性が抜群（型補完がしっかり効く）</li>
         <li>基本的な書き方がExpressとほぼ同じで、学習コストが低い</li>
-        <li>
-          Cloudflare Workers・Bun・Node.js・Denoなど、
-          <span className="font-medium">どの実行環境でも同じコードが動く</span>
-        </li>
       </ul>
+
+      <h3 className="mt-8 text-lg font-semibold">Honoの強み</h3>
+      <p className="mt-2 leading-relaxed">
+        Honoのいいところを、ひとことずつにまとめるとこの4つです。
+      </p>
+
+      <HonoStrengthsFigure />
+
+      <p className="mt-3 text-sm leading-relaxed">
+        「型を共有できる」は、サブクエスト「
+        <a href="#/extra/rpc" className="text-primary underline-offset-4 hover:underline">
+          RPCで型安全な連携
+        </a>
+        」で体験できます。
+      </p>
 
       <Callout variant="tip" title="第3回への伏線">
         <p>
@@ -168,14 +183,34 @@ export default app`}</code>
 
       <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
       <Quiz
-        question="Honoの特徴「Batteries Included」の意味として正しいものはどれ？"
+        question="Honoの公式サイトにある「Batteries Included」の意味として正しいものはどれ？"
         choices={[
-          "電池で動作する軽量フレームワークである",
-          "必要な機能が最初から揃っていて、追加インストールが少なくて済む",
-          "バッテリー消費が少ない設計になっている",
+          "最小限の機能だけを持ち、必要な機能はすべてプラグインとして自分で追加していく",
+          "実行環境（Bunなど）も同梱されているので、Honoをインストールするだけでサーバーが動く",
+          "ルーティング・JSONレスポンス・CORSなど、APIづくりに必要な機能が最初から揃っている",
+        ]}
+        answerIndex={2}
+        explanation="「必要なものは全部入り」という意味です。1つ目はExpressの思想にあたります。また、Honoに含まれるのはAPIを作るための機能で、BunやCloudflare Workersといった実行環境は別に用意します。"
+      />
+      <Quiz
+        question="BunとHonoの関係として正しいものはどれ？"
+        choices={[
+          "BunはJavaScriptを動かす実行環境で、Honoはその上で動く「APIを作るための土台」",
+          "HonoはBunに標準で含まれる機能の一つで、Bunをインストールすると自動的に使える",
+          "どちらもAPIを作るためのフレームワークなので、どちらか好きな方を1つ選んで使う",
+        ]}
+        answerIndex={0}
+        explanation="Bunが厨房、Honoが調理器具セットのイメージです。役割が違うので両方を組み合わせて使います。HonoはBunとは別のライブラリで、Cloudflare WorkersやNode.jsの上でも動きます。"
+      />
+      <Quiz
+        question="第4回では、第1〜3回にBunで作ったAPIをCloudflare Workersにデプロイします。このときAPIのコードはどうなる？"
+        choices={[
+          "Cloudflare Workers向けに、app.get や c.json を使った部分をすべて書き直す",
+          "app.get や c.json などのAPIのコードはほぼそのまま使え、変えるのは起動まわりの数行だけ",
+          "Cloudflare WorkersではHonoが動かないため、別のフレームワークに乗り換える",
         ]}
         answerIndex={1}
-        explanation="「必要なものは全部入り」という意味の慣用句です。CORSやJSONなど、今回使う機能もHonoに内蔵されています。"
+        explanation="Honoの強みの一つ「どこでも動く」です。Honoは特定の実行環境に依存しない作りになっているので、実行環境を変えてもAPIのコード自体はほとんど書き換えずに済みます。"
       />
 
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>

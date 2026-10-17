@@ -82,3 +82,88 @@
 pre {
   overflow-x: auto;
 }
+
+/* ============================================================
+   図解（src/components/figures）用のアニメーション
+   ============================================================ */
+
+/* 伝票が左右に移動する。--fig-from / --fig-to で始点・終点（left）を指定 */
+@keyframes fig-travel {
+  0% { left: var(--fig-from); opacity: 0; }
+  12% { opacity: 1; }
+  100% { left: var(--fig-to); opacity: 1; }
+}
+/* 届いたら消える版（リクエストの伝票など） */
+@keyframes fig-travel-vanish {
+  0% { left: var(--fig-from); opacity: 0; }
+  12% { opacity: 1; }
+  85% { left: var(--fig-to); opacity: 1; }
+  100% { left: var(--fig-to); opacity: 0; }
+}
+@keyframes fig-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fig-pop {
+  0% { opacity: 0; transform: scale(0.6); }
+  70% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+/* 棚などが一瞬光る（金色の縁取り） */
+@keyframes fig-glow {
+  0%, 100% { opacity: 0; }
+  40%, 60% { opacity: 1; }
+}
+/* 線の上を流れる点（SVG stroke-dashoffset） */
+@keyframes fig-flow {
+  to { stroke-dashoffset: -24; }
+}
+/* 半分ずつの点滅（step-end で使う）。a は前半、b は後半だけ表示される
+   a はセリフ窓の「▼」、b はドット絵の2コマ目の重ね絵に使う
+   b の要素には通常時 opacity: 0 を指定しておく（100%は指定しない＝通常時の値に戻る） */
+@keyframes fig-frame-a {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes fig-frame-b {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+}
+/* まばたき用：最後の少しだけ2コマ目の重ね絵（目を閉じた部分）を表示する */
+@keyframes fig-blink-b {
+  0% { opacity: 0; }
+  92% { opacity: 1; }
+}
+/* ふわふわ浮く */
+@keyframes fig-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+/* 左右に揺れる（「？」や困り顔） */
+@keyframes fig-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+/* 消えてしまう（再起動でデータが消える演出） */
+@keyframes fig-vanish {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.6); }
+}
+/* 横に揺れて弾かれる */
+@keyframes fig-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* 動きを減らす設定の環境では、図解のアニメーションは最終状態を即表示する
+   （判子のstamp-inは対象外。AGENTS.mdの約束どおり常に再生する） */
+@media (prefers-reduced-motion: reduce) {
+  .fig-anim,
+  .fig-anim * {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

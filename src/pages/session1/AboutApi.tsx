@@ -4,6 +4,11 @@ import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
+import { ApiExchangeFigure } from "@/components/figures/ApiExchangeFigure";
+import { HttpAnatomyFigure } from "@/components/figures/HttpAnatomyFigure";
+import { StatusCodeFigure } from "@/components/figures/StatusCodeFigure";
+import { MultiClientFigure } from "@/components/figures/MultiClientFigure";
+import { SecurityFigure } from "@/components/figures/SecurityFigure";
 
 export function AboutApi() {
   return (
@@ -45,6 +50,8 @@ export function AboutApi() {
         <span className="font-medium">バックエンド側の窓口（APIサーバー）</span>をHonoで作ります。
       </p>
 
+      <ApiExchangeFigure />
+
       <h2 className="mt-10 text-xl font-bold">リクエストとレスポンス</h2>
       <p className="mt-3 leading-relaxed">
         店頭のやりとりをAPIの言葉に翻訳すると、こうなります。
@@ -83,6 +90,12 @@ export function AboutApi() {
         </table>
       </div>
 
+      <p className="mt-4 leading-relaxed">
+        1枚の「伝票」として見ると、お願いとお返事はそれぞれ次の部品でできています。
+        この後の3つの見出しで、部品を1つずつ見ていきます。
+      </p>
+      <HttpAnatomyFigure />
+
       <h3 className="mt-8 text-lg font-semibold">HTTPメソッド = お願いの種類</h3>
       <p className="mt-2 leading-relaxed">
         「見せて」（取得）は <span className="font-medium">GET</span>、
@@ -109,27 +122,64 @@ export function AboutApi() {
       <p className="mt-2 leading-relaxed">
         レスポンスには3桁の数字（ステータスコード）が付いていて、結果の種類を表します。
       </p>
+      <StatusCodeFigure />
+
+      <h2 className="mt-10 text-xl font-bold">なぜ画面とデータを分けるの？</h2>
+      <p className="mt-3 leading-relaxed">
+        画面の中に商品データや計算処理を全部書いてしまうこともできます。
+        それでもわざわざAPIという窓口を挟んで、フロントエンド（見た目）とバックエンド（データ・計算）を分けるのには、
+        いくつかの理由があります。
+      </p>
+
+      <h3 className="mt-8 text-lg font-semibold">1. 大事なものを店の奥にしまえる（セキュリティ）</h3>
+      <p className="mt-2 leading-relaxed">
+        フロントエンドのコードは、冒険者のブラウザにダウンロードされてから動きます。
+        つまり<span className="font-medium">冒険者の手元にあるもの</span>です。
+        ブラウザの開発者ツールを使えば誰でも中身を読めますし、
+        APIへ送るお願いの中身を書き換えたり、curlで直接お願いを送ったりすることもできます。
+      </p>
+      <p className="mt-3 leading-relaxed">
+        だから、データベースのパスワードのような秘密の情報や、値段・所持金の計算といった
+        <span className="font-medium">ごまかされては困る処理は、サーバー（店の奥）に置きます</span>。
+        画面側の入力チェックは「うっかりミスを防ぐ親切」にすぎません。
+        最後の判断は必ずサーバーで行います。
+      </p>
+      <SecurityFigure />
+      <Callout variant="warn" title="サーバーに置いても、チェックを忘れると穴が開く">
+        <p>
+          この講座の購入APIは、冒険者から「どれを・いくつ」だけを受け取り、値段はサーバー側で計算します。
+          ただし、届いた個数そのものを疑わないと、マイナスの個数で所持金が増える穴が残ります。
+          第2回では、この穴を実際に開けてからふさぎます。
+        </p>
+      </Callout>
+
+      <h3 className="mt-8 text-lg font-semibold">2. 画面がいくつ増えても使い回せる</h3>
+      <p className="mt-2 leading-relaxed">
+        画面を作り替えても、データの仕組みはそのまま使い回せます。
+        よろず屋が将来「スマホアプリ」や「魔王城向け特別窓口」を出店しても、
+        同じAPIを呼ぶだけで済みます。
+      </p>
+      <MultiClientFigure />
+
+      <h3 className="mt-8 text-lg font-semibold">3. 窓口の約束さえ守れば、別々に作り替えられる</h3>
+      <p className="mt-2 leading-relaxed">
+        「このURLにこう頼めば、こういうJSONが返る」という約束（API）さえ変えなければ、
+        画面とサーバーはお互いを気にせず作り替えられます。
+      </p>
       <ul className="mt-3 list-disc space-y-1.5 pl-6 text-sm leading-relaxed">
+        <li>フロント担当とバックエンド担当が、約束を決めたあとは同時に作業を進められる</li>
+        <li>値段の計算ミスなどをサーバー側で直せば、アプリを入れ直してもらわなくても全員にすぐ反映される</li>
         <li>
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">200</code> … 成功（「はい、どうぞ」）
-        </li>
-        <li>
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">400</code> … お願いの内容がおかしい（「何を買いたいか分からないよ」）
-        </li>
-        <li>
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">404</code> … 指定されたものが存在しない（「そんな商品は置いてないよ」）
-        </li>
-        <li>
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">500</code> … サーバー側のトラブル（「店が大変なことに…」）
+          第3回では、データの置き場所をメモリからデータベースに差し替えます。
+          URLとレスポンスの形を変えないので、画面側は一切書き換えません
         </li>
       </ul>
 
-      <Callout variant="tip" title="なぜ画面とデータを分けるの？">
+      <Callout variant="tip" title="ひとことで言うと">
         <p>
-          フロントエンド（見た目）とバックエンド（データ・計算）を分けると、
-          画面を作り替えてもデータの仕組みはそのまま使い回せます。
-          よろず屋が将来「スマホアプリ」や「魔王城向け特別窓口」を出店しても、
-          同じAPIを呼ぶだけで済むのです。
+          画面は「冒険者に見せる店頭」、サーバーは「店主しか入れない店の奥」。
+          APIはその間にある<span className="font-medium">ただ1つの窓口</span>です。
+          窓口を1つにしぼるから、守りやすく、使い回しやすく、作り替えやすくなります。
         </p>
       </Callout>
 
@@ -149,6 +199,16 @@ export function AboutApi() {
         choices={["200", "404", "500"]}
         answerIndex={1}
         explanation="「指定されたものが存在しない」ことを表すのは404です。500は「サーバー側で予期しないトラブルが起きた」ときに使うもので、意味が異なります。"
+      />
+      <Quiz
+        question="購入するときの合計金額（値段×個数）は、どこで計算するのが安全？"
+        choices={[
+          "ブラウザで計算して、合計金額をAPIに送る",
+          "APIには「どれを・いくつ」だけ送り、サーバーで計算する",
+          "どちらでも同じ",
+        ]}
+        answerIndex={1}
+        explanation="ブラウザで計算した金額は、冒険者が開発者ツールなどで書き換えられます。値段はサーバーが持つデータで計算すれば、ごまかしようがありません。"
       />
 
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>

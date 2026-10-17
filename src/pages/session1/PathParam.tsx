@@ -4,15 +4,16 @@ import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
 import { Quiz } from "@/components/Quiz";
+import { UrlAnatomyFigure } from "@/components/figures/UrlAnatomyFigure";
 
 export function PathParam() {
   return (
     <div>
       <PageHeader
-        title="商品詳細と404"
+        title="商品詳細・絞り込みと404"
         chapter="05"
-        goal="GET /api/items/:id で1件の商品を返し、存在しないIDには404を返せるようになっている"
-        minutes={15}
+        goal="GET /api/items/:id で1件の商品を返し、存在しないIDには404を返せる。GET /api/items?maxPrice= で価格の絞り込みもできる"
+        minutes={20}
       />
 
       <Callout variant="quest">
@@ -21,6 +22,7 @@ export function PathParam() {
           商品を1つだけ詳しく教える窓口を作ります。ポイントは、
           <span className="font-medium">URLの一部（ID）を受け取る</span>ことと、
           <span className="font-medium">存在しない商品へのお返事</span>です。
+          あわせて、商品一覧を<span className="font-medium">値段で絞り込む</span>方法も覚えます。
         </p>
       </Callout>
 
@@ -32,6 +34,8 @@ export function PathParam() {
         Honoではパスに <code className="rounded bg-muted px-1.5 py-0.5 text-xs">:id</code>
         と書くことで、その部分を変数として受け取れます。
       </p>
+
+      <UrlAnatomyFigure />
 
       <CopyBlock
         lang="ts"
@@ -88,16 +92,17 @@ curl http://localhost:3000/api/items/999`}
 # 先頭行に HTTP/1.1 404 Not Found と表示される`}
       />
 
-      <h2 className="mt-10 text-xl font-bold">3. 発展：クエリパラメータで絞り込む</h2>
+      <h2 className="mt-10 text-xl font-bold">3. クエリパラメータで絞り込む</h2>
       <p className="mt-3 leading-relaxed">
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/api/items?maxPrice=100</code>
         のように <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?</code> の後ろに付ける値を
         <span className="font-medium">クエリパラメータ</span>と呼びます。
-        「値段で絞り込んで」といったお願いに使えます。余裕がある人は試してみましょう。
+        「値段で絞り込んで」といったお願いに使えます。Honoでは <code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.req.query('maxPrice')</code>
+        で取り出せます。パスパラメータと同じく、受け取った値は<span className="font-medium">文字列</span>です。
       </p>
       <CopyBlock
         lang="ts"
-        title="backend/src/index.ts（発展・追記）"
+        title="backend/src/index.ts（GET /api/items を書き換え）"
         code={`// 商品一覧（?maxPrice=100 のように価格で絞り込める）
 app.get('/api/items', (c) => {
   const maxPrice = c.req.query('maxPrice')
@@ -177,6 +182,26 @@ curl http://localhost:3000/api/items`}
         answerIndex={0}
         explanation="URLの一部として受け取る値はすべて文字列です。'3'（文字列）と 3（数値）は厳密比較（===）で一致しないため、Number() で変換します。"
       />
+      <Quiz
+        question="「IDが3の商品を1件だけ見たい」「100G以下の商品だけ一覧で見たい」。それぞれに向いているURLの組み合わせは？"
+        choices={[
+          "/api/items?id=3 と /api/items/100",
+          "/api/items/3 と /api/items?maxPrice=100",
+          "/api/items/3 と /api/items/maxPrice/100",
+        ]}
+        answerIndex={1}
+        explanation="「どれを」（1件の指定）はパスパラメータ、「どんな条件で」（絞り込み）はクエリパラメータで表すのが一般的です。/api/items/100 だと「IDが100の商品」と読めてしまい、意味が変わってしまいます。"
+      />
+      <Quiz
+        question="/api/items?maxPrice=100 にアクセスされたとき、「100」を取り出すコードはどれ？"
+        choices={[
+          "c.req.param('maxPrice')",
+          "await c.req.json()",
+          "c.req.query('maxPrice')",
+        ]}
+        answerIndex={2}
+        explanation="? の後ろの値は c.req.query() で取り出します。c.req.param() はパスに :id のように書いた部分を取り出すもので、c.req.json() はリクエストボディを読むものです。取り出した値は文字列の '100' なので、比較する前に Number() で数値に変換します。"
+      />
 
       <h2 className="mt-10 text-xl font-bold">よくあるつまずき</h2>
       <ul className="mt-3 list-disc space-y-2 pl-6 text-sm leading-relaxed">
@@ -191,6 +216,16 @@ curl http://localhost:3000/api/items`}
           は <code className="rounded bg-muted px-1.5 py-0.5 text-xs">NaN</code> になり、
           NaNはどんな値と比べても一致しない（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">NaN === NaN</code> ですらfalse）という性質のおかげで、
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">items.find</code> が何も見つけられず、結果的に意図通り404になります。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?maxPrice=</code>
+          を付けても全件が返ってくる → 新しい <code className="rounded bg-muted px-1.5 py-0.5 text-xs">app.get('/api/items', ...)</code>
+          を既存のものの<span className="font-medium">下に追加</span>していないか確認しましょう。先に書いた方が使われるため、
+          既存のハンドラを置き換える必要があります。
+        </li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{'&'}</code>
+          を含むURLで、途中までの条件しか効かない → URL全体をクォートで囲み忘れています（上の「なぜクォートで囲むの？」参照）。
         </li>
       </ul>
 
@@ -209,7 +244,7 @@ curl http://localhost:3000/api/items`}
         </ul>
       </Callout>
 
-      <ProgressCheck id="s1-05-path-param" label="GET /api/items/:id で商品詳細と404を返せた" />
+      <ProgressCheck id="s1-05-path-param" label="GET /api/items/:id で商品詳細と404を返し、?maxPrice= で絞り込めた" />
       <NextLink current="/session1/05-path-param" />
     </div>
   );

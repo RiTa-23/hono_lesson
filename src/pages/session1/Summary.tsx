@@ -33,7 +33,7 @@ export function Summary() {
               <td className="px-4 py-2">
                 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">GET /api/items</code>
               </td>
-              <td className="px-4 py-2">商品一覧を返す</td>
+              <td className="px-4 py-2">商品一覧を返す（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">?maxPrice=</code> で価格の絞り込み）</td>
             </tr>
             <tr>
               <td className="px-4 py-2">
@@ -72,7 +72,8 @@ export function Summary() {
           で窓口を作り、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.json()</code> で返す
         </li>
         <li>
-          パスパラメータ（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.req.param()</code>）と
+          パスパラメータ（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.req.param()</code>）・
+          クエリパラメータ（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.req.query()</code>）・
           リクエストボディ（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">await c.req.json()</code>）の受け取り方
         </li>
         <li>ステータスコード（200 / 400 / 404）で結果の種類を伝える</li>

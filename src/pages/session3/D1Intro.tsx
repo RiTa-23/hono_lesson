@@ -3,6 +3,8 @@ import { Callout } from "@/components/Callout";
 import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
+import { MemoryVsDbFigure } from "@/components/figures/MemoryVsDbFigure";
+import { OrmChainFigure } from "@/components/figures/OrmChainFigure";
 
 export function D1Intro() {
   return (
@@ -42,6 +44,8 @@ export function D1Intro() {
         の行がもう一度実行され、初期値に巻き戻ってしまいます。
       </p>
 
+      <MemoryVsDbFigure />
+
       <h2 className="mt-10 text-xl font-bold">2. D1 = Cloudflareが提供するデータベース</h2>
       <p className="mt-3 leading-relaxed">
         <span className="font-medium">D1</span>は、Cloudflare Workers上で使える
@@ -76,6 +80,8 @@ export function D1Intro() {
           今回はすべてローカルで完結するので、Cloudflareのアカウントはまだ必要ありません。
         </p>
       </Callout>
+
+      <OrmChainFigure />
 
       <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
       <Quiz

@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Menu, Store, X } from "lucide-react";
 import { AllClearOverlay } from "@/components/AllClearOverlay";
+import { SessionClearOverlay } from "@/components/SessionClearOverlay";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -102,6 +103,8 @@ export function Layout({ currentPath, children }: Props) {
         </main>
       </div>
 
+      {/* 各回の全クエスト達成時の演出（その回の最後のクエスト完了瞬間に表示） */}
+      <SessionClearOverlay />
       {/* 全クエスト達成時の演出（最後のクエスト完了瞬間に表示） */}
       <AllClearOverlay />
     </div>

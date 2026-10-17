@@ -51,6 +51,19 @@ export function Setup() {
         </TabsContent>
       </Tabs>
 
+      <Callout variant="warn" title="Windowsの方は、ここから先はGit Bashで">
+        <p>
+          講座のコマンド（特にcurl）はMac/Linuxのターミナルと同じ書き方になっていて、
+          PowerShellではそのまま動かないものがあります。Bunのインストールが終わったら、
+          以降のコマンドはすべて<span className="font-medium">Git Bash</span>
+          （Git for Windowsに付属）で実行してください。
+        </p>
+        <p className="mt-2">
+          VS Codeのターミナルなら、右上の「＋」の横の「∨」から「Git Bash」を選べます。
+          「既定のプロファイルの選択」でGit Bashにしておくと、毎回切り替えずに済みます。
+        </p>
+      </Callout>
+
       <p className="mt-3 leading-relaxed">
         インストール後、以下のコマンドでバージョンが表示されればOKです。
       </p>
@@ -108,8 +121,45 @@ export function Setup() {
         code={`yorozuya/\n├── frontend/   # 完成済みのReactアプリ（店舗の外観）\n└── backend/    # ← これから自分で作ります（倉庫と窓口）`}
       />
 
+      <h2 className="mt-10 text-xl font-bold">3. VS Codeでプロジェクトを開く</h2>
+      <p className="mt-3 leading-relaxed">
+        環境が整いました。ここからは<span className="font-medium">VS Codeで作業をしていきます！</span>
+        いまターミナルで開いているディレクトリ（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">yorozuya</code>）を
+        そのままVS Codeで開くには、次のコマンドを実行します。
+      </p>
+      <CopyBlock
+        lang="bash"
+        title="ターミナル"
+        code={`code .`}
+      />
+      <p className="mt-3 leading-relaxed">
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">.</code> は「今いるディレクトリ」の意味です。
+        VS Codeが起動して、左のサイドバー（エクスプローラー）に
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">frontend/</code>
+        が見えればOKです（<code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend/</code>
+        は次のステップで作るので、まだありません）。
+        これ以降は「<span className="font-medium">ファイルの編集はVS Code、コマンド実行はターミナル</span>」という
+        使い分けで進めていきます。
+      </p>
+      <Callout variant="tip" title="「code .」が効かないときは">
+        <p>
+          VS Code本体は入っているのに、codeコマンドだけがターミナルから認識されていない状態です。
+          まずはVS Codeを普通に起動して、「File → Open Folder」からyorozuyaフォルダを選んでもOKです。
+        </p>
+        <ul className="list-disc space-y-2 pl-5">
+          <li>
+            <span className="font-medium">macOS:</span> VS Codeを開き、Cmd+Shift+Pでコマンドパレットを出して
+            「Shell Command: Install 'code' command in PATH」を実行すると、次回からcodeコマンドが使えます。
+          </li>
+          <li>
+            <span className="font-medium">Windows:</span> Git Bashを一度閉じて開き直すと認識されることが多いです。
+            それでもダメな場合は、VS Codeのインストーラーで「PATHへの追加（Add to PATH）」に
+            チェックが入っているか確認してください。
+          </li>
+        </ul>
+      </Callout>
 
-      <h2 className="mt-10 text-xl font-bold">3. backendディレクトリにHonoを作成する</h2>
+      <h2 className="mt-10 text-xl font-bold">4. backendディレクトリにHonoを作成する</h2>
       <p className="mt-3 leading-relaxed">
         HonoにはBun用のプロジェクト作成コマンドが用意されています。
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs">yorozuya</code>
@@ -161,7 +211,7 @@ export function Setup() {
         の1コマンドで完結します（第2回以降で使います）。
       </p>
 
-      <h2 className="mt-10 text-xl font-bold">4. 開発サーバーを起動する</h2>
+      <h2 className="mt-10 text-xl font-bold">5. 開発サーバーを起動する</h2>
       <p className="mt-3 leading-relaxed">
         作成されたbackendディレクトリに移動して、開発サーバーを起動します。
       </p>
@@ -208,6 +258,7 @@ export function Setup() {
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun: command not found</code>
           → ターミナルを開き直すか、インストール時に表示されたPATH設定のコマンドを実行してください。
+          WindowsでPowerShellからインストールした直後は、Git Bashも一度開き直すと認識されます。
         </li>
         <li>
           ポート3000がすでに使われている → ポートは「パソコンの中の番地」のようなものです。

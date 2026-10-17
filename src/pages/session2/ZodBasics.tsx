@@ -4,6 +4,7 @@ import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
+import { ZodGateFigure } from "@/components/figures/ZodGateFigure";
 
 export function ZodBasics() {
   return (
@@ -21,6 +22,8 @@ export function ZodBasics() {
         「このデータはこういう形であるべき」というルール（スキーマ）を書いておくと、
         実際に来たデータがそのルールに合っているかをチェックしてくれます。
       </p>
+
+      <ZodGateFigure />
 
       <h2 className="mt-10 text-xl font-bold">1. インストールする</h2>
       <CopyBlock lang="bash" title="ターミナル（backendディレクトリで）" code={`bun add zod`} />

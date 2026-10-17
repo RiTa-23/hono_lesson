@@ -357,6 +357,13 @@ curl -X POST -H "Content-Type: application/json" \\
           の付け忘れが典型例です。これがないと「これはJSONだよ」と伝わりません。
         </li>
         <li>
+          Windowsで「パラメーター名 'X' に一致するパラメーターが見つかりません」などのエラーが出る
+          → PowerShellで実行している可能性があります。行末の
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">\</code> による改行や
+          JSONの <code className="rounded bg-muted px-1.5 py-0.5 text-xs">"</code> の扱いが違うため、
+          <span className="font-medium">Git Bash</span>で実行してください（03のセットアップ参照）。
+        </li>
+        <li>
           購入したはずなのに所持金が戻っている → ホットリロードで状態がリセットされただけです（上の「注意」参照）。
         </li>
         <li>

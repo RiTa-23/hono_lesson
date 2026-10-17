@@ -4,6 +4,7 @@ import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
+import { LocalRemoteFigure } from "@/components/figures/LocalRemoteFigure";
 
 export function RemoteMigration() {
   return (
@@ -100,6 +101,8 @@ database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`}
         を、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">--remote</code>
         に変えるだけです。
       </p>
+
+      <LocalRemoteFigure />
       <CopyBlock
         lang="bash"
         title="ターミナル（backendディレクトリで）"

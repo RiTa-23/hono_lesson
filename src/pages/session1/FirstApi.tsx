@@ -150,6 +150,12 @@ app.get('/api/items', (c) => {
           など単数形にしていませんか？）。
         </li>
         <li>
+          Windowsでcurlを実行すると、JSONではなく「StatusCode」「Content」などの一覧が表示される、
+          またはエラーになる → PowerShellで実行している可能性があります。PowerShellでは
+          curlが別のコマンドとして扱われることがあり、講座のcurlがそのままでは動きません。
+          <span className="font-medium">Git Bash</span>で実行してください（03のセットアップ参照）。
+        </li>
+        <li>
           ブラウザに生のJSONがそのまま表示されて不安になる → 今開発中のAPIを直接見ているだけなので、これで正常です。実際の画面はこの後ReactがこのJSONを受け取って、見やすい形に描画します（07で確認します）。
         </li>
       </ul>
