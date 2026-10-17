@@ -245,11 +245,9 @@ curl http://localhost:3000/api/player
           が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun test</code>
           で失敗するようになった → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">tradeApp</code>
           が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env.DB</code>
-          を必要とするようになったためで、想定どおりの挙動です。テスト用のD1を用意する方法（
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">@cloudflare/vitest-pool-workers</code>
-          など）はこの講座の範囲外なので、いったんテストファイルを削除するか、
-          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">describe.skip</code>
-          にしておいて構いません。
+          を必要とするようになったためで、想定どおりの挙動です。
+          <span className="font-medium">削除もskipも不要です</span>。次の依頼No.08で、
+          テスト用のD1を渡して全部PASSに戻すところまでやります。
         </li>
         <li>
           複数の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">update</code>
