@@ -127,8 +127,19 @@ export function WranglerSetup() {
       <p className="mt-3 leading-relaxed">
         第1回で選んだ<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun</code>
         テンプレートにはwranglerが含まれていないので、開発用の依存として自分で追加します。
+        ここから先のコマンドは、すべて<code className="rounded bg-muted px-1.5 py-0.5 text-xs">backend</code>
+        ディレクトリの中で実行します。
       </p>
-      <CopyBlock lang="bash" title="ターミナル（backendディレクトリで）" code={`bun add -D wrangler`} />
+      <CopyBlock lang="bash" title="ターミナル" code={`cd backend
+bun add -D wrangler`} />
+      <p className="mt-3 leading-relaxed">
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">cd backend</code>
+        は<code className="rounded bg-muted px-1.5 py-0.5 text-xs">yorozuya</code>
+        ディレクトリにいる場合の移動コマンドです。すでにbackendにいる人（第1回から開発サーバーを
+        起動しっぱなしの人など）は2行目だけでOKです。今どこにいるかは
+        <code className="rounded bg-muted px-1.5 py-0.5 text-xs">pwd</code>
+        で確認できます。
+      </p>
       <p className="mt-3 leading-relaxed">入ったかどうかは、バージョン表示で確認できます。</p>
       <CopyBlock lang="bash" title="確認" code={`bun wrangler --version`} />
       <p className="mt-3 leading-relaxed">
