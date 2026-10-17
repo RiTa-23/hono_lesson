@@ -82,6 +82,19 @@ const TERMS: { term: string; reading?: string; body: string }[] = [
     term: "中間テーブル",
     body: "多対多の関係（例：プレイヤーとアイテム）を表現するためのテーブル。player_itemsのように、両方のIDと付随する情報（数量など）を1行にまとめて持つ。",
   },
+  {
+    term: "Miniflare",
+    reading: "ミニフレア",
+    body: "Workersの実行環境を手元で再現するシミュレーター。wrangler devが内部で使っているものと同じで、ライブラリとしても呼び出せる。テストの中でnew Miniflare({ d1Databases: { DB: ':memory:' } })とすれば、本物と同じD1の実装をテスト用に借りられる。",
+  },
+  {
+    term: "testClient(app, env)",
+    body: "hono/testingのtestClientは、第2引数でbindings（env）を渡せる。wrangler devがc.env.DBを渡してくれる役を、テストでは自分で引き受ける形になる。キー名はwrangler.jsoncのbindingと揃える必要がある。",
+  },
+  {
+    term: ":memory:",
+    body: "「ファイルではなくメモリ上にデータベースを作る」という指定。テストが終われば消えるので、毎回まっさらな状態から始められ、開発用の.wrangler/のデータも汚さない。",
+  },
 ];
 
 export function Glossary3() {

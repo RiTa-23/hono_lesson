@@ -9,7 +9,7 @@ export function Session3Summary() {
     <div>
       <PageHeader
         title="まとめ・次回予告"
-        chapter="08"
+        chapter="09"
         goal="第3回で作ったもの・学んだことを振り返り、次回への準備ができている"
         minutes={10}
       />
@@ -76,6 +76,12 @@ export function Session3Summary() {
           で、SQLをTypeScriptのメソッドチェーンとして書ける
         </li>
         <li>APIのレスポンス契約さえ守れば、実装（メモリ→D1）が変わってもフロントは無傷でいられる</li>
+        <li>
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">testClient(app, {'{ DB }'})</code>
+          のようにテスト側からバインディングを渡せば、D1を使うAPIも
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun test</code>
+          でテストできる（ふるまいをテストしていたので、第2回のexpectはそのまま使えた）
+        </li>
       </ul>
 
       <Callout variant="info" title="次回までに用意しておくこと">
@@ -133,8 +139,8 @@ export function Session3Summary() {
         </a>
       </div>
 
-      <ProgressCheck id="s3-08-summary" label="第3回の内容を振り返り、次回の予習ができた" />
-      <NextLink current="/session3/08-summary" />
+      <ProgressCheck id="s3-09-summary" label="第3回の内容を振り返り、次回の予習ができた" />
+      <NextLink current="/session3/09-summary" />
     </div>
   );
 }

@@ -121,6 +121,23 @@ describe('POST /api/purchase', () => {
         </p>
       </Callout>
 
+      <Callout variant="tip" title="第3回で、このテストはどうなる？">
+        <p>
+          第3回ではデータの置き場所をメモリからデータベース（D1）に移すので、
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs">tradeApp</code>
+          がデータベースを必要とするようになり、
+          <span className="font-medium">
+            今書いたテストは一度失敗するようになります
+          </span>
+          （第3回でその理由と直し方を扱います）。
+          ただし直すのは<code className="rounded bg-muted px-1.5 py-0.5 text-xs">client</code>
+          を作る部分だけで、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">expect</code>
+          は1行も書き換えません。
+          「<span className="font-medium">APIの外から見たふるまい</span>」をテストしておくと、
+          中の実装を作り替えてもテストが資産として残る——という点を、第3回で体験することになります。
+        </p>
+      </Callout>
+
       <h2 className="mt-10 text-xl font-bold">理解度チェック</h2>
       <Quiz
         question="testClient(app) を使ったテストを実行するために、事前に bun run dev で開発サーバーを起動しておく必要はある？"
