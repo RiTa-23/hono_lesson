@@ -246,8 +246,12 @@ curl http://localhost:3000/api/player
           で失敗するようになった → <code className="rounded bg-muted px-1.5 py-0.5 text-xs">tradeApp</code>
           が<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env.DB</code>
           を必要とするようになったためで、想定どおりの挙動です。
-          <span className="font-medium">削除もskipも不要です</span>。次の依頼No.08で、
-          テスト用のD1を渡して全部PASSに戻すところまでやります。
+          <span className="font-medium">削除もskipも不要です</span>。本編はこのまま進めてかまいません。
+          直したい人は、第3回を終えたあとにサブクエスト「
+          <a href="#/extra/testing-d1" className="text-primary underline-offset-4 hover:underline">
+            第2回のテストをD1対応にする
+          </a>
+          」で、テスト用のD1を渡して全部PASSに戻せます。
         </li>
         <li>
           複数の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">update</code>

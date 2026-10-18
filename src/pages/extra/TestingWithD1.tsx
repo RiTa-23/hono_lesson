@@ -4,24 +4,34 @@ import { Quiz } from "@/components/Quiz";
 import { ProgressCheck } from "@/components/ProgressCheck";
 import { NextLink } from "@/components/NextLink";
 import { CopyBlock } from "@/components/CopyBlock";
+import { Badge } from "@/components/ui/badge";
 
 export function TestingWithD1() {
   return (
     <div>
+      <Badge variant="secondary" className="mb-4">
+        サブクエスト（本編の進行には含まれません）
+      </Badge>
       <PageHeader
         title="第2回のテストをD1対応にする"
-        chapter="08"
         goal="第2回で書いたテストが落ちる理由を説明でき、テスト用のD1を渡して bun test を再び全部緑にできている"
         minutes={20}
       />
 
+      <Callout variant="info" title="第3回を最後まで終えた人向けです">
+        <p>
+          このサブクエストは、第3回の依頼No.07（purchase/sellをDB更新処理に書き換える）までが
+          終わっていることを前提にしています。本編の第4回に進むだけなら、やらなくても困りません。
+        </p>
+      </Callout>
+
       <Callout variant="quest">
         <p>
-          APIの書き換えはこれで完了ですが、まだ片付いていないものが1つあります。
+          第3回でAPIの書き換えは完了しましたが、まだ片付いていないものが1つあります。
           第2回で書いた<code className="rounded bg-muted px-1.5 py-0.5 text-xs">trade.test.ts</code>
           です。ためしに<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun test</code>
           を実行してみてください。<span className="font-medium">赤く落ちているはずです。</span>
-          これを直すのが最後の依頼です。
+          これを直すのが、このサブクエストの依頼です。
         </p>
       </Callout>
 
@@ -70,7 +80,7 @@ export function TestingWithD1() {
         code={`TypeError: undefined is not an object (evaluating 'c.env.DB')`}
       />
       <p className="mt-3 leading-relaxed">
-        依頼No.02で学んだとおり、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env.DB</code>
+        第3回の依頼No.02で学んだとおり、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">c.env.DB</code>
         は<span className="font-medium">Cloudflareのランタイムがリクエストごとに渡してくれる値</span>でした。
         <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun test</code>
         はwranglerを通さずテストコードを直接実行するので、誰も
@@ -155,7 +165,7 @@ export async function createTestDb() {
   const DB = await mf.getD1Database('DB')
   const db = drizzle(DB)
 
-  // 依頼No.05でdrizzle-kitが生成したSQLを、そのまま適用する
+  // 第3回の依頼No.05でdrizzle-kitが生成したSQLを、そのまま適用する
   await migrate(db, { migrationsFolder: './drizzle/migrations' })
 
   // テストの前提になる初期データ（seed.sqlと同じ内容）
@@ -182,7 +192,7 @@ export async function createTestDb() {
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">migrate(db, {'{ migrationsFolder }'})</code>
           … <code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler d1 migrations apply</code>
-          のDrizzle版です。依頼No.05で生成済みのSQLを使うので、
+          のDrizzle版です。第3回の依頼No.05で生成済みのSQLを使うので、
           <span className="font-medium">テスト用にスキーマを書き直す必要はありません</span>
           （スキーマを二重管理すると、必ずどちらかが古くなります）。
         </li>
@@ -272,7 +282,7 @@ describe('POST /api/purchase', () => {
           … <code className="rounded bg-muted px-1.5 py-0.5 text-xs">wrangler.jsonc</code>
           の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">binding</code>
           に書いた名前と<span className="font-medium">同じ</span>でなければいけません。
-          依頼No.03で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">"binding": "DB"</code>
+          第3回の依頼No.03で<code className="rounded bg-muted px-1.5 py-0.5 text-xs">"binding": "DB"</code>
           としたので、ここも<code className="rounded bg-muted px-1.5 py-0.5 text-xs">DB</code>です。
         </li>
       </ul>
@@ -337,7 +347,7 @@ describe('POST /api/purchase', () => {
           や<code className="rounded bg-muted px-1.5 py-0.5 text-xs">{'{ DB1: ... }'}</code>
           になっていないか見てみましょう。正しくは
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">{'{ DB: testDb.DB }'}</code>
-          です（依頼No.03のbindingと同じ名前）。
+          です（第3回の依頼No.03のbindingと同じ名前）。
         </li>
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">Can't find meta/_journal.json file</code>
@@ -345,7 +355,7 @@ describe('POST /api/purchase', () => {
           のパスがずれています。これは<span className="font-medium">コマンドを実行したディレクトリから見た相対パス</span>
           なので、<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun test</code>
           はbackendディレクトリで実行してください。
-          依頼No.05の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bunx drizzle-kit generate</code>
+          第3回の依頼No.05の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bunx drizzle-kit generate</code>
           が済んでいない場合も、このエラーになります。
         </li>
         <li>
@@ -356,7 +366,7 @@ describe('POST /api/purchase', () => {
         <li>
           <code className="rounded bg-muted px-1.5 py-0.5 text-xs">Cannot find name 'D1Database'</code>
           のような型エラーが<code className="rounded bg-muted px-1.5 py-0.5 text-xs">test/d1.ts</code>
-          で出る → 依頼No.03の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler types</code>
+          で出る → 第3回の依頼No.03の<code className="rounded bg-muted px-1.5 py-0.5 text-xs">bun wrangler types</code>
           が済んでいるか確認してください。
         </li>
         <li>
@@ -376,10 +386,10 @@ describe('POST /api/purchase', () => {
       </ul>
 
       <ProgressCheck
-        id="s3-08-testing"
+        id="extra-testing-d1"
         label="テスト用のD1をtestClientに渡して、bun testを再び全部PASSにできた"
       />
-      <NextLink current="/session3/08-testing" />
+      <NextLink current="/extra/testing-d1" />
     </div>
   );
 }

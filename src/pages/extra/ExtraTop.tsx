@@ -13,6 +13,7 @@ const BLURBS: Record<string, string> = {
   "/extra/glossary": "第1回で出てきた用語をいつでも引けるようにまとめました。",
   "/extra/glossary-2": "zod・OpenAPI・テストまわりの用語をまとめました。",
   "/extra/glossary-3": "D1・Drizzle ORMまわりの用語をまとめました。",
+  "/extra/testing-d1": "第3回を終えた人向け。D1化で落ちるようになった第2回のテストに、テスト用のD1を渡して全部PASSに戻します。",
   "/extra/glossary-4": "本番デプロイまわりの用語をまとめました。",
 };
 
