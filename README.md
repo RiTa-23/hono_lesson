@@ -22,23 +22,6 @@ npm run build      # 型チェック + 本番ビルド（dist/ に出力）
 npm test           # テスト実行
 ```
 
-## デプロイ（Cloudflare Pages）
-
-### GitHub連携（推奨）
-
-1. このリポジトリをGitHubにpush
-2. Cloudflare ダッシュボード → Workers & Pages → Pages → 「Gitに接続」
-3. ビルド設定:
-   - Build command: `npm run build`
-   - Build output directory: `dist`
-
-### 手動デプロイ
-
-```bash
-npm run build
-npx wrangler pages deploy dist --project-name hono-yorozuya-kouza
-```
-
 ## 公開設定
 
 どの回まで公開するかは `src/lib/routes.ts` の `PUBLISHED_UP_TO`（数値）で一元管理しています。
